@@ -8,10 +8,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float runSpeed;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float jumpPower;
-    [SerializeField] private bool isWalking;
-    [SerializeField] private bool isGrounded;
-    [SerializeField] private Vector2 moveInput;
-    [SerializeField] private Vector3 moveDirection;
+
+    private bool isWalking;
+    private bool isGrounded;
+    private Vector2 moveInput;
+    private Vector3 moveDirection;
+    private bool jumpQueued; // 점프 명령 대기
 
     private Animator animator;
     private Rigidbody rb;
@@ -30,24 +32,28 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (jumpQueued)
+        {
+            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);
+            jumpQueued = false;
+        }
         moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
-
         float currentSpeed = isWalking ? walkSpeed : runSpeed;
-        Vector3 velocity = moveDirection * currentSpeed;
-        velocity.y = rb.velocity.y;
-        rb.velocity = velocity;
 
-        if (moveDirection != Vector3.zero)
+        rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
+
+        if (moveDirection != Vector3.zero)///////////////////
         {
             transform.LookAt(transform.position + moveDirection);
         }
     }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
+        {
+            animator.SetBool("isJumping", false);
             isGrounded = true;
-        animator.SetBool("isJumping", false);
+        }
     }
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -58,7 +64,8 @@ public class Player : MonoBehaviour
     {
         if (context.performed && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            //rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            jumpQueued = true;
             isGrounded = false;
             animator.SetTrigger("doJump");
             animator.SetBool("isJumping", true);
@@ -66,9 +73,6 @@ public class Player : MonoBehaviour
     }
     public void OnWalk(InputAction.CallbackContext context)
     {
-        if (context.performed)
-            isWalking = true;
-        else if (context.canceled)
-            isWalking = false;
+        isWalking = context.performed;
     }
 }

@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 159457986}
   - component: {fileID: 159457985}
   - component: {fileID: 159457984}
+  - component: {fileID: 159457988}
   m_Layer: 0
   m_Name: Wall (2)
   m_TagString: Untagged
@@ -182,7 +183,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: a9ad0487c4e0b8f4d85b3baa3e05d933, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -228,6 +228,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1911193709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &159457988
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 159457983}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &387175634
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,6 +267,7 @@ GameObject:
   - component: {fileID: 387175637}
   - component: {fileID: 387175636}
   - component: {fileID: 387175635}
+  - component: {fileID: 387175639}
   m_Layer: 0
   m_Name: Wall (1)
   m_TagString: Untagged
@@ -288,7 +316,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: a9ad0487c4e0b8f4d85b3baa3e05d933, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -334,6 +361,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1911193709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &387175639
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 387175634}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &643081015
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,7 +448,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: a9ad0487c4e0b8f4d85b3baa3e05d933, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -653,6 +706,7 @@ GameObject:
   - component: {fileID: 1120976652}
   - component: {fileID: 1120976651}
   - component: {fileID: 1120976650}
+  - component: {fileID: 1120976654}
   m_Layer: 0
   m_Name: Wall
   m_TagString: Untagged
@@ -701,7 +755,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: a9ad0487c4e0b8f4d85b3baa3e05d933, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -747,6 +800,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1911193709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1120976654
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120976649}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1290166529 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5461052779654786451, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
@@ -766,11 +846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 15
   walkSpeed: 7.5
-  jumpPower: 30
-  isWalking: 0
-  isGrounded: 0
-  moveInput: {x: 0, y: 0}
-  moveDirection: {x: 0, y: 0, z: 0}
+  jumpPower: 20
 --- !u!136 &1290166531
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1198,6 +1274,7 @@ GameObject:
   - component: {fileID: 1732273155}
   - component: {fileID: 1732273154}
   - component: {fileID: 1732273153}
+  - component: {fileID: 1732273157}
   m_Layer: 0
   m_Name: Wall (3)
   m_TagString: Untagged
@@ -1246,7 +1323,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   - {fileID: 2100000, guid: a9ad0487c4e0b8f4d85b3baa3e05d933, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -1292,6 +1368,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1911193709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1732273157
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732273152}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1911193708
 GameObject:
   m_ObjectHideFlags: 0
