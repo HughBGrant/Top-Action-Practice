@@ -2,45 +2,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private float runSpeed;
     [SerializeField] private float walkSpeed;
+    [SerializeField] private float jumpPower;
     [SerializeField] private bool isWalking;
-    [SerializeField] private Vector2 inputVec;
-    [SerializeField] private Vector3 moveVec;
-    private Animator anim;
+    [SerializeField] private Vector2 moveInput;
+    [SerializeField] private Vector3 moveDirection;
 
-    // Start is called before the first frame update
+    private Animator animator;
+    private Rigidbody rb;
+
     void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        moveVec = new Vector3(inputVec.x, 0f, inputVec.y);
-
-        transform.position += moveVec * (isWalking ? walkSpeed : runSpeed) * Time.deltaTime;
-
-        anim.SetBool("isRunning", moveVec != Vector3.zero);
-        anim.SetBool("isWalking", isWalking);
-
-        transform.LookAt(transform.position + moveVec);
+        animator.SetBool("isRunning", moveDirection != Vector3.zero);
+        animator.SetBool("isWalking", isWalking);
     }
+
+    void FixedUpdate()
+    {
+        moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
+
+        float currentSpeed = isWalking ? walkSpeed : runSpeed;
+        Vector3 velocity = moveDirection * currentSpeed;
+        velocity.y = rb.velocity.y;
+        rb.velocity = velocity;
+
+        if (moveDirection != Vector3.zero)
+        {
+            transform.LookAt(transform.position + moveDirection);
+        }
+    }
+
     public void OnMove(InputAction.CallbackContext context)
     {
-        inputVec = context.ReadValue<Vector2>();
+        moveInput = context.ReadValue<Vector2>();
     }
+
     public void OnWalk(InputAction.CallbackContext context)
     {
         if (context.performed)
             isWalking = true;
-
-        if (context.canceled)
+        else if (context.canceled)
             isWalking = false;
+    }
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Debug.Log("Jump!");
+            rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        }
     }
 }
