@@ -7,6 +7,7 @@ using static UnityEditor.Timeline.TimelinePlaybackControls;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float runSpeed;
+    [SerializeField] private float walkSpeed;
     [SerializeField] private bool isWalking;
     [SerializeField] private Vector2 inputVec;
     [SerializeField] private Vector3 moveVec;
@@ -21,11 +22,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveVec = new Vector3(inputVec.x, 0f, inputVec.y) * runSpeed * Time.deltaTime;
-        transform.position += moveVec;
+        moveVec = new Vector3(inputVec.x, 0f, inputVec.y);
+
+        transform.position += moveVec * (isWalking ? walkSpeed : runSpeed) * Time.deltaTime;
 
         anim.SetBool("isRunning", moveVec != Vector3.zero);
         anim.SetBool("isWalking", isWalking);
+
+        transform.LookAt(transform.position + moveVec);
     }
     public void OnMove(InputAction.CallbackContext context)
     {
