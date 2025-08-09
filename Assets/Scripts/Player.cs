@@ -7,12 +7,16 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float runSpeed;
     [SerializeField] private float walkSpeed;
+    [SerializeField] private float currentSpeed;
     [SerializeField] private float jumpPower;
+
 
     private bool isWalking;
     private bool isGrounded;
+    private bool isDodging;
     private Vector2 moveInput;
     private Vector3 moveDirection;
+    private Vector3 dodgeDirection;
     private bool jumpQueued; // 점프 명령 대기
 
     private Animator animator;
@@ -38,7 +42,12 @@ public class Player : MonoBehaviour
             jumpQueued = false;
         }
         moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
-        float currentSpeed = isWalking ? walkSpeed : runSpeed;
+
+        if (isDodging)
+        {
+            moveDirection = dodgeDirection;
+        }
+        currentSpeed = isWalking ? walkSpeed : runSpeed;
 
         rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
 
@@ -58,11 +67,12 @@ public class Player : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
+
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed && isGrounded)
+        if (context.performed && isGrounded && moveDirection == Vector3.zero && !isDodging)
         {
             //rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             jumpQueued = true;
@@ -70,9 +80,26 @@ public class Player : MonoBehaviour
             animator.SetTrigger("doJump");
             animator.SetBool("isJumping", true);
         }
+        if (context.performed && isGrounded && moveDirection != Vector3.zero && !isDodging)
+        {
+            dodgeDirection = moveDirection;
+            currentSpeed *= 2;
+            animator.SetTrigger("doDodge");
+            isDodging = true;
+
+            Invoke("DodgeEnd", 0.5f);///////////
+        }
+    }
+    public void OnDodge(InputAction.CallbackContext context)
+    {
     }
     public void OnWalk(InputAction.CallbackContext context)
     {
         isWalking = context.performed;
+    }
+    void DodgeEnd()
+    {
+        currentSpeed *= 0.5f;
+        isDodging = false;
     }
 }

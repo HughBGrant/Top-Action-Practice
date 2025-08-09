@@ -149,7 +149,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 159457983}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1f63295b7d9814d48b26df2ed48d7942, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -282,7 +282,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387175634}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1f63295b7d9814d48b26df2ed48d7942, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -721,7 +721,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1120976649}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1f63295b7d9814d48b26df2ed48d7942, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -846,6 +846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runSpeed: 15
   walkSpeed: 7.5
+  currentSpeed: 0
   jumpPower: 20
 --- !u!136 &1290166531
 CapsuleCollider:
@@ -1289,7 +1290,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1732273152}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 1f63295b7d9814d48b26df2ed48d7942, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
