@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
 
         rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
 
-        if (moveDirection != Vector3.zero)///////////////////
+        if (moveDirection != Vector3.zero)
         {
             transform.LookAt(transform.position + moveDirection);
         }
