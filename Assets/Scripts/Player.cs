@@ -12,15 +12,16 @@ public class Player : MonoBehaviour
 
 
     private bool isWalking;
+    private bool isJumpRequested;
     private bool isGrounded;
     private bool isDodging;
-    private Vector2 moveInput;
-    private Vector3 moveDirection;
-    private Vector3 dodgeDirection;
-    private bool jumpQueued; // 점프 명령 대기
+    [SerializeField] private Vector2 moveInput;
+    [SerializeField] private Vector3 moveDirection;
+    [SerializeField] private Vector3 dodgeDirection;
 
     private Animator animator;
     private Rigidbody rb;
+    private GameObject nearObj;
 
     void Awake()
     {
@@ -31,16 +32,16 @@ public class Player : MonoBehaviour
     void Update()
     {
         animator.SetBool("isRunning", moveDirection != Vector3.zero);
-        animator.SetBool("isWalking", isWalking);
     }
 
     void FixedUpdate()
     {
-        if (jumpQueued)
+        if (isJumpRequested)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);
-            jumpQueued = false;
+            isJumpRequested = false;
         }
+
         moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
 
         if (isDodging)
@@ -64,38 +65,68 @@ public class Player : MonoBehaviour
             isGrounded = true;
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Weapon")
+        {
+            nearObj = other.gameObject;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Weapon")
+        {
+            nearObj = null;
+        }
+    }
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>();
 
+        if (context.started || context.canceled)
+        {
+            moveInput = context.ReadValue<Vector2>();
+        }
     }
-
+    public void OnWalk(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            isWalking = true;
+            animator.SetBool("isWalking", true);
+        }
+    }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed && isGrounded && moveDirection == Vector3.zero && !isDodging)
+        if (context.started && isGrounded && !isDodging)
         {
-            //rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-            jumpQueued = true;
-            isGrounded = false;
-            animator.SetTrigger("doJump");
-            animator.SetBool("isJumping", true);
-        }
-        if (context.performed && isGrounded && moveDirection != Vector3.zero && !isDodging)
-        {
-            dodgeDirection = moveDirection;
-            currentSpeed *= 2;
-            animator.SetTrigger("doDodge");
-            isDodging = true;
+            if (moveDirection == Vector3.zero)
+            {
+                isJumpRequested = true;
+                animator.SetTrigger("doJump");
 
-            Invoke("DodgeEnd", 0.5f);///////////
+                isGrounded = false;
+                animator.SetBool("isJumping", true);
+            }
+            else
+            {
+                dodgeDirection = moveDirection;
+                currentSpeed *= 2;
+                isDodging = true;
+                animator.SetTrigger("doDodge");
+
+                Invoke("DodgeEnd", 0.5f);///////////
+            }
+        }
+    }
+    public void OnInteraction(InputAction.CallbackContext context)
+    {
+        if (context.started && nearObj != null && !isGrounded)
+        {
+
         }
     }
     public void OnDodge(InputAction.CallbackContext context)
     {
-    }
-    public void OnWalk(InputAction.CallbackContext context)
-    {
-        isWalking = context.performed;
     }
     void DodgeEnd()
     {
