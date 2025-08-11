@@ -10,11 +10,17 @@ public class Player : MonoBehaviour
     [SerializeField] private float currentSpeed;
     [SerializeField] private float jumpPower;
 
-
+    private bool isRunning;
     private bool isWalking;
     private bool isJumpRequested;
-    private bool isGrounded;
+    private bool isJumping;
     private bool isDodging;
+    private static readonly int isRunningHash = Animator.StringToHash("isRunning");
+    private static readonly int isWalkingHash = Animator.StringToHash("isWalking");
+    private static readonly int isJumpingHash = Animator.StringToHash("isJumping");
+    private static readonly int doJumpHash = Animator.StringToHash("doJump");
+    private static readonly int doDodgeHash = Animator.StringToHash("doDodge");
+
     [SerializeField] private Vector2 moveInput;
     [SerializeField] private Vector3 moveDirection;
     [SerializeField] private Vector3 dodgeDirection;
@@ -31,7 +37,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        animator.SetBool("isRunning", moveDirection != Vector3.zero);
+        animator.SetBool(isRunningHash, isRunning);
     }
 
     void FixedUpdate()
@@ -42,18 +48,18 @@ public class Player : MonoBehaviour
             isJumpRequested = false;
         }
 
+        currentSpeed = isWalking ? walkSpeed : runSpeed;
+
         moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
 
         if (isDodging)
         {
-            moveDirection = dodgeDirection;
+            rb.velocity = new Vector3(dodgeDirection.x * currentSpeed, rb.velocity.y, dodgeDirection.z * currentSpeed);
+            transform.LookAt(transform.position + dodgeDirection);
         }
-        currentSpeed = isWalking ? walkSpeed : runSpeed;
-
-        rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
-
-        if (moveDirection != Vector3.zero)
+        else
         {
+            rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
             transform.LookAt(transform.position + moveDirection);
         }
     }
@@ -61,8 +67,8 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            animator.SetBool("isJumping", false);
-            isGrounded = true;
+            isJumping = false;
+            animator.SetBool(isJumpingHash, isJumping);
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -81,38 +87,50 @@ public class Player : MonoBehaviour
     }
     public void OnMove(InputAction.CallbackContext context)
     {
-
-        if (context.started || context.canceled)
+        if (context.performed)
         {
+            isRunning = true;
             moveInput = context.ReadValue<Vector2>();
         }
+        if (context.canceled)
+        {
+            isRunning = false;
+            moveInput = context.ReadValue<Vector2>();
+        }
+
     }
     public void OnWalk(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             isWalking = true;
-            animator.SetBool("isWalking", true);
+            animator.SetBool(isWalkingHash, isWalking);
+        }
+        else if (context.canceled)
+        {
+            isWalking = false;
+            animator.SetBool(isWalkingHash, isWalking);
         }
     }
+
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && isGrounded && !isDodging)
+        if (context.started && !isJumping && !isDodging)
         {
-            if (moveDirection == Vector3.zero)
+            if (!isRunning)
             {
                 isJumpRequested = true;
-                animator.SetTrigger("doJump");
+                animator.SetTrigger(doJumpHash);
 
-                isGrounded = false;
-                animator.SetBool("isJumping", true);
+                isJumping = true;
+                animator.SetBool(isJumpingHash, isJumping);
             }
             else
             {
                 dodgeDirection = moveDirection;
                 currentSpeed *= 2;
                 isDodging = true;
-                animator.SetTrigger("doDodge");
+                animator.SetTrigger(doDodgeHash);
 
                 Invoke("DodgeEnd", 0.5f);///////////
             }
@@ -120,13 +138,10 @@ public class Player : MonoBehaviour
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (context.started && nearObj != null && !isGrounded)
+        if (context.started && nearObj != null && isJumping)
         {
 
         }
-    }
-    public void OnDodge(InputAction.CallbackContext context)
-    {
     }
     void DodgeEnd()
     {
