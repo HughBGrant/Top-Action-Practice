@@ -9,11 +9,17 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private float currentSpeed;
     [SerializeField] private float jumpPower;
+    [SerializeField] private GameObject[] weapons;
+    [SerializeField] private bool[] hasWeapons;
+    [SerializeField] private Vector2 moveInput;
+    [SerializeField] private Vector3 moveDirection;
+    [SerializeField] private Vector3 dodgeDirection;
+    [SerializeField] private int currentWeapon;
 
     private bool isRunning;
     private bool isWalking;
-    private bool isJumpRequested;
     private bool isJumping;
+    private bool isJumpRequested;
     private bool isDodging;
     private static readonly int isRunningHash = Animator.StringToHash("isRunning");
     private static readonly int isWalkingHash = Animator.StringToHash("isWalking");
@@ -21,9 +27,6 @@ public class Player : MonoBehaviour
     private static readonly int doJumpHash = Animator.StringToHash("doJump");
     private static readonly int doDodgeHash = Animator.StringToHash("doDodge");
 
-    [SerializeField] private Vector2 moveInput;
-    [SerializeField] private Vector3 moveDirection;
-    [SerializeField] private Vector3 dodgeDirection;
 
     private Animator animator;
     private Rigidbody rb;
@@ -136,16 +139,39 @@ public class Player : MonoBehaviour
             }
         }
     }
+    public void OnSwitchWeapon(InputAction.CallbackContext context)
+    {
+        if (context.started && !isJumping && !isDodging)
+        {
+            currentWeapon = Mathf.RoundToInt(context.ReadValue<float>());
+
+            weapons[currentWeapon].SetActive(true);
+        }
+    }
+    public void OnSwitchWeapon1(InputAction.CallbackContext context)
+    {
+    }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (context.started && nearObj != null && isJumping)
+        if (context.started && nearObj != null && !isJumping && !isDodging)
         {
+            if (nearObj.tag == "Weapon")
+            {
+                Item item = nearObj.GetComponent<Item>();
+                int weaponIndex = item.value;
+                hasWeapons[weaponIndex] = true;
 
+                Destroy(nearObj);
+            }
         }
     }
     void DodgeEnd()
     {
         currentSpeed *= 0.5f;
         isDodging = false;
+    }
+    void SelectWeaponByIndex(int weaponId)
+    {
+
     }
 }
