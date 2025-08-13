@@ -351,7 +351,7 @@
                     "id": "99e50318-e83c-479f-b198-ce66ac63abf4",
                     "path": "<Keyboard>/3",
                     "interactions": "",
-                    "processors": "Scale(factor=3)",
+                    "processors": "Scale(factor=2)",
                     "groups": ";Keyboard&Mouse",
                     "action": "SwitchWeapon",
                     "isComposite": false,

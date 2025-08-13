@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector2 moveInput;
     [SerializeField] private Vector3 moveDirection;
     [SerializeField] private Vector3 dodgeDirection;
-    [SerializeField] private int currentWeapon;
+    [SerializeField] private int currentWeaponId;
+    [SerializeField] private GameObject currentWeapon;
 
     private bool isRunning;
     private bool isWalking;
@@ -143,13 +144,14 @@ public class Player : MonoBehaviour
     {
         if (context.started && !isJumping && !isDodging)
         {
-            currentWeapon = Mathf.RoundToInt(context.ReadValue<float>());
-
-            weapons[currentWeapon].SetActive(true);
+            if (currentWeapon != null)
+            {
+                currentWeapon.SetActive(false);
+            }
+            currentWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
+            currentWeapon = weapons[currentWeaponId];
+            currentWeapon.SetActive(true);
         }
-    }
-    public void OnSwitchWeapon1(InputAction.CallbackContext context)
-    {
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
