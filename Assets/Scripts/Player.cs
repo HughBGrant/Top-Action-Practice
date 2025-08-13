@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private float currentSpeed;
     [SerializeField] private float jumpPower;
+
     [SerializeField] private GameObject[] weapons;
     [SerializeField] private bool[] hasWeapons;
     [SerializeField] private Vector2 moveInput;
@@ -22,28 +22,30 @@ public class Player : MonoBehaviour
     private bool isJumping;
     private bool isJumpRequested;
     private bool isDodging;
+    private bool isSwitching;
+
+    private float speedMultiplier = 1f;
+
     private static readonly int isRunningHash = Animator.StringToHash("isRunning");
     private static readonly int isWalkingHash = Animator.StringToHash("isWalking");
     private static readonly int isJumpingHash = Animator.StringToHash("isJumping");
     private static readonly int doJumpHash = Animator.StringToHash("doJump");
     private static readonly int doDodgeHash = Animator.StringToHash("doDodge");
-
+    private static readonly int doSwitchHash = Animator.StringToHash("doSwitch");
+    private static readonly WaitForFixedUpdate waitForFixedUpdate = new WaitForFixedUpdate();
 
     private Animator animator;
     private Rigidbody rb;
     private GameObject nearObj;
+
+    private Coroutine dodgeCo;
+    private Coroutine switchCo;
 
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
     }
-
-    void Update()
-    {
-        animator.SetBool(isRunningHash, isRunning);
-    }
-
     void FixedUpdate()
     {
         if (isJumpRequested)
@@ -51,21 +53,15 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);
             isJumpRequested = false;
         }
-
-        currentSpeed = isWalking ? walkSpeed : runSpeed;
-
         moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
+        currentSpeed = (isWalking ? walkSpeed : runSpeed) * speedMultiplier;
 
         if (isDodging)
         {
-            rb.velocity = new Vector3(dodgeDirection.x * currentSpeed, rb.velocity.y, dodgeDirection.z * currentSpeed);
-            transform.LookAt(transform.position + dodgeDirection);
+            moveDirection = dodgeDirection;
         }
-        else
-        {
-            rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
-            transform.LookAt(transform.position + moveDirection);
-        }
+        rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
+        transform.LookAt(transform.position + moveDirection);
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -91,30 +87,13 @@ public class Player : MonoBehaviour
     }
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            isRunning = true;
-            moveInput = context.ReadValue<Vector2>();
-        }
-        if (context.canceled)
-        {
-            isRunning = false;
-            moveInput = context.ReadValue<Vector2>();
-        }
-
+        moveInput = context.ReadValue<Vector2>();
+        animator.SetBool(isRunningHash, isRunning);
     }
     public void OnWalk(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            isWalking = true;
-            animator.SetBool(isWalkingHash, isWalking);
-        }
-        else if (context.canceled)
-        {
-            isWalking = false;
-            animator.SetBool(isWalkingHash, isWalking);
-        }
+        isWalking = context.ReadValueAsButton();
+        animator.SetBool(isWalkingHash, isWalking);
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -132,11 +111,13 @@ public class Player : MonoBehaviour
             else
             {
                 dodgeDirection = moveDirection;
-                currentSpeed *= 2;
-                isDodging = true;
                 animator.SetTrigger(doDodgeHash);
 
-                Invoke("DodgeEnd", 0.5f);///////////
+                if (dodgeCo != null)
+                {
+                    StopCoroutine(dodgeCo);
+                }
+                dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
             }
         }
     }
@@ -149,8 +130,15 @@ public class Player : MonoBehaviour
                 currentWeapon.SetActive(false);
             }
             currentWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
+
+
             currentWeapon = weapons[currentWeaponId];
+            
             currentWeapon.SetActive(true);
+
+            animator.SetTrigger(doSwitchHash);
+
+            isSwitching = true;
         }
     }
     public void OnInteraction(InputAction.CallbackContext context)
@@ -167,13 +155,31 @@ public class Player : MonoBehaviour
             }
         }
     }
-    void DodgeEnd()
+    private IEnumerator DodgeRoutine(float duration, float multiplier)
+    {
+        isDodging = true;
+
+        // 속도 배수 적용 (겹치는 상황 방지 위해 기존 배수 저장)
+        float prevMultiplier = speedMultiplier;
+        speedMultiplier = multiplier;
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.fixedDeltaTime; // 물리 프레임 기준으로 진행
+            yield return waitForFixedUpdate;
+        }
+
+        // 원복
+        speedMultiplier = prevMultiplier;
+        isDodging = false;
+        dodgeCo = null;
+        //moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
+    }
+
+    void SwitchEnd()
     {
         currentSpeed *= 0.5f;
         isDodging = false;
-    }
-    void SelectWeaponByIndex(int weaponId)
-    {
-
     }
 }
