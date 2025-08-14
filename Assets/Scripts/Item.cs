@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public ItemType type;
-    public int value;
+    public ItemType Type;
+    public int Value;
     
 
     void Update()

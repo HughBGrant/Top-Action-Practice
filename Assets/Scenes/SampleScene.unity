@@ -906,13 +906,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 30, z: -45}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 20, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,8 +925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ecc3fd1c0b2aec44b5328a7e1fe0fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1290166534}
-  offset: {x: 0, y: 8, z: -12}
+  _playerTransform: {fileID: 1290166534}
+  _offset: {x: 0, y: 20, z: -20}
 --- !u!1 &1120976649
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,19 +1077,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e50b00e73f90ea4f8be4c9d336432bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: 15
-  walkSpeed: 7.5
-  currentSpeed: 0
-  jumpPower: 20
-  weapons:
+  _runSpeed: 15
+  _walkSpeed: 10
+  _currentSpeed: 0
+  _jumpPower: 30
+  _weapons:
   - {fileID: 799233087}
   - {fileID: 362308789}
   - {fileID: 1329389789}
-  hasWeapons: 000000
-  moveInput: {x: 0, y: 0}
-  moveDirection: {x: 0, y: 0, z: 0}
-  dodgeDirection: {x: 0, y: 0, z: 0}
-  currentWeapon: 0
+  _hasWeapons: 000000
+  _moveInput: {x: 0, y: 0}
+  _moveDirection: {x: 0, y: 0, z: 0}
+  _dodgeDirection: {x: 0, y: 0, z: 0}
+  _ammo: 0
+  _coin: 0
+  _health: 100
+  _grenadeCount: 0
 --- !u!136 &1290166531
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1138,7 +1141,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &1290166533
 MonoBehaviour:
@@ -1281,7 +1284,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1290166530}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnSwitchWeapon
+        m_MethodName: OnSwapWeapon
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

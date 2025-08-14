@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] Transform target;
-    [SerializeField] Vector3 offset;
+    [SerializeField] private Transform _playerTransform;
+    [SerializeField] private Vector3 _offset;
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = target.position + offset;
+        transform.position = _playerTransform.position + _offset;
     }
 }

@@ -4,182 +4,247 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float runSpeed;
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private float currentSpeed;
-    [SerializeField] private float jumpPower;
+    [SerializeField] private float _runSpeed;
+    [SerializeField] private float _walkSpeed;
+    [SerializeField] private float _currentSpeed;
+    [SerializeField] private float _jumpPower;
 
-    [SerializeField] private GameObject[] weapons;
-    [SerializeField] private bool[] hasWeapons;
-    [SerializeField] private Vector2 moveInput;
-    [SerializeField] private Vector3 moveDirection;
-    [SerializeField] private Vector3 dodgeDirection;
-    [SerializeField] private int currentWeaponId;
-    [SerializeField] private GameObject currentWeapon;
+    [SerializeField] private GameObject[] _weapons;
+    [SerializeField] private bool[] _hasWeapons;
+    [SerializeField] private Vector2 _moveInput;
+    [SerializeField] private Vector3 _moveDirection;
+    [SerializeField] private Vector3 _dodgeDirection;
 
-    private bool isRunning;
-    private bool isWalking;
-    private bool isJumping;
-    private bool isJumpRequested;
-    private bool isDodging;
-    private bool isSwitching;
+    private bool _isRunning;
+    private bool _isWalking;
+    private bool _isJumping;
+    private bool _isJumpRequested;
+    private bool _isDodging;
+    private bool _isSwapping;
 
-    private float speedMultiplier = 1f;
+    private int _currentWeaponId = -1;
+    private GameObject _currentWeapon;
+    private float _speedMultiplier = 1f;
+    [SerializeField] private int _ammo;
+    [SerializeField] private int _coin;
+    [SerializeField] private int _health = 100;
+    [SerializeField] private int _grenadeCount;
 
-    private static readonly int isRunningHash = Animator.StringToHash("isRunning");
-    private static readonly int isWalkingHash = Animator.StringToHash("isWalking");
-    private static readonly int isJumpingHash = Animator.StringToHash("isJumping");
-    private static readonly int doJumpHash = Animator.StringToHash("doJump");
-    private static readonly int doDodgeHash = Animator.StringToHash("doDodge");
-    private static readonly int doSwitchHash = Animator.StringToHash("doSwitch");
-    private static readonly WaitForFixedUpdate waitForFixedUpdate = new WaitForFixedUpdate();
+    private int _maxAmmo = 999;
+    private int _maxCoin = 99999;
+    private int _maxHealth = 100;
+    private int _maxGrenadeCount = 4;
 
-    private Animator animator;
-    private Rigidbody rb;
-    private GameObject nearObj;
 
-    private Coroutine dodgeCo;
-    private Coroutine switchCo;
+
+    private static readonly int _isRunningHash = Animator.StringToHash("isRunning");
+    private static readonly int _isWalkingHash = Animator.StringToHash("isWalking");
+    private static readonly int _isJumpingHash = Animator.StringToHash("isJumping");
+    private static readonly int _doJumpHash = Animator.StringToHash("doJump");
+    private static readonly int _doDodgeHash = Animator.StringToHash("doDodge");
+    private static readonly int _doSwapHash = Animator.StringToHash("doSwap");
+    private static readonly WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
+
+    private Animator _animator;
+    private Rigidbody _rb;
+    private GameObject _nearObj;
+
+    private Coroutine _dodgeCo;
+    private Coroutine _swapCo;
 
     void Awake()
     {
-        animator = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
+        _rb = GetComponent<Rigidbody>();
     }
     void FixedUpdate()
     {
-        if (isJumpRequested)
+        if (_isJumpRequested)
         {
-            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);
-            isJumpRequested = false;
+            _rb.velocity = new Vector3(_rb.velocity.x, _jumpPower, _rb.velocity.z);
+            _isJumpRequested = false;
         }
-        moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
-        currentSpeed = (isWalking ? walkSpeed : runSpeed) * speedMultiplier;
+        _moveDirection = new Vector3(_moveInput.x, 0f, _moveInput.y);
 
-        if (isDodging)
+        if (_isDodging)
         {
-            moveDirection = dodgeDirection;
+            _moveDirection = _dodgeDirection;
         }
-        rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, moveDirection.z * currentSpeed);
-        transform.LookAt(transform.position + moveDirection);
+        if (_isSwapping)
+        {
+            _moveDirection = Vector3.zero;
+        }
+        _currentSpeed = (_isWalking ? _walkSpeed : _runSpeed) * _speedMultiplier;
+        Vector3 moveVector = new Vector3(_moveDirection.x, 0f, _moveDirection.z) * _currentSpeed;
+        _rb.velocity = new Vector3(moveVector.x, _rb.velocity.y, moveVector.z);
+
+        if (!_moveDirection.Equals(Vector3.zero))
+        {
+            transform.LookAt(transform.position + _moveDirection);
+        }
+
+        _isRunning = !_moveDirection.Equals(Vector3.zero);
+        _animator.SetBool(_isRunningHash, _isRunning);
+
+        _animator.SetBool(_isWalkingHash, _isWalking);
+
     }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isJumping = false;
-            animator.SetBool(isJumpingHash, isJumping);
+            _isJumping = false;
+            _animator.SetBool(_isJumpingHash, _isJumping);
         }
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Item")
+        {
+            Item item = other.GetComponent<Item>();
+            switch (item.Type)
+            {
+                case ItemType.Ammo:
+                    _ammo = Mathf.Min(_ammo + item.Value, _maxAmmo);
+                    break;
+                case ItemType.Coin:
+                    _coin = Mathf.Min(_coin + item.Value, _maxCoin);
+                    break;
+                case ItemType.Heart:
+                    _health = Mathf.Min(_health + item.Value, _maxHealth);
+                    break;
+                case ItemType.Grenade:
+                    _grenadeCount = Mathf.Min(_grenadeCount + item.Value, _maxGrenadeCount);
+                    break;
+            }
+            Destroy(other.gameObject);
+        }
+        
+    }
+    private void OnTriggerStay(Collider other)
+    {
         if (other.tag == "Weapon")
         {
-            nearObj = other.gameObject;
+            _nearObj = other.gameObject;
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Weapon")
         {
-            nearObj = null;
+            _nearObj = null;
         }
     }
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>();
-        animator.SetBool(isRunningHash, isRunning);
+        _moveInput = context.ReadValue<Vector2>();
     }
     public void OnWalk(InputAction.CallbackContext context)
     {
-        isWalking = context.ReadValueAsButton();
-        animator.SetBool(isWalkingHash, isWalking);
+        _isWalking = context.ReadValueAsButton();
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started && !isJumping && !isDodging)
+        if (context.started)
         {
-            if (!isRunning)
+            if (_isJumping || _isDodging || _isSwapping) { return; }
+            if (!_isRunning)
             {
-                isJumpRequested = true;
-                animator.SetTrigger(doJumpHash);
+                _isJumpRequested = true;
+                _animator.SetTrigger(_doJumpHash);
 
-                isJumping = true;
-                animator.SetBool(isJumpingHash, isJumping);
+                _isJumping = true;
+                _animator.SetBool(_isJumpingHash, _isJumping);
             }
             else
             {
-                dodgeDirection = moveDirection;
-                animator.SetTrigger(doDodgeHash);
+                _dodgeDirection = _moveDirection;
+                _animator.SetTrigger(_doDodgeHash);
 
-                if (dodgeCo != null)
+                if (_dodgeCo != null)
                 {
-                    StopCoroutine(dodgeCo);
+                    StopCoroutine(_dodgeCo);
                 }
-                dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
+                _dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
             }
         }
     }
-    public void OnSwitchWeapon(InputAction.CallbackContext context)
+    public void OnSwapWeapon(InputAction.CallbackContext context)
     {
-        if (context.started && !isJumping && !isDodging)
+        if (context.started)
         {
-            if (currentWeapon != null)
+            if (_isJumping || _isDodging) { return; }
+            Debug.Log("0");
+            int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
+
+            if (!_hasWeapons[newWeaponId] || newWeaponId == _currentWeaponId) { return; }
+
+            Debug.Log("1");
+            if (_currentWeapon != null)
             {
-                currentWeapon.SetActive(false);
+                _currentWeapon.SetActive(false);
             }
-            currentWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
-
-
-            currentWeapon = weapons[currentWeaponId];
+            _currentWeaponId = newWeaponId;
+            _currentWeapon = _weapons[_currentWeaponId];
             
-            currentWeapon.SetActive(true);
+            _currentWeapon.SetActive(true);
 
-            animator.SetTrigger(doSwitchHash);
+            _animator.SetTrigger(_doSwapHash);
 
-            isSwitching = true;
+            if (_swapCo != null)
+            {
+                StopCoroutine(_swapCo);
+            }
+            _swapCo = StartCoroutine(SwapRoutine(0.5f));
         }
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (context.started && nearObj != null && !isJumping && !isDodging)
+        if (context.started)
         {
-            if (nearObj.tag == "Weapon")
+            if (_nearObj == null || _isJumping || _isDodging) { return; }
+            if (_nearObj.tag == "Weapon")
             {
-                Item item = nearObj.GetComponent<Item>();
-                int weaponIndex = item.value;
-                hasWeapons[weaponIndex] = true;
+                Item item = _nearObj.GetComponent<Item>();
+                _hasWeapons[item.Value] = true;
 
-                Destroy(nearObj);
+                Destroy(_nearObj);
             }
         }
     }
     private IEnumerator DodgeRoutine(float duration, float multiplier)
     {
-        isDodging = true;
-
+        _isDodging = true;
         // 속도 배수 적용 (겹치는 상황 방지 위해 기존 배수 저장)
-        float prevMultiplier = speedMultiplier;
-        speedMultiplier = multiplier;
+        float prevMultiplier = _speedMultiplier;
+        _speedMultiplier = multiplier;
 
         float t = 0f;
         while (t < duration)
         {
             t += Time.fixedDeltaTime; // 물리 프레임 기준으로 진행
-            yield return waitForFixedUpdate;
+            yield return _waitForFixedUpdate;
         }
 
-        // 원복
-        speedMultiplier = prevMultiplier;
-        isDodging = false;
-        dodgeCo = null;
-        //moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
+        _speedMultiplier = prevMultiplier;
+        _dodgeCo = null;
+        _isDodging = false;
     }
 
-    void SwitchEnd()
+    private IEnumerator SwapRoutine(float duration)
     {
-        currentSpeed *= 0.5f;
-        isDodging = false;
+        _isSwapping = true;
+
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.fixedDeltaTime; // 물리 프레임 기준으로 진행
+            yield return _waitForFixedUpdate;
+        }
+
+        _swapCo = null;
+        _isSwapping = false;
     }
 }
