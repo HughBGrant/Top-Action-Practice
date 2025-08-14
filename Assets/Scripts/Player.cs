@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameObject[] _weapons;
     [SerializeField] private bool[] _hasWeapons;
+    [SerializeField] private GameObject[] _grenades;
+    [SerializeField] private int _grenadeCount;
+
     [SerializeField] private Vector2 _moveInput;
     [SerializeField] private Vector3 _moveDirection;
     [SerializeField] private Vector3 _dodgeDirection;
@@ -28,7 +31,6 @@ public class Player : MonoBehaviour
     [SerializeField] private int _ammo;
     [SerializeField] private int _coin;
     [SerializeField] private int _health = 100;
-    [SerializeField] private int _grenadeCount;
 
     private int _maxAmmo = 999;
     private int _maxCoin = 99999;
