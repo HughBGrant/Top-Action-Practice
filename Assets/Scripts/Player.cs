@@ -116,7 +116,10 @@ public class Player : MonoBehaviour
                     _health = Mathf.Min(_health + item.Value, _maxHealth);
                     break;
                 case ItemType.Grenade:
-                    _grenadeCount = Mathf.Min(_grenadeCount + item.Value, _maxGrenadeCount);
+                    if (_grenadeCount == _maxGrenadeCount)
+                        return;
+                    _grenades[_grenadeCount].SetActive(true);
+                    _grenadeCount = _grenadeCount + item.Value;
                     break;
             }
             Destroy(other.gameObject);
