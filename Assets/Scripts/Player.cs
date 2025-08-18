@@ -13,6 +13,10 @@ public class Player : MonoBehaviour
     [SerializeField] private bool[] _hasWeapons;
     [SerializeField] private GameObject[] _grenades;
     [SerializeField] private int _grenadeCount;
+    [SerializeField] private int _ammo;
+    [SerializeField] private int _coin;
+    [SerializeField] private int _health = 100;
+    [SerializeField] private float _attackDelay;
 
     [SerializeField] private Vector2 _moveInput;
     [SerializeField] private Vector3 _moveDirection;
@@ -21,23 +25,19 @@ public class Player : MonoBehaviour
     private bool _isRunning;
     private bool _isWalking;
     private bool _isJumping;
-    private bool _isJumpRequested;
+    private bool _shouldJump;
     private bool _isDodging;
     private bool _isSwapping;
-
-    private int _currentWeaponId = -1;
-    private GameObject _currentWeapon;
-    private float _speedMultiplier = 1f;
-    [SerializeField] private int _ammo;
-    [SerializeField] private int _coin;
-    [SerializeField] private int _health = 100;
+    private bool _isAttacking;
 
     private int _maxAmmo = 999;
     private int _maxCoin = 99999;
     private int _maxHealth = 100;
     private int _maxGrenadeCount = 4;
 
-
+    private int _currentWeaponId = -1;
+    private Weapon _currentWeapon;
+    private float _speedMultiplier = 1f;
 
     private static readonly int _isRunningHash = Animator.StringToHash("isRunning");
     private static readonly int _isWalkingHash = Animator.StringToHash("isWalking");
@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
 
     private Coroutine _dodgeCo;
     private Coroutine _swapCo;
+    private Coroutine _attackCo;
 
     void Awake()
     {
@@ -61,10 +62,10 @@ public class Player : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if (_isJumpRequested)
+        if (_shouldJump)
         {
             _rb.velocity = new Vector3(_rb.velocity.x, _jumpPower, _rb.velocity.z);
-            _isJumpRequested = false;
+            _shouldJump = false;
         }
         _moveDirection = new Vector3(_moveInput.x, 0f, _moveInput.y);
 
@@ -151,76 +152,90 @@ public class Player : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.started)
+        if (!context.started) { return; }
+        if (_isJumping || _isDodging || _isSwapping) { return; }
+        if (!_isRunning)
         {
-            if (_isJumping || _isDodging || _isSwapping) { return; }
-            if (!_isRunning)
-            {
-                _isJumpRequested = true;
-                _animator.SetTrigger(_doJumpHash);
+            _shouldJump = true;
+            _animator.SetTrigger(_doJumpHash);
 
-                _isJumping = true;
-                _animator.SetBool(_isJumpingHash, _isJumping);
-            }
-            else
-            {
-                _dodgeDirection = _moveDirection;
-                _animator.SetTrigger(_doDodgeHash);
-
-                if (_dodgeCo != null)
-                {
-                    StopCoroutine(_dodgeCo);
-                }
-                _dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
-            }
+            _isJumping = true;
+            _animator.SetBool(_isJumpingHash, _isJumping);
         }
+        else
+        {
+            _dodgeDirection = _moveDirection;
+            _animator.SetTrigger(_doDodgeHash);
+
+            if (_dodgeCo != null)
+            {
+                StopCoroutine(_dodgeCo);
+            }
+            _dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
+        }
+        
     }
     public void OnSwapWeapon(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            if (_isJumping || _isDodging) { return; }
-            Debug.Log("0");
-            int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
-
-            if (!_hasWeapons[newWeaponId] || newWeaponId == _currentWeaponId) { return; }
-
-            Debug.Log("1");
-            if (_currentWeapon != null)
-            {
-                _currentWeapon.SetActive(false);
-            }
-            _currentWeaponId = newWeaponId;
-            _currentWeapon = _weapons[_currentWeaponId];
+        if (!context.started) { return; }
+        if (_isJumping || _isDodging) { return; }
             
-            _currentWeapon.SetActive(true);
+        int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
 
-            _animator.SetTrigger(_doSwapHash);
+        if (!_hasWeapons[newWeaponId] || newWeaponId == _currentWeaponId) { return; }
 
-            if (_swapCo != null)
-            {
-                StopCoroutine(_swapCo);
-            }
-            _swapCo = StartCoroutine(SwapRoutine(0.5f));
+        if (_currentWeapon != null)
+        {
+            _currentWeapon.gameObject.SetActive(false);
         }
+        _currentWeaponId = newWeaponId;
+        _currentWeapon = _weapons[_currentWeaponId].GetComponent<Weapon>();
+            
+        _currentWeapon.gameObject.SetActive(true);
+
+        _animator.SetTrigger(_doSwapHash);
+
+        if (_swapCo != null)
+        {
+            StopCoroutine(_swapCo);
+        }
+        _swapCo = StartCoroutine(SwapRoutine(0.5f));
+        
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (context.started)
-        {
-            if (_nearObj == null || _isJumping || _isDodging) { return; }
-            if (_nearObj.tag == "Weapon")
-            {
-                Item item = _nearObj.GetComponent<Item>();
-                _hasWeapons[item.Value] = true;
+        if (!context.started) { return; }
+        if (_nearObj == null) { return; }
+        if (_isJumping || _isDodging) { return; }
 
-                Destroy(_nearObj);
-            }
+        if (_nearObj.tag == "Weapon")
+        {
+            Item item = _nearObj.GetComponent<Item>();
+            _hasWeapons[item.Value] = true;
+
+            Destroy(_nearObj);
         }
+        
+    }
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (context.started) { return; }
+        if (_currentWeapon == null) { return; }
+
+        if (_isAttacking || _isDodging || _isSwapping) { return; }
+
+        _currentWeapon.Use();
+        _animator.SetTrigger("doSwing");
+        if (_attackCo != null)
+        {
+            StopCoroutine(_attackCo);
+        }
+        _attackCo = StartCoroutine(AttackRoutine(_currentWeapon.AttackSpeed));
     }
     private IEnumerator DodgeRoutine(float duration, float multiplier)
     {
         _isDodging = true;
+
         // 속도 배수 적용 (겹치는 상황 방지 위해 기존 배수 저장)
         float prevMultiplier = _speedMultiplier;
         _speedMultiplier = multiplier;
@@ -233,6 +248,7 @@ public class Player : MonoBehaviour
         }
 
         _speedMultiplier = prevMultiplier;
+
         _dodgeCo = null;
         _isDodging = false;
     }
@@ -240,7 +256,6 @@ public class Player : MonoBehaviour
     private IEnumerator SwapRoutine(float duration)
     {
         _isSwapping = true;
-
 
         float t = 0f;
         while (t < duration)
@@ -251,5 +266,14 @@ public class Player : MonoBehaviour
 
         _swapCo = null;
         _isSwapping = false;
+    }
+    private IEnumerator AttackRoutine(float delay)
+    {
+        _isAttacking = true;
+
+        yield return new WaitForSeconds(delay); // 공격 속도만큼 대기
+
+        _attackCo = null;
+        _isAttacking = false;
     }
 }

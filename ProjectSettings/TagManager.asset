@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Weapon
   - Item
+  - Melee
   layers:
   - Default
   - TransparentFX

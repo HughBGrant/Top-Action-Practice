@@ -6,3 +6,8 @@ public enum ItemType
     Heart,
     Weapon
 }
+public enum WeaponType
+{
+    Melee,
+    Range
+}
