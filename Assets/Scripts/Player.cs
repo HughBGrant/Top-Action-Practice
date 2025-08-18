@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
         {
             _moveDirection = _dodgeDirection;
         }
-        if (_isSwapping)
+        if (_isSwapping || _isAttacking)
         {
             _moveDirection = Vector3.zero;
         }

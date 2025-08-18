@@ -7,7 +7,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private WeaponType _weaponType;
     [SerializeField] private int _damage;
     public float AttackSpeed;
-    [SerializeField] private BoxCollider _meleeRange;
+    private BoxCollider _meleeRange;
     [SerializeField] private TrailRenderer _trailEffect;
 
     private static readonly WaitForSeconds _waitForSeconds01 = new WaitForSeconds(0.1f);
@@ -18,8 +18,7 @@ public class Weapon : MonoBehaviour
 
     private void Awake()
     {
-        //_meleeRange = GetComponent<BoxCollider>();
-        //_trailEffect = GetComponent<TrailRenderer>();
+        _meleeRange = GetComponent<BoxCollider>();
     }
     public void Use()
     {
