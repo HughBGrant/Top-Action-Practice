@@ -169,6 +169,7 @@ public class Player : MonoBehaviour
             if (_dodgeCo != null)
             {
                 StopCoroutine(_dodgeCo);
+                _dodgeCo = null;
             }
             _dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
         }
@@ -217,18 +218,27 @@ public class Player : MonoBehaviour
     }
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (!context.started) { return; }
-        if (_currentWeapon == null) { return; }
-
-        if (_isAttacking || _isDodging || _isSwapping) { return; }
-
-        _currentWeapon.Use();
-        _animator.SetTrigger(_currentWeapon.WeaponType == WeaponType.Melee ? "doSwing" : "doShot");
-        if (_attackCo != null)
+        if (context.performed)
         {
-            StopCoroutine(_attackCo);
+            _isAttackHeld = true;
+
+            // 이미 루틴이 돌고 있지 않으면 시작
+            if (_attackCo == null)
+            {
+                _attackCo = StartCoroutine(AttackRoutine());
+            }
         }
-        _attackCo = StartCoroutine(AttackRoutine(_currentWeapon.AttackSpeed));
+        else if (context.canceled)
+        {
+            _isAttackHeld = false;
+
+            // 즉시 정지
+            if (_attackCo != null)
+            {
+                StopCoroutine(_attackCo);
+                _attackCo = null;
+            }
+        }
     }
     private IEnumerator DodgeRoutine(float duration, float multiplier)
     {
@@ -265,13 +275,25 @@ public class Player : MonoBehaviour
         _swapCo = null;
         _isSwapping = false;
     }
-    private IEnumerator AttackRoutine(float delay)
+    private IEnumerator AttackRoutine()
     {
         _isAttacking = true;
 
-        yield return new WaitForSeconds(delay); // 공격 속도만큼 대기
+        while (_isAttackHeld)
+        {
+            if (_currentWeapon != null && !_isDodging && !_isSwapping)
+            {
+                _currentWeapon.Use();
+                _animator.SetTrigger(_currentWeapon.WeaponType == WeaponType.Melee ? "doSwing" : "doShot");
+
+                yield return new WaitForSeconds(_currentWeapon.AttackSpeed);
+                continue;
+            }
+            yield return null;
+        }
+
+        _isAttacking = false;
 
         _attackCo = null;
-        _isAttacking = false;
     }
 }
