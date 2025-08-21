@@ -169,6 +169,7 @@ public class Player : MonoBehaviour
             if (_dodgeCo != null)
             {
                 StopCoroutine(_dodgeCo);
+                _isDodging = false;
                 _dodgeCo = null;
             }
             _dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
@@ -198,6 +199,8 @@ public class Player : MonoBehaviour
         if (_swapCo != null)
         {
             StopCoroutine(_swapCo);
+            _isSwapping = false;
+            _swapCo = null;
         }
         _swapCo = StartCoroutine(SwapRoutine(0.5f));
         
@@ -236,6 +239,7 @@ public class Player : MonoBehaviour
             if (_attackCo != null)
             {
                 StopCoroutine(_attackCo);
+                _isAttacking = false;
                 _attackCo = null;
             }
         }
@@ -256,9 +260,8 @@ public class Player : MonoBehaviour
         }
 
         _speedMultiplier = prevMultiplier;
-
-        _dodgeCo = null;
         _isDodging = false;
+        _dodgeCo = null;
     }
 
     private IEnumerator SwapRoutine(float duration)
@@ -272,8 +275,8 @@ public class Player : MonoBehaviour
             yield return _waitForFixedUpdate;
         }
 
-        _swapCo = null;
         _isSwapping = false;
+        _swapCo = null;
     }
     private IEnumerator AttackRoutine()
     {
@@ -293,7 +296,6 @@ public class Player : MonoBehaviour
         }
 
         _isAttacking = false;
-
         _attackCo = null;
     }
 }
