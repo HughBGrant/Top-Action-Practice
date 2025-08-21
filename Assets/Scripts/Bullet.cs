@@ -8,11 +8,11 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Floor")
+        if (collision.gameObject.CompareTag(Tags.Floor))
         {
             Destroy(gameObject, 3);
         }
-        else if (collision.gameObject.tag == "Wall")
+        else if (collision.gameObject.CompareTag(Tags.Wall))
         {
             Destroy(gameObject);
         }

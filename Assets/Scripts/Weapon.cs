@@ -1,28 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] private WeaponType _weaponType;
     [SerializeField] private int _damage;
-    public float AttackSpeed;
-    private BoxCollider _meleeRange;
+    [SerializeField] private BoxCollider _meleeRange;
     [SerializeField] private TrailRenderer _trailEffect;
-
-    private static readonly WaitForSeconds _waitForSeconds01 = new WaitForSeconds(0.1f);
-    private static readonly WaitForSeconds _waitForSeconds03 = new WaitForSeconds(0.3f);
+    [SerializeField] private Transform _firePoint;
+    [SerializeField] private GameObject _bullet;
+    [SerializeField] private Transform _ejectPoint;
+    [SerializeField] private GameObject _casing;
 
 
     private Coroutine _swingCo;
 
+
+    [SerializeField] private float _attackSpeed;
+    public float AttackSpeed { get => _attackSpeed; }
+
+    [SerializeField] private WeaponType _weaponType;
+    public WeaponType WeaponType { get => _weaponType; }
+
+    private static readonly WaitForSeconds _waitForSeconds01 = new WaitForSeconds(0.1f);
+    private static readonly WaitForSeconds _waitForSeconds03 = new WaitForSeconds(0.3f);
     private void Awake()
     {
-        _meleeRange = GetComponent<BoxCollider>();
     }
     public void Use()
     {
-        if (_weaponType == WeaponType.Melee)
+        if (WeaponType == WeaponType.Melee)
         {
             if (_swingCo != null)
             {

@@ -122,11 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &65670799 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4904821307653703414, guid: 2b8a94b2ece96504d8009f2b2f523114, type: 3}
-  m_PrefabInstance: {fileID: 8817995001968187659}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &83008190 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}
@@ -270,6 +265,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &198873681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 198873682}
+  m_Layer: 0
+  m_Name: EjectPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &198873682
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198873681}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.000000063329935, y: -0.000000113621354, z: -0.000000059604645, w: 1}
+  m_LocalPosition: {x: 0, y: 0.85, z: -0.15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1329389790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &242702906
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,7 +445,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2285952976136801637, guid: a2e051660762cbe4494c17a095a95e10, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 545756592}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1509416925549156319, guid: a2e051660762cbe4494c17a095a95e10, type: 3}
       insertIndex: -1
@@ -447,10 +476,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06710322534c17d49b493b00d47131ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponType: 0
   _damage: 0
-  AttackSpeed: 0
+  _meleeRange: {fileID: 0}
   _trailEffect: {fileID: 0}
+  _firePoint: {fileID: 1673774121}
+  _bullet: {fileID: 7189803251394478203, guid: fd6e6218879737c4b83eee070c88c519, type: 3}
+  _ejectPoint: {fileID: 545756592}
+  _casing: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
+  _attackSpeed: 0.4
+  _weaponType: 1
 --- !u!1 &387175634
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,6 +633,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 883724508928496280, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
   m_PrefabInstance: {fileID: 1566877316}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &545756591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 545756592}
+  m_Layer: 0
+  m_Name: EjectPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &545756592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 545756591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.85, z: -0.15}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 362308790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &622605787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1039,10 +1104,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06710322534c17d49b493b00d47131ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponType: 0
   _damage: 25
-  AttackSpeed: 0.4
+  _meleeRange: {fileID: 799233089}
   _trailEffect: {fileID: 1678683728}
+  _firePoint: {fileID: 0}
+  _bullet: {fileID: 0}
+  _ejectPoint: {fileID: 0}
+  _casing: {fileID: 0}
+  _attackSpeed: 0.4
+  _weaponType: 0
 --- !u!1 &852288990 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}
@@ -1803,10 +1873,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06710322534c17d49b493b00d47131ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _weaponType: 0
   _damage: 0
-  AttackSpeed: 0
+  _meleeRange: {fileID: 0}
   _trailEffect: {fileID: 0}
+  _firePoint: {fileID: 1673774121}
+  _bullet: {fileID: 3266974850389035250, guid: 9be37de3ba72ee34eb5df79901133c8d, type: 3}
+  _ejectPoint: {fileID: 198873682}
+  _casing: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
+  _attackSpeed: 0.15
+  _weaponType: 1
 --- !u!1 &1344738193
 GameObject:
   m_ObjectHideFlags: 0
@@ -1836,7 +1911,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 65670799}
   - {fileID: 1981895256}
   - {fileID: 114765645}
   - {fileID: 1605865718}
@@ -11660,7 +11734,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 547435428816858648, guid: 203326381d9b54d489646c6c2f61f53a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 924136447322616994, guid: 203326381d9b54d489646c6c2f61f53a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11704,7 +11778,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 924136447322616994, guid: 203326381d9b54d489646c6c2f61f53a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 198873682}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 547435428816858648, guid: 203326381d9b54d489646c6c2f61f53a, type: 3}
       insertIndex: -1
@@ -11983,6 +12060,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5903297864969995812, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1829115799}
+    - targetCorrespondingSourceObject: {fileID: 5903297864969995812, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1673774121}
     - targetCorrespondingSourceObject: {fileID: 883724508928496280, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 242702907}
@@ -12166,6 +12246,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7401683855934008590, guid: d9c8d49f366ee11418fc1e788f7eeb2a, type: 3}
   m_PrefabInstance: {fileID: 6463297770298721034}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1673774120
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1673774121}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1673774121
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673774120}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 2.5, z: 1.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1290166534}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1678683726
 GameObject:
   m_ObjectHideFlags: 0
@@ -22966,7 +23077,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1344738194}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 987838822247679152, guid: 2b8a94b2ece96504d8009f2b2f523114, type: 3}
       propertyPath: m_IsActive
@@ -23029,6 +23140,7 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 1911193709}
   - {fileID: 1566877316}
+  - {fileID: 8817995001968187659}
   - {fileID: 6203073549854923260}
   - {fileID: 5482718616130131307}
   - {fileID: 1344738194}

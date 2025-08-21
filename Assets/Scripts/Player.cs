@@ -39,13 +39,7 @@ public class Player : MonoBehaviour
     private Weapon _currentWeapon;
     private float _speedMultiplier = 1f;
 
-    private static readonly int _isRunningHash = Animator.StringToHash("isRunning");
-    private static readonly int _isWalkingHash = Animator.StringToHash("isWalking");
-    private static readonly int _isJumpingHash = Animator.StringToHash("isJumping");
-    private static readonly int _doJumpHash = Animator.StringToHash("doJump");
-    private static readonly int _doDodgeHash = Animator.StringToHash("doDodge");
-    private static readonly int _doSwapHash = Animator.StringToHash("doSwap");
-    private static readonly WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
+
 
     private Animator _animator;
     private Rigidbody _rb;
@@ -55,6 +49,13 @@ public class Player : MonoBehaviour
     private Coroutine _swapCo;
     private Coroutine _attackCo;
 
+    private static readonly int _isRunningHash = Animator.StringToHash("isRunning");
+    private static readonly int _isWalkingHash = Animator.StringToHash("isWalking");
+    private static readonly int _isJumpingHash = Animator.StringToHash("isJumping");
+    private static readonly int _doJumpHash = Animator.StringToHash("doJump");
+    private static readonly int _doDodgeHash = Animator.StringToHash("doDodge");
+    private static readonly int _doSwapHash = Animator.StringToHash("doSwap");
+    private static readonly WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
     void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
@@ -94,7 +95,7 @@ public class Player : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(Tags.Ground))
         {
             _isJumping = false;
             _animator.SetBool(_isJumpingHash, _isJumping);
@@ -102,7 +103,7 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Item")
+        if (other.CompareTag(Tags.Item))
         {
             Item item = other.GetComponent<Item>();
             switch (item.Type)
@@ -129,14 +130,14 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Weapon")
+        if (other.CompareTag(Tags.Weapon))
         {
             _nearObj = other.gameObject;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Weapon")
+        if (other.CompareTag(Tags.Weapon))
         {
             _nearObj = null;
         }
@@ -208,7 +209,7 @@ public class Player : MonoBehaviour
         if (_nearObj == null) { return; }
         if (_isJumping || _isDodging) { return; }
 
-        if (_nearObj.tag == "Weapon")
+        if (_nearObj.CompareTag(Tags.Weapon))
         {
             Item item = _nearObj.GetComponent<Item>();
             _hasWeapons[item.Value] = true;
@@ -225,7 +226,7 @@ public class Player : MonoBehaviour
         if (_isAttacking || _isDodging || _isSwapping) { return; }
 
         _currentWeapon.Use();
-        _animator.SetTrigger("doSwing");
+        _animator.SetTrigger(_currentWeapon.WeaponType == WeaponType.Melee ? "doSwing" : "doShot");
         if (_attackCo != null)
         {
             StopCoroutine(_attackCo);
