@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     private bool _isDodging;
     private bool _isSwapping;
     private bool _isAttacking;
+    private bool _isAttackHeld;
 
     private int _maxAmmo = 999;
     private int _maxCoin = 99999;
@@ -38,8 +39,6 @@ public class Player : MonoBehaviour
     private int _currentWeaponId = -1;
     private Weapon _currentWeapon;
     private float _speedMultiplier = 1f;
-
-
 
     private Animator _animator;
     private Rigidbody _rb;
@@ -150,7 +149,6 @@ public class Player : MonoBehaviour
     {
         _isWalking = context.ReadValueAsButton();
     }
-
     public void OnJump(InputAction.CallbackContext context)
     {
         if (!context.started) { return; }
@@ -216,11 +214,10 @@ public class Player : MonoBehaviour
 
             Destroy(_nearObj);
         }
-        
     }
-    public void OnFire(InputAction.CallbackContext context)
+    public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started) { return; }
+        if (!context.started) { return; }
         if (_currentWeapon == null) { return; }
 
         if (_isAttacking || _isDodging || _isSwapping) { return; }

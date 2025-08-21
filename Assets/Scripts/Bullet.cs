@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag(Tags.Floor))
+        if (collision.gameObject.CompareTag(Tags.Ground))
         {
             Destroy(gameObject, 3);
         }
