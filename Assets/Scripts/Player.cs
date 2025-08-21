@@ -37,11 +37,13 @@ public class Player : MonoBehaviour
     private int _maxGrenadeCount = 4;
 
     private int _currentWeaponId = -1;
-    private Weapon _currentWeapon;
+    private float _preDodgeSpeedMultiplier = 1f;
     private float _speedMultiplier = 1f;
 
     private Animator _animator;
     private Rigidbody _rb;
+
+    private Weapon _currentWeapon;
     private GameObject _nearObj;
 
     private Coroutine _dodgeCo;
@@ -169,6 +171,7 @@ public class Player : MonoBehaviour
             if (_dodgeCo != null)
             {
                 StopCoroutine(_dodgeCo);
+                _speedMultiplier = _preDodgeSpeedMultiplier;
                 _isDodging = false;
                 _dodgeCo = null;
             }
@@ -249,7 +252,7 @@ public class Player : MonoBehaviour
         _isDodging = true;
 
         // 속도 배수 적용 (겹치는 상황 방지 위해 기존 배수 저장)
-        float prevMultiplier = _speedMultiplier;
+        _preDodgeSpeedMultiplier = _speedMultiplier;
         _speedMultiplier = multiplier;
 
         float t = 0f;
@@ -259,7 +262,7 @@ public class Player : MonoBehaviour
             yield return _waitForFixedUpdate;
         }
 
-        _speedMultiplier = prevMultiplier;
+        _speedMultiplier = _preDodgeSpeedMultiplier;
         _isDodging = false;
         _dodgeCo = null;
     }
