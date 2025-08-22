@@ -9,5 +9,5 @@ public enum ItemType
 public enum WeaponType
 {
     Melee,
-    Range
+    Ranged
 }

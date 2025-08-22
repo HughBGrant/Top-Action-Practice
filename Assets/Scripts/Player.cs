@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
     [SerializeField] private int _ammo;
     [SerializeField] private int _coin;
     [SerializeField] private int _health = 100;
-    [SerializeField] private float _attackDelay;
 
     [SerializeField] private Vector2 _moveInput;
     [SerializeField] private Vector3 _moveDirection;
@@ -56,6 +55,8 @@ public class Player : MonoBehaviour
     private static readonly int _doJumpHash = Animator.StringToHash("doJump");
     private static readonly int _doDodgeHash = Animator.StringToHash("doDodge");
     private static readonly int _doSwapHash = Animator.StringToHash("doSwap");
+    private static readonly int _doShotHash = Animator.StringToHash("doShot");
+    private static readonly int _doSwingHash = Animator.StringToHash("doSwing");
     private static readonly WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
     void Awake()
     {
@@ -83,16 +84,14 @@ public class Player : MonoBehaviour
         Vector3 moveVector = new Vector3(_moveDirection.x, 0f, _moveDirection.z) * _currentSpeed;
         _rb.velocity = new Vector3(moveVector.x, _rb.velocity.y, moveVector.z);
 
-        if (!_moveDirection.Equals(Vector3.zero))
+        if (_moveDirection.sqrMagnitude > 0.0001f)
         {
             transform.LookAt(transform.position + _moveDirection);
         }
-
-        _isRunning = !_moveDirection.Equals(Vector3.zero);
+        _isRunning = _moveDirection.sqrMagnitude > 0.0001f;
         _animator.SetBool(_isRunningHash, _isRunning);
 
         _animator.SetBool(_isWalkingHash, _isWalking);
-
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -171,13 +170,10 @@ public class Player : MonoBehaviour
             if (_dodgeCo != null)
             {
                 StopCoroutine(_dodgeCo);
-                _speedMultiplier = _preDodgeSpeedMultiplier;
-                _isDodging = false;
-                _dodgeCo = null;
+                EndDodge();
             }
             _dodgeCo = StartCoroutine(DodgeRoutine(0.5f, 2f));
         }
-        
     }
     public void OnSwapWeapon(InputAction.CallbackContext context)
     {
@@ -202,8 +198,7 @@ public class Player : MonoBehaviour
         if (_swapCo != null)
         {
             StopCoroutine(_swapCo);
-            _isSwapping = false;
-            _swapCo = null;
+            EndSwap();
         }
         _swapCo = StartCoroutine(SwapRoutine(0.5f));
         
@@ -242,8 +237,7 @@ public class Player : MonoBehaviour
             if (_attackCo != null)
             {
                 StopCoroutine(_attackCo);
-                _isAttacking = false;
-                _attackCo = null;
+                EndAttack();
             }
         }
     }
@@ -261,12 +255,14 @@ public class Player : MonoBehaviour
             t += Time.fixedDeltaTime; // 물리 프레임 기준으로 진행
             yield return _waitForFixedUpdate;
         }
-
+        EndDodge();
+    }
+    private void EndDodge()
+    {
         _speedMultiplier = _preDodgeSpeedMultiplier;
         _isDodging = false;
         _dodgeCo = null;
     }
-
     private IEnumerator SwapRoutine(float duration)
     {
         _isSwapping = true;
@@ -277,7 +273,10 @@ public class Player : MonoBehaviour
             t += Time.fixedDeltaTime; // 물리 프레임 기준으로 진행
             yield return _waitForFixedUpdate;
         }
-
+        EndSwap();
+    }
+    private void EndSwap()
+    {
         _isSwapping = false;
         _swapCo = null;
     }
@@ -290,15 +289,19 @@ public class Player : MonoBehaviour
             if (_currentWeapon != null && !_isDodging && !_isSwapping)
             {
                 _currentWeapon.Use();
-                _animator.SetTrigger(_currentWeapon.WeaponType == WeaponType.Melee ? "doSwing" : "doShot");
+                _animator.SetTrigger(_currentWeapon.WeaponType == WeaponType.Melee ? _doSwingHash : _doShotHash);
 
                 yield return new WaitForSeconds(_currentWeapon.AttackSpeed);
                 continue;
             }
             yield return null;
         }
-
+        EndAttack();
+    }
+    private void EndAttack()
+    {
         _isAttacking = false;
         _attackCo = null;
+
     }
 }

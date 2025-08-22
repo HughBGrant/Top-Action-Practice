@@ -39,7 +39,7 @@ public class Weapon : MonoBehaviour
             }
             _swingCo = StartCoroutine(SwingRoutine());
         }
-        else if (WeaponType == WeaponType.Range)
+        else if (WeaponType == WeaponType.Ranged)
         {
             if (_shotCo != null)
             {
@@ -48,6 +48,7 @@ public class Weapon : MonoBehaviour
             _shotCo = StartCoroutine(ShotRoutine());
         }
     }
+
     IEnumerator SwingRoutine()
     {
         yield return _waitForSeconds01;
@@ -64,13 +65,13 @@ public class Weapon : MonoBehaviour
     {
         GameObject bulletInstant = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
         Rigidbody bulletRb = bulletInstant.GetComponent<Rigidbody>();
-        bulletRb.velocity = _firePoint.forward * 50;
+        bulletRb.velocity = _firePoint.forward * 50;/////////////////
         yield return null;
 
         GameObject casingInstant = Instantiate(_casingPrefab, _ejectPoint.position, _ejectPoint.rotation);
         Rigidbody casingRb = casingInstant.GetComponent<Rigidbody>();
-        Vector3 casingVec = _ejectPoint.forward * Random.Range(-4, -1) + Vector3.up * Random.Range(1, 4);
+        Vector3 casingVec = _ejectPoint.forward * -Random.Range(1, 4) + Vector3.up * Random.Range(1, 4);
         casingRb.AddForce(casingVec, ForceMode.Impulse);
-        casingRb.AddTorque(Vector3.up * 10, ForceMode.Impulse);
+        casingRb.AddTorque(Vector3.up * 10, ForceMode.Impulse);////////////
     }
 }
