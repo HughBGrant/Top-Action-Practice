@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private Animator _animator;
     private Rigidbody _rb;
 
-    private Weapon _currentWeapon;
+    private WeaponBase _currentWeapon;
     private GameObject _nearObj;
 
     private Coroutine _dodgeCo;
@@ -55,8 +55,6 @@ public class Player : MonoBehaviour
     private static readonly int _doJumpHash = Animator.StringToHash("doJump");
     private static readonly int _doDodgeHash = Animator.StringToHash("doDodge");
     private static readonly int _doSwapHash = Animator.StringToHash("doSwap");
-    private static readonly int _doShotHash = Animator.StringToHash("doShot");
-    private static readonly int _doSwingHash = Animator.StringToHash("doSwing");
     private static readonly WaitForFixedUpdate _waitForFixedUpdate = new WaitForFixedUpdate();
     void Awake()
     {
@@ -189,7 +187,7 @@ public class Player : MonoBehaviour
             _currentWeapon.gameObject.SetActive(false);
         }
         _currentWeaponId = newWeaponId;
-        _currentWeapon = _weapons[_currentWeaponId].GetComponent<Weapon>();
+        _currentWeapon = _weapons[_currentWeaponId].GetComponent<WeaponBase>();
             
         _currentWeapon.gameObject.SetActive(true);
 
@@ -289,7 +287,7 @@ public class Player : MonoBehaviour
             if (_currentWeapon != null && !_isDodging && !_isSwapping)
             {
                 _currentWeapon.Use();
-                _animator.SetTrigger(_currentWeapon.WeaponType == WeaponType.Melee ? _doSwingHash : _doShotHash);
+                _animator.SetTrigger(_currentWeapon.doAttackHash);
 
                 yield return new WaitForSeconds(_currentWeapon.AttackSpeed);
                 continue;

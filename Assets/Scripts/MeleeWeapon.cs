@@ -1,29 +1,41 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MeleeWeapon : WeaponBase
 {
-    [SerializeField] BoxCollider _meleeRange;
-    [SerializeField] TrailRenderer _trail;
-    static readonly WaitForSeconds W01 = new(0.1f);
-    static readonly WaitForSeconds W03 = new(0.3f);
+    [SerializeField] private int _damage;
+    [SerializeField] private BoxCollider _meleeRange;
+    [SerializeField] private TrailRenderer _trailEffect;
 
-    protected override void PerformAttack()
+    private Coroutine _swingCo;
+    public override int doAttackHash => _doSwingHash;
+    private static readonly int _doSwingHash = Animator.StringToHash("doSwing");
+
+    private static readonly WaitForSeconds _wait01 = new WaitForSeconds(0.1f);
+    private static readonly WaitForSeconds _wait03 = new WaitForSeconds(0.3f);
+    private void Awake()
     {
-        StartCoroutine(Swing());
+        //_meleeRange = GetComponent<BoxCollider>();
+    }
+    public override void Use()
+    {
+        if (_swingCo != null)
+        {
+            StopCoroutine(_swingCo);
+        }
+        _swingCo = StartCoroutine(SwingRoutine());
     }
 
-    IEnumerator Swing()
+    private IEnumerator SwingRoutine()
     {
-        yield return W01;
+        yield return _wait01;
         _meleeRange.enabled = true;
-        _trail.enabled = true;
+        _trailEffect.enabled = true;
 
-        yield return W03;
+        yield return _wait03;
         _meleeRange.enabled = false;
 
-        yield return W03;
-        _trail.enabled = false;
+        yield return _wait03;
+        _trailEffect.enabled = false;
     }
 }

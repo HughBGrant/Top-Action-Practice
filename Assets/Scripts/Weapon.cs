@@ -26,9 +26,6 @@ public class Weapon : MonoBehaviour
 
     private static readonly WaitForSeconds _waitForSeconds01 = new WaitForSeconds(0.1f);
     private static readonly WaitForSeconds _waitForSeconds03 = new WaitForSeconds(0.3f);
-    private void Awake()
-    {
-    }
     public void Use()
     {
         if (WeaponType == WeaponType.Melee)
