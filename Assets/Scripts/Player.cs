@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     private int _currentWeaponId = -1;
     private float _preDodgeSpeedMultiplier = 1f;
     private float _speedMultiplier = 1f;
+    private float _nextAttackTime;
 
     private Animator _animator;
     private Rigidbody _rb;
@@ -230,13 +231,6 @@ public class Player : MonoBehaviour
         else if (context.canceled)
         {
             _isAttackHeld = false;
-
-            // 즉시 정지
-            if (_attackCo != null)
-            {
-                StopCoroutine(_attackCo);
-                EndAttack();
-            }
         }
     }
     private IEnumerator DodgeRoutine(float duration, float multiplier)
@@ -286,11 +280,15 @@ public class Player : MonoBehaviour
         {
             if (_currentWeapon != null && !_isDodging && !_isSwapping)
             {
-                _currentWeapon.Use();
+                if (Time.time < _nextAttackTime)
+                {
+                    yield return null;
+                    continue;
+                }
                 _animator.SetTrigger(_currentWeapon.doAttackHash);
-
-                yield return new WaitForSeconds(_currentWeapon.AttackSpeed);
-                continue;
+                _currentWeapon.Use();
+                _nextAttackTime = Time.time + _currentWeapon.AttackSpeed;
+                
             }
             yield return null;
         }
@@ -300,6 +298,5 @@ public class Player : MonoBehaviour
     {
         _isAttacking = false;
         _attackCo = null;
-
     }
 }
