@@ -482,18 +482,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 362308789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06710322534c17d49b493b00d47131ce, type: 3}
+  m_Script: {fileID: 11500000, guid: f342b75da338fa2488cdb190e176afb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 0
-  _meleeRange: {fileID: 0}
-  _trailEffect: {fileID: 0}
+  _attackSpeed: 0.4
   _firePoint: {fileID: 1673774121}
   _bulletPrefab: {fileID: 7189803251394478203, guid: fd6e6218879737c4b83eee070c88c519, type: 3}
   _ejectPoint: {fileID: 545756592}
   _casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
-  _attackSpeed: 0.4
-  _weaponType: 1
 --- !u!1 &387175634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1060,10 +1056,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1348174882345252545, guid: c2ec4bfd1a6491c49a0c34b8dc3a7639, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 799233090}
+      addedObject: {fileID: 799233089}
     - targetCorrespondingSourceObject: {fileID: 1348174882345252545, guid: c2ec4bfd1a6491c49a0c34b8dc3a7639, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 799233089}
+      addedObject: {fileID: 799233090}
   m_SourcePrefab: {fileID: 100100000, guid: c2ec4bfd1a6491c49a0c34b8dc3a7639, type: 3}
 --- !u!4 &787071936 stripped
 Transform:
@@ -1110,18 +1106,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 799233087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06710322534c17d49b493b00d47131ce, type: 3}
+  m_Script: {fileID: 11500000, guid: be5f8a0e1aba39347b77e0a28b3afeb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackSpeed: 0.4
   _damage: 25
   _meleeRange: {fileID: 799233089}
   _trailEffect: {fileID: 1678683728}
-  _firePoint: {fileID: 0}
-  _bulletPrefab: {fileID: 0}
-  _ejectPoint: {fileID: 0}
-  _casingPrefab: {fileID: 0}
-  _attackSpeed: 0.4
-  _weaponType: 0
 --- !u!1 &852288990 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}
@@ -1605,7 +1596,6 @@ MonoBehaviour:
   _ammo: 0
   _coin: 0
   _health: 100
-  _attackDelay: 0
   _moveInput: {x: 0, y: 0}
   _moveDirection: {x: 0, y: 0, z: 0}
   _dodgeDirection: {x: 0, y: 0, z: 0}
@@ -1879,18 +1869,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1329389789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06710322534c17d49b493b00d47131ce, type: 3}
+  m_Script: {fileID: 11500000, guid: f342b75da338fa2488cdb190e176afb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 0
-  _meleeRange: {fileID: 0}
-  _trailEffect: {fileID: 0}
+  _attackSpeed: 0.15
   _firePoint: {fileID: 1673774121}
   _bulletPrefab: {fileID: 3266974850389035250, guid: 9be37de3ba72ee34eb5df79901133c8d, type: 3}
   _ejectPoint: {fileID: 198873682}
   _casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
-  _attackSpeed: 0.15
-  _weaponType: 1
 --- !u!1 &1344738193
 GameObject:
   m_ObjectHideFlags: 0
