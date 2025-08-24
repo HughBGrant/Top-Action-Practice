@@ -490,6 +490,8 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 7189803251394478203, guid: fd6e6218879737c4b83eee070c88c519, type: 3}
   _ejectPoint: {fileID: 545756592}
   _casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
+  maxAmmo: 0
+  curAmmo: 0
 --- !u!1 &387175634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1580,8 +1582,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _runSpeed: 15
   _walkSpeed: 10
-  _currentSpeed: 0
-  _jumpPower: 30
+  _jumpPower: 20
+  _extraFallMultiplier: 2
+  _groundCheckPoint: {fileID: 1841845943}
+  _groundCheckDistance: 0.2
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _health: 100
+  _ammo: 0
+  _coin: 0
+  _grenadeCount: 0
   _weapons:
   - {fileID: 799233087}
   - {fileID: 362308789}
@@ -1592,18 +1603,9 @@ MonoBehaviour:
   - {fileID: 2006751319}
   - {fileID: 1414647320}
   - {fileID: 83008190}
-  _grenadeCount: 0
-  _ammo: 0
-  _coin: 0
-  _health: 100
   _moveInput: {x: 0, y: 0}
   _moveDirection: {x: 0, y: 0, z: 0}
   _dodgeDirection: {x: 0, y: 0, z: 0}
-  _groundCheckPoint: {fileID: 1841845943}
-  _groundCheckDistance: 0.2
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 64
 --- !u!136 &1290166531
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1636,7 +1638,7 @@ Rigidbody:
   m_GameObject: {fileID: 1290166529}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 1
+  m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -1882,6 +1884,8 @@ MonoBehaviour:
   _bulletPrefab: {fileID: 3266974850389035250, guid: 9be37de3ba72ee34eb5df79901133c8d, type: 3}
   _ejectPoint: {fileID: 198873682}
   _casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
+  maxAmmo: 0
+  curAmmo: 0
 --- !u!1 &1344738193
 GameObject:
   m_ObjectHideFlags: 0

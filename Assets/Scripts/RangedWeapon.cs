@@ -7,6 +7,8 @@ public class RangedWeapon : WeaponBase
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _ejectPoint;
     [SerializeField] private GameObject _casingPrefab;
+    [SerializeField] private int maxAmmo;
+    [SerializeField] private int curAmmo;
 
     private Coroutine _shotCo;
     public override int doAttackHash => _doShotHash;
@@ -14,6 +16,7 @@ public class RangedWeapon : WeaponBase
 
     public override void Use()
     {
+        //if (curAmmo <= 0) { return; }
         if (_shotCo != null)
             StopCoroutine(_shotCo);
 
