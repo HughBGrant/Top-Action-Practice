@@ -21,6 +21,10 @@ public class Player : MonoBehaviour
     [SerializeField] private Vector3 _moveDirection;
     [SerializeField] private Vector3 _dodgeDirection;
 
+    [SerializeField] private Transform _groundCheckPoint;
+    [SerializeField] private float _groundCheckDistance = 0.2f;
+    [SerializeField] private LayerMask _groundLayer;
+
     private bool _isRunning;
     private bool _isWalking;
     private bool _isJumping;
@@ -91,15 +95,28 @@ public class Player : MonoBehaviour
         _animator.SetBool(_isRunningHash, _isRunning);
 
         _animator.SetBool(_isWalkingHash, _isWalking);
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag(Tags.Ground))
+
+        bool wasJumping = _isJumping;
+        if (_rb.velocity.y <= 0f)
         {
-            _isJumping = false;
+            if (Physics.Raycast(_groundCheckPoint.position, Vector3.down, _groundCheckDistance, _groundLayer))
+            {
+                _isJumping = false;
+            }
+        }
+        if (wasJumping != _isJumping)
+        {
             _animator.SetBool(_isJumpingHash, _isJumping);
         }
     }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag(Tags.Ground))
+    //    {
+    //        _isJumping = false;
+    //        _animator.SetBool(_isJumpingHash, _isJumping);
+    //    }
+    //}
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Tags.Item))
