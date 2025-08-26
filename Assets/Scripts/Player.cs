@@ -5,64 +5,81 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     [Header("Movement")]
-    [SerializeField] private float _runSpeed;
-    [SerializeField] private float _walkSpeed;
-    [SerializeField] private float _jumpPower;
-    [SerializeField] private float _extraFallMultiplier;
+    [SerializeField]
+    private float runSpeed;
+    [SerializeField]
+    private float walkSpeed;
+    [SerializeField]
+    private float jumpPower;
+    [SerializeField]
+    private float extraFallMultiplier;
 
     [Header("Dodge / Swap")]
-    [SerializeField] private float _dodgeDuration;
-    [SerializeField] private float _dodgeSpeedMultiplier;
-    [SerializeField] private float _swapDuration;
+    [SerializeField]
+    private float dodgeDuration;
+    [SerializeField]
+    private float dodgeSpeedMultiplier;
+    [SerializeField]
+    private float swapDuration;
 
     [Header("Ground Check")]
-    [SerializeField] private Transform _groundCheckPoint;
-    [SerializeField] private float _groundCheckDistance;
-    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField]
+    private Transform groundCheckPoint;
+    [SerializeField]
+    private float groundCheckDistance;
+    [SerializeField]
+    private LayerMask groundLayer;
 
     [Header("Stats")]
-    [SerializeField] private int _health;
-    [SerializeField] private int _ammo;
-    [SerializeField] private int _coin;
-    [SerializeField] private int _grenadeCount;
+    [SerializeField]
+    private int health;
+    [SerializeField]
+    private int ammo;
+    [SerializeField]
+    private int coin;
+    [SerializeField]
+    private int grenadeCount;
+
+    [Header("Weapons & Items")]
+    [SerializeField]
+    private GameObject[] weapons;
+    [SerializeField]
+    private bool[] hasWeapons;
+    [SerializeField]
+    private GameObject[] grenades;
+
+    // State
+    private Vector2 moveInput;
+    private Vector3 moveDirection;
+    private Vector3 dodgeDirection;
+
+    private bool isWalking;
+    private bool isJumping;
+    private bool shouldJump;
+    private bool isDodging;
+    private bool isSwapping;
+    private bool isAttacking;
+    private bool isAttackHeld;
+
+    private int currentWeaponId = -1;
+    private float speedMultiplier = 1f;
+    private float nextAttackTime;
+
+    private Animator animator;
+    private Rigidbody rb;
+
+    private WeaponBase currentWeapon;
+    private GameObject nearObj;
+
+    private Coroutine dodgeCo;
+    private Coroutine swapCo;
+    private Coroutine attackCo;
 
     private const int MaxAmmo = 999;
     private const int MaxCoin = 99999;
     private const int MaxHealth = 100;
     private const int MaxGrenadeCount = 4;
     private const float MoveEpsilon = 0.0001f;
-
-    [Header("Weapons & Items")]
-    [SerializeField] private GameObject[] _weapons;
-    [SerializeField] private bool[] _hasWeapons;
-    [SerializeField] private GameObject[] _grenades;
-
-    // State
-    private Vector2 _moveInput;
-    private Vector3 _moveDirection;
-    private Vector3 _dodgeDirection;
-
-    private bool _isWalking;
-    private bool _isJumping;
-    private bool _shouldJump;
-    private bool _isDodging;
-    private bool _isSwapping;
-    private bool _isAttacking;
-    private bool _isAttackHeld;
-
-    private int _currentWeaponId = -1;
-    private float _speedMultiplier = 1f;
-    private float _nextAttackTime;
-
-    private Animator _animator;
-    private Rigidbody _rb;
-
-    private WeaponBase _currentWeapon;
-    private GameObject _nearObj;
-
-    private Coroutine _dodgeCo;
-    private Coroutine _swapCo;
-    private Coroutine _attackCo;
 
     private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
     private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
@@ -72,12 +89,12 @@ public class Player : MonoBehaviour
     private static readonly int DoSwapHash = Animator.StringToHash("doSwap");
     void Awake()
     {
-        _animator = GetComponentInChildren<Animator>();
-        _rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
+        rb = GetComponent<Rigidbody>();
 
         // 방어적으로 GroundCheckPoint 비어있다면 하위에서 찾아보기
-        if (_groundCheckPoint == null)
-            _groundCheckPoint = transform.Find("GroundCheckPoint");
+        if (groundCheckPoint == null)
+            groundCheckPoint = transform.Find("GroundCheckPoint");
     }
     void FixedUpdate()
     {
@@ -86,199 +103,198 @@ public class Player : MonoBehaviour
     }
     private void HandleMovement()
     {
-        if (_shouldJump)
+        if (shouldJump)
         {
-            _rb.velocity = new Vector3(_rb.velocity.x, _jumpPower, _rb.velocity.z);
-            _shouldJump = false;
+            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);
+            shouldJump = false;
         }
 
-        _moveDirection = new Vector3(_moveInput.x, 0f, _moveInput.y);
+        moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
 
-        if (_isDodging)
+        if (isDodging)
         {
-            _moveDirection = _dodgeDirection;
+            moveDirection = dodgeDirection;
         }
-        if (_isSwapping || _isAttacking)
+        if (isSwapping || isAttacking)
         {
-            _moveDirection = Vector3.zero;
+            moveDirection = Vector3.zero;
         }
 
-        bool isMoving = _moveDirection.sqrMagnitude > MoveEpsilon;
+        bool isMoving = moveDirection.sqrMagnitude > MoveEpsilon;
         if (isMoving)
         {
-            transform.forward = _moveDirection;
+            transform.forward = moveDirection;
         }
 
-        float speed = (_isWalking ? _walkSpeed : _runSpeed) * _speedMultiplier;
-        Vector3 moveXZ = new Vector3(_moveDirection.x, 0f, _moveDirection.z) * speed;
-        _rb.velocity = new Vector3(moveXZ.x, _rb.velocity.y, moveXZ.z);
+        float speed = (isWalking ? walkSpeed : runSpeed) * speedMultiplier;
+        Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
+        rb.velocity = new Vector3(moveXZ.x, rb.velocity.y, moveXZ.z);
 
-        _animator.SetBool(IsRunningHash, isMoving);
-        _animator.SetBool(IsWalkingHash, _isWalking);
+        animator.SetBool(IsRunningHash, isMoving);
+        animator.SetBool(IsWalkingHash, isWalking);
     }
     private void HandleJumpFall()
     {
-        bool wasJumping = _isJumping;
+        bool wasJumping = isJumping;
 
-        if (_rb.velocity.y < 0f)
+        if (rb.velocity.y < 0f)
         {
-            _rb.velocity += Vector3.up * Physics.gravity.y * (_extraFallMultiplier - 1f) * Time.fixedDeltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (extraFallMultiplier - 1f) * Time.fixedDeltaTime;
 
             if (IsGrounded())
             {
-                _isJumping = false;
+                isJumping = false;
             }
         }
-        if (wasJumping != _isJumping)
+        if (wasJumping != isJumping)
         {
-            _animator.SetBool(IsJumpingHash, _isJumping);
+            animator.SetBool(IsJumpingHash, isJumping);
         }
 
     }
     private bool IsGrounded()
     {
-        if (_groundCheckPoint == null)
+        if (groundCheckPoint == null)
         {
             return false;
         }
         // 하강 중일 때만 바닥 감지
-        if (_rb.velocity.y > 0f)
+        if (rb.velocity.y > 0f)
         {
             return false;
         }
-        return Physics.Raycast(_groundCheckPoint.position, Vector3.down, _groundCheckDistance, _groundLayer);
+        return Physics.Raycast(groundCheckPoint.position, Vector3.down, groundCheckDistance, groundLayer);
     }
     public void OnMove(InputAction.CallbackContext context)
     {
-        _moveInput = context.ReadValue<Vector2>();
+        moveInput = context.ReadValue<Vector2>();
     }
     public void OnWalk(InputAction.CallbackContext context)
     {
-        _isWalking = context.ReadValueAsButton();
+        isWalking = context.ReadValueAsButton();
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.started || _isJumping || _isDodging || _isSwapping) { return; }
+        if (!context.started || isJumping || isDodging || isSwapping) { return; }
 
-        bool hasMoveInput = _moveInput.sqrMagnitude > MoveEpsilon;
+        bool hasMoveInput = moveInput.sqrMagnitude > MoveEpsilon;
 
         if (!hasMoveInput)
         {
-            _shouldJump = true;
-            _isJumping = true;
-            _animator.SetTrigger(DoJumpHash);
-            _animator.SetBool(IsJumpingHash, _isJumping);
+            shouldJump = true;
+            isJumping = true;
+            animator.SetTrigger(DoJumpHash);
+            animator.SetBool(IsJumpingHash, isJumping);
         }
         else
         {
-            _dodgeDirection = _moveDirection;
-            _animator.SetTrigger(DoDodgeHash);
-            RestartRoutine(ref _dodgeCo, DodgeRoutine(_dodgeDuration, _dodgeSpeedMultiplier));
+            dodgeDirection = moveDirection;
+            animator.SetTrigger(DoDodgeHash);
+            RestartRoutine(ref dodgeCo, DodgeRoutine(dodgeDuration, dodgeSpeedMultiplier));
         }
     }
     public void OnSwapWeapon(InputAction.CallbackContext context)
     {
         if (!context.started) { return; }
-        if (_isJumping || _isDodging) { return; }
-            
+        if (isJumping || isDodging) { return; }
+        if (weapons == null || hasWeapons == null) { return; }
+
         int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
 
-        if (_weapons == null || newWeaponId < 0 || newWeaponId >= _weapons.Length) { return; }//////////////
-        if (_hasWeapons == null || newWeaponId >= _hasWeapons.Length || !_hasWeapons[newWeaponId]) { return; }//////////////////
-        if (newWeaponId == _currentWeaponId) return;
+        if (newWeaponId < 0 || newWeaponId >= weapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == currentWeaponId || !hasWeapons[newWeaponId]) { return; }
 
-        if (_currentWeapon != null)
+        if (currentWeapon != null)
         {
-            _currentWeapon.gameObject.SetActive(false);
+            currentWeapon.gameObject.SetActive(false);
         }
-        _currentWeaponId = newWeaponId;
+        currentWeaponId = newWeaponId;
         //1
-        _currentWeapon = _weapons[_currentWeaponId].GetComponent<WeaponBase>();
-        _currentWeapon.gameObject.SetActive(true);
+        //currentWeapon = weapons[currentWeaponId].GetComponent<WeaponBase>();
+        //currentWeapon.gameObject.SetActive(true);
 
-        _animator.SetTrigger(DoSwapHash);
+        //animator.SetTrigger(DoSwapHash);
 
-        if (_swapCo != null)
-        {
-            StopCoroutine(_swapCo);
-        }
-        _swapCo = StartCoroutine(SwapRoutine(_swapDuration));
+        //if (swapCo != null)
+        //{
+        //    StopCoroutine(swapCo);
+        //}
+        //swapCo = StartCoroutine(SwapRoutine(swapDuration));
         //2
-        GameObject go = _weapons[_currentWeaponId];
+        GameObject go = weapons[currentWeaponId];
         if (go != null && go.TryGetComponent(out WeaponBase weapon))
         {
-            _currentWeapon = weapon;
-            _currentWeapon.gameObject.SetActive(true);
-            _animator.SetTrigger(DoSwapHash);
-            RestartRoutine(ref _swapCo, SwapRoutine(_swapDuration));
+            currentWeapon = weapon;
+            currentWeapon.gameObject.SetActive(true);
+            animator.SetTrigger(DoSwapHash);
+            RestartRoutine(ref swapCo, SwapRoutine(swapDuration));
         }
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (!context.started || _nearObj == null || _isJumping || _isDodging) { return; }
+        if (!context.started || nearObj == null || isJumping || isDodging) { return; }
 
-        if (_nearObj.CompareTag(Tags.Weapon))
+        if (nearObj.CompareTag(Tags.Weapon))
         {
-            if (_nearObj.TryGetComponent(out Item item))
+            if (nearObj.TryGetComponent(out Item item))
             {
-                if (_hasWeapons != null && item.Value >= 0 && item.Value < _hasWeapons.Length)/////////////
+                if (hasWeapons != null && item.Value >= 0 && item.Value < hasWeapons.Length)
                 {
-                    _hasWeapons[item.Value] = true;
+                    hasWeapons[item.Value] = true;
                 }
             }
-            Destroy(_nearObj);
+            Destroy(nearObj);
         }
     }
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            _isAttackHeld = true;
+            isAttackHeld = true;
 
-            if (_attackCo == null)
+            if (attackCo == null)
             {
-                _attackCo = StartCoroutine(AttackRoutine());
+                attackCo = StartCoroutine(AttackRoutine());
             }
         }
         else if (context.canceled)
         {
-            _isAttackHeld = false;
+            isAttackHeld = false;
         }
     }
     private IEnumerator DodgeRoutine(float duration, float multiplier)
     {
-        _isDodging = true;
-        float _prev = _speedMultiplier;
-        _speedMultiplier = multiplier;
+        isDodging = true;
+        float _prev = speedMultiplier;
+        speedMultiplier = multiplier;
 
         yield return new WaitForSeconds(duration);
 
-        _speedMultiplier = _prev;
-        _isDodging = false;
-        _dodgeCo = null;
+        speedMultiplier = _prev;
+        isDodging = false;
+        dodgeCo = null;
     }
     private IEnumerator SwapRoutine(float duration)
     {
-        _isSwapping = true;
+        isSwapping = true;
         yield return new WaitForSeconds(duration);
-        _isSwapping = false;
-        _swapCo = null;
+        isSwapping = false;
+        swapCo = null;
     }
     private IEnumerator AttackRoutine()
     {
-        _isAttacking = true;
-        while (_isAttackHeld)
+        isAttacking = true;
+        while (isAttackHeld)
         {
-            if (_currentWeapon != null && !_isDodging && !_isSwapping && Time.time > _nextAttackTime)
+            if (currentWeapon != null && !isDodging && !isSwapping && Time.time > nextAttackTime)
             {
-                _animator.SetTrigger(_currentWeapon.doAttackHash);
-                _currentWeapon.Use();
-                _nextAttackTime = Time.time + _currentWeapon.AttackSpeed;
+                animator.SetTrigger(currentWeapon.DoAttackHash);
+                currentWeapon.Use();
+                nextAttackTime = Time.time + currentWeapon.AttackSpeed;
             }
             yield return null;
         }
-        _isAttacking = false;
-        _attackCo = null;
+        isAttacking = false;
+        attackCo = null;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -289,33 +305,33 @@ public class Player : MonoBehaviour
         switch (item.Type)
         {
             case ItemType.Ammo:
-                _ammo = Mathf.Min(_ammo + item.Value, MaxAmmo);
+                ammo = Mathf.Min(ammo + item.Value, MaxAmmo);
                 break;
             case ItemType.Coin:
-                _coin = Mathf.Min(_coin + item.Value, MaxCoin);
+                coin = Mathf.Min(coin + item.Value, MaxCoin);
                 break;
             case ItemType.Heart:
-                _health = Mathf.Min(_health + item.Value, MaxHealth);
+                health = Mathf.Min(health + item.Value, MaxHealth);
                 break;
             case ItemType.Grenade:
                 //if (_grenadeCount == MaxGrenadeCount)
                 //    return;
                 //_grenades[_grenadeCount].SetActive(true);
                 //_grenadeCount = _grenadeCount + item.Value;
-                if (_grenades != null && _grenades.Length > 0)//////
+                if (grenades != null && grenades.Length > 0)
                 {
-                    int before = _grenadeCount;
-                    int after = Mathf.Clamp(_grenadeCount + item.Value, 0, MaxGrenadeCount);/////
+                    int before = grenadeCount;
+                    int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
 
                     // UI 토글: 새로 늘어난 슬롯만 활성화
-                    for (int i = before; i < after && i < _grenades.Length; i++)//////
+                    for (int i = before; i < after && i < grenades.Length; i++)
                     {
-                        if (_grenades[i] != null)
+                        if (grenades[i] != null)
                         {
-                            _grenades[i].SetActive(true);
+                            grenades[i].SetActive(true);
                         }
                     }
-                    _grenadeCount = after;
+                    grenadeCount = after;
                 }
                 break;
         }
@@ -326,14 +342,14 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag(Tags.Weapon))
         {
-            _nearObj = other.gameObject;
+            nearObj = other.gameObject;
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag(Tags.Weapon))
         {
-            _nearObj = null;
+            nearObj = null;
         }
     }
     // --- Utils ---

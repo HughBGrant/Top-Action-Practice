@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 public abstract class WeaponBase : MonoBehaviour
 {
-    [SerializeField] protected float _attackSpeed;
-
-    public float AttackSpeed { get => _attackSpeed; }
-    public abstract int doAttackHash { get; }
+    [SerializeField]
+    protected float attackSpeed;
+    public float AttackSpeed { get => attackSpeed; }
+    public abstract int DoAttackHash { get; }
 
     public abstract void Use();
 }

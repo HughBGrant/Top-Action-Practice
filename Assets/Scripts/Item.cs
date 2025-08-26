@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] private ItemType _type;
-    public ItemType Type {  get => _type; }
+    [SerializeField]
+    private ItemType type;
+    public ItemType Type { get => type; }
 
-    [SerializeField] int _value;
-    public int Value { get => _value; }
+    [SerializeField]
+    int value;
+    public int Value { get => value; }
 
+    private float rotationSpeed = 20f;
 
     void Update()
     {
-        transform.Rotate(Vector3.up * 20 * Time.deltaTime);///////////
+        transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
     }
 }
