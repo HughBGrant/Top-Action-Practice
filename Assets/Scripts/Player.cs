@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float jumpPower;
     [SerializeField]
-    private float extraFallMultiplier;
+    private float fallGravityMultiplier;
 
     [Header("Dodge / Swap")]
     [SerializeField]
@@ -62,7 +63,6 @@ public class Player : MonoBehaviour
     private bool isAttackHeld;
 
     private int currentWeaponId = -1;
-    private float speedMultiplier = 1f;
     private float nextAttackTime;
 
     private Animator animator;
@@ -126,7 +126,7 @@ public class Player : MonoBehaviour
             transform.forward = moveDirection;
         }
 
-        float speed = (isWalking ? walkSpeed : runSpeed) * speedMultiplier;
+        float speed = (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
         Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
         rb.velocity = new Vector3(moveXZ.x, rb.velocity.y, moveXZ.z);
 
@@ -139,7 +139,7 @@ public class Player : MonoBehaviour
 
         if (rb.velocity.y < 0f)
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * (extraFallMultiplier - 1f) * Time.fixedDeltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
 
             if (IsGrounded())
             {
@@ -150,20 +150,6 @@ public class Player : MonoBehaviour
         {
             animator.SetBool(IsJumpingHash, isJumping);
         }
-
-    }
-    private bool IsGrounded()
-    {
-        if (groundCheckPoint == null)
-        {
-            return false;
-        }
-        // 하강 중일 때만 바닥 감지
-        if (rb.velocity.y > 0f)
-        {
-            return false;
-        }
-        return Physics.Raycast(groundCheckPoint.position, Vector3.down, groundCheckDistance, groundLayer);
     }
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -190,59 +176,7 @@ public class Player : MonoBehaviour
         {
             dodgeDirection = moveDirection;
             animator.SetTrigger(DoDodgeHash);
-            RestartRoutine(ref dodgeCo, DodgeRoutine(dodgeDuration, dodgeSpeedMultiplier));
-        }
-    }
-    public void OnSwapWeapon(InputAction.CallbackContext context)
-    {
-        if (!context.started) { return; }
-        if (isJumping || isDodging) { return; }
-        if (weapons == null || hasWeapons == null) { return; }
-
-        int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
-
-        if (newWeaponId < 0 || newWeaponId >= weapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == currentWeaponId || !hasWeapons[newWeaponId]) { return; }
-
-        if (currentWeapon != null)
-        {
-            currentWeapon.gameObject.SetActive(false);
-        }
-        currentWeaponId = newWeaponId;
-        //1
-        //currentWeapon = weapons[currentWeaponId].GetComponent<WeaponBase>();
-        //currentWeapon.gameObject.SetActive(true);
-
-        //animator.SetTrigger(DoSwapHash);
-
-        //if (swapCo != null)
-        //{
-        //    StopCoroutine(swapCo);
-        //}
-        //swapCo = StartCoroutine(SwapRoutine(swapDuration));
-        //2
-        GameObject go = weapons[currentWeaponId];
-        if (go != null && go.TryGetComponent(out WeaponBase weapon))
-        {
-            currentWeapon = weapon;
-            currentWeapon.gameObject.SetActive(true);
-            animator.SetTrigger(DoSwapHash);
-            RestartRoutine(ref swapCo, SwapRoutine(swapDuration));
-        }
-    }
-    public void OnInteraction(InputAction.CallbackContext context)
-    {
-        if (!context.started || nearObj == null || isJumping || isDodging) { return; }
-
-        if (nearObj.CompareTag(Tags.Weapon))
-        {
-            if (nearObj.TryGetComponent(out Item item))
-            {
-                if (hasWeapons != null && item.Value >= 0 && item.Value < hasWeapons.Length)
-                {
-                    hasWeapons[item.Value] = true;
-                }
-            }
-            Destroy(nearObj);
+            RestartRoutine(ref dodgeCo, DodgeRoutine());
         }
     }
     public void OnAttack(InputAction.CallbackContext context)
@@ -261,22 +195,65 @@ public class Player : MonoBehaviour
             isAttackHeld = false;
         }
     }
-    private IEnumerator DodgeRoutine(float duration, float multiplier)
+    public void OnReload(InputAction.CallbackContext context)
+    {
+        if (!context.started || currentWeapon == null) { return; }
+
+    }
+    public void OnInteraction(InputAction.CallbackContext context)
+    {
+        if (!context.started || nearObj == null || isJumping || isDodging) { return; }
+
+        if (nearObj.CompareTag(Tags.Weapon))
+        {
+            if (nearObj.TryGetComponent(out Item item))
+            {
+                if (hasWeapons != null && item.Value >= 0 && item.Value < hasWeapons.Length)
+                {
+                    hasWeapons[item.Value] = true;
+                }
+            }
+            Destroy(nearObj);
+        }
+    }
+    public void OnSwapWeapon(InputAction.CallbackContext context)
+    {
+        if (!context.started) { return; }
+        if (isJumping || isDodging) { return; }
+        if (weapons == null || hasWeapons == null) { return; }
+
+        int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
+
+        if (newWeaponId < 0 || newWeaponId >= weapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == currentWeaponId || !hasWeapons[newWeaponId]) { return; }
+
+        if (currentWeapon != null)
+        {
+            currentWeapon.gameObject.SetActive(false);
+        }
+        currentWeaponId = newWeaponId;
+
+        GameObject go = weapons[currentWeaponId];
+        if (go != null && go.TryGetComponent(out WeaponBase weapon))
+        {
+            currentWeapon = weapon;
+            currentWeapon.gameObject.SetActive(true);
+            animator.SetTrigger(DoSwapHash);
+            RestartRoutine(ref swapCo, SwapRoutine());
+        }
+    }
+    private IEnumerator DodgeRoutine()
     {
         isDodging = true;
-        float _prev = speedMultiplier;
-        speedMultiplier = multiplier;
+        yield return new WaitForSeconds(dodgeDuration);
 
-        yield return new WaitForSeconds(duration);
-
-        speedMultiplier = _prev;
         isDodging = false;
         dodgeCo = null;
     }
-    private IEnumerator SwapRoutine(float duration)
+    private IEnumerator SwapRoutine()
     {
         isSwapping = true;
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(swapDuration);
+
         isSwapping = false;
         swapCo = null;
     }
@@ -314,10 +291,6 @@ public class Player : MonoBehaviour
                 health = Mathf.Min(health + item.Value, MaxHealth);
                 break;
             case ItemType.Grenade:
-                //if (_grenadeCount == MaxGrenadeCount)
-                //    return;
-                //_grenades[_grenadeCount].SetActive(true);
-                //_grenadeCount = _grenadeCount + item.Value;
                 if (grenades != null && grenades.Length > 0)
                 {
                     int before = grenadeCount;
@@ -360,5 +333,18 @@ public class Player : MonoBehaviour
             StopCoroutine(coField);
         }
         coField = StartCoroutine(routine);
+    }
+    private bool IsGrounded()
+    {
+        if (groundCheckPoint == null)
+        {
+            return false;
+        }
+        // 하강 중일 때만 바닥 감지
+        if (rb.velocity.y > 0f)
+        {
+            return false;
+        }
+        return Physics.Raycast(groundCheckPoint.position, Vector3.down, groundCheckDistance, groundLayer);
     }
 }

@@ -25,10 +25,11 @@ public class RangedWeapon : WeaponBase
 
     public override void Use()
     {
-        //if (curAmmo <= 0) { return; }
+        if (curAmmo <= 0) { return; }
         if (shotCo != null)
+        {
             StopCoroutine(shotCo);
-
+        }
         shotCo = StartCoroutine(ShotRoutine());
     }
     
