@@ -1415,8 +1415,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e50b00e73f90ea4f8be4c9d336432bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: 15
-  walkSpeed: 10
+  runSpeed: 20
+  walkSpeed: 5
   jumpPower: 20
   fallGravityMultiplier: 2
   dodgeDuration: 0.5
@@ -1520,7 +1520,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1290166530}
         m_TargetAssemblyTypeName: Player, Assembly-CSharp
-        m_MethodName: OnMove
+        m_MethodName: OnRun
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1657,7 +1657,19 @@ MonoBehaviour:
     m_ActionId: 7316aade-ba22-430b-848f-cbd8c9fc02e9
     m_ActionName: Player/SwitchWeapon
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1290166530}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnReload
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 6e8dd998-61e2-4cd7-a778-06520d837694
     m_ActionName: Player/Reload
   m_NeverAutoSwitchControlSchemes: 0
@@ -11852,10 +11864,10 @@ PrefabInstance:
       addedObject: {fileID: 1290166531}
     - targetCorrespondingSourceObject: {fileID: 5461052779654786451, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1290166530}
+      addedObject: {fileID: 1290166533}
     - targetCorrespondingSourceObject: {fileID: 5461052779654786451, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1290166533}
+      addedObject: {fileID: 1290166530}
     - targetCorrespondingSourceObject: {fileID: 3403024553794750845, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1311583676}

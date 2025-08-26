@@ -120,17 +120,16 @@ public class Player : MonoBehaviour
             moveDirection = Vector3.zero;
         }
 
-        bool isMoving = moveDirection.sqrMagnitude > MoveEpsilon;
-        if (isMoving)
-        {
-            transform.forward = moveDirection;
-        }
-
         float speed = (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
         Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
         rb.velocity = new Vector3(moveXZ.x, rb.velocity.y, moveXZ.z);
 
-        animator.SetBool(IsRunningHash, isMoving);
+        bool isRunning = moveDirection.sqrMagnitude > MoveEpsilon;
+        if (isRunning)
+        {
+            transform.forward = moveDirection;
+        }
+        animator.SetBool(IsRunningHash, isRunning);
         animator.SetBool(IsWalkingHash, isWalking);
     }
     private void HandleJumpFall()
@@ -151,7 +150,7 @@ public class Player : MonoBehaviour
             animator.SetBool(IsJumpingHash, isJumping);
         }
     }
-    public void OnMove(InputAction.CallbackContext context)
+    public void OnRun(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
     }
