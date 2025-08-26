@@ -93,6 +93,7 @@ public class Player : MonoBehaviour
         }
 
         _moveDirection = new Vector3(_moveInput.x, 0f, _moveInput.y);
+
         if (_isDodging)
         {
             _moveDirection = _dodgeDirection;
@@ -136,10 +137,15 @@ public class Player : MonoBehaviour
     }
     private bool IsGrounded()
     {
-        if (_groundCheckPoint == null) return false;
+        if (_groundCheckPoint == null)
+        {
+            return false;
+        }
         // 하강 중일 때만 바닥 감지
-        if (_rb.velocity.y > 0f) return false;
-
+        if (_rb.velocity.y > 0f)
+        {
+            return false;
+        }
         return Physics.Raycast(_groundCheckPoint.position, Vector3.down, _groundCheckDistance, _groundLayer);
     }
     public void OnMove(InputAction.CallbackContext context)
@@ -152,7 +158,7 @@ public class Player : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.started || _isJumping || _isDodging || _isSwapping) return;
+        if (!context.started || _isJumping || _isDodging || _isSwapping) { return; }
 
         bool hasMoveInput = _moveInput.sqrMagnitude > MoveEpsilon;
 
@@ -177,17 +183,15 @@ public class Player : MonoBehaviour
             
         int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
 
-        if (_weapons == null || newWeaponId < 0 || newWeaponId >= _weapons.Length) return;//////////////
-        if (_hasWeapons == null || newWeaponId >= _hasWeapons.Length || !_hasWeapons[newWeaponId]) return;//////////////////
+        if (_weapons == null || newWeaponId < 0 || newWeaponId >= _weapons.Length) { return; }//////////////
+        if (_hasWeapons == null || newWeaponId >= _hasWeapons.Length || !_hasWeapons[newWeaponId]) { return; }//////////////////
         if (newWeaponId == _currentWeaponId) return;
 
         if (_currentWeapon != null)
         {
             _currentWeapon.gameObject.SetActive(false);
         }
-
         _currentWeaponId = newWeaponId;
-
         //1
         _currentWeapon = _weapons[_currentWeaponId].GetComponent<WeaponBase>();
         _currentWeapon.gameObject.SetActive(true);
@@ -198,8 +202,7 @@ public class Player : MonoBehaviour
         {
             StopCoroutine(_swapCo);
         }
-        _swapCo = StartCoroutine(SwapRoutine(0.5f));
-
+        _swapCo = StartCoroutine(SwapRoutine(_swapDuration));
         //2
         GameObject go = _weapons[_currentWeaponId];
         if (go != null && go.TryGetComponent(out WeaponBase weapon))
@@ -212,14 +215,16 @@ public class Player : MonoBehaviour
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (!context.started || _nearObj == null || _isJumping || _isDodging) return;
+        if (!context.started || _nearObj == null || _isJumping || _isDodging) { return; }
 
         if (_nearObj.CompareTag(Tags.Weapon))
         {
             if (_nearObj.TryGetComponent(out Item item))
             {
                 if (_hasWeapons != null && item.Value >= 0 && item.Value < _hasWeapons.Length)/////////////
+                {
                     _hasWeapons[item.Value] = true;
+                }
             }
             Destroy(_nearObj);
         }
@@ -229,6 +234,7 @@ public class Player : MonoBehaviour
         if (context.performed)
         {
             _isAttackHeld = true;
+
             if (_attackCo == null)
             {
                 _attackCo = StartCoroutine(AttackRoutine());
@@ -278,7 +284,7 @@ public class Player : MonoBehaviour
     {
         if (!other.CompareTag(Tags.Item)) {  return; }
 
-        if (!other.TryGetComponent(out Item item)) return;
+        if (!other.TryGetComponent(out Item item)) { return; }
 
         switch (item.Type)
         {
@@ -296,8 +302,6 @@ public class Player : MonoBehaviour
                 //    return;
                 //_grenades[_grenadeCount].SetActive(true);
                 //_grenadeCount = _grenadeCount + item.Value;
-
-
                 if (_grenades != null && _grenades.Length > 0)//////
                 {
                     int before = _grenadeCount;
@@ -311,7 +315,6 @@ public class Player : MonoBehaviour
                             _grenades[i].SetActive(true);
                         }
                     }
-
                     _grenadeCount = after;
                 }
                 break;
@@ -336,7 +339,10 @@ public class Player : MonoBehaviour
     // --- Utils ---
     private void RestartRoutine(ref Coroutine coField, IEnumerator routine)
     {
-        if (coField != null) StopCoroutine(coField);
+        if (coField != null)
+        {
+            StopCoroutine(coField);
+        }
         coField = StartCoroutine(routine);
     }
 }

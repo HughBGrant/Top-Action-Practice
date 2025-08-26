@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(Tags.Ground))
         {
-            Destroy(gameObject, 3);
+            Destroy(gameObject, 3);//////
         }
         else if (collision.gameObject.CompareTag(Tags.Wall))
         {
