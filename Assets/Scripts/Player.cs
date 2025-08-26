@@ -11,9 +11,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float _extraFallMultiplier;
 
     [Header("Dodge / Swap")]
-    [SerializeField] private float _dodgeDuration = 0.5f;
-    [SerializeField] private float _dodgeSpeedMultiplier = 2f;
-    [SerializeField] private float _swapDuration = 0.5f;
+    [SerializeField] private float _dodgeDuration;
+    [SerializeField] private float _dodgeSpeedMultiplier;
+    [SerializeField] private float _swapDuration;
 
     [Header("Ground Check")]
     [SerializeField] private Transform _groundCheckPoint;

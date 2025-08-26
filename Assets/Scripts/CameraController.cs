@@ -7,7 +7,6 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Vector3 _offset;
 
-    // Update is called once per frame
     void LateUpdate()
     {
         transform.position = _playerTransform.position + _offset;

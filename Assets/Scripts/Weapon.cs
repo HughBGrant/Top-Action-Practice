@@ -13,7 +13,6 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Transform _ejectPoint;
     [SerializeField] private GameObject _casingPrefab;
 
-
     private Coroutine _swingCo;
     private Coroutine _shotCo;
 
