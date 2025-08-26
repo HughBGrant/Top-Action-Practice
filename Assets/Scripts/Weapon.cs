@@ -16,7 +16,6 @@ public class Weapon : MonoBehaviour
     private Coroutine _swingCo;
     private Coroutine _shotCo;
 
-
     [SerializeField] private float _attackSpeed;
     public float AttackSpeed { get => _attackSpeed; }
 

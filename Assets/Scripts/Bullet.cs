@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag(Tags.Ground))
         {
-            Destroy(gameObject, 3);//////
+            Destroy(gameObject, _groundDestroyDelay);
         }
         else if (collision.gameObject.CompareTag(Tags.Wall))
         {
