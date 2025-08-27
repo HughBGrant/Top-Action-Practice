@@ -15,13 +15,15 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float fallGravityMultiplier;
 
-    [Header("Dodge / Swap")]
+    [Header("Dodge / Swap / Reload")]
     [SerializeField]
     private float dodgeDuration;
     [SerializeField]
     private float dodgeSpeedMultiplier;
     [SerializeField]
     private float swapDuration;
+    [SerializeField]
+    private float reloadDuration;
 
     [Header("Ground Check")]
     [SerializeField]
@@ -61,6 +63,7 @@ public class Player : MonoBehaviour
     private bool isSwapping;
     private bool isAttacking;
     private bool isAttackHeld;
+    private bool isReloading;
 
     private int currentWeaponId = -1;
     private float nextAttackTime;
@@ -74,7 +77,7 @@ public class Player : MonoBehaviour
     private Coroutine dodgeCo;
     private Coroutine swapCo;
     private Coroutine attackCo;
-
+    private Coroutine reloadCo;
     private const int MaxAmmo = 999;
     private const int MaxCoin = 99999;
     private const int MaxHealth = 100;
@@ -87,6 +90,7 @@ public class Player : MonoBehaviour
     private static readonly int DoJumpHash = Animator.StringToHash("doJump");
     private static readonly int DoDodgeHash = Animator.StringToHash("doDodge");
     private static readonly int DoSwapHash = Animator.StringToHash("doSwap");
+    private static readonly int DoReloadHash = Animator.StringToHash("doReload");
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -182,12 +186,14 @@ public class Player : MonoBehaviour
     {
         if (context.performed)
         {
+            if (currentWeapon == null || isDodging || isSwapping || isAttacking) { return; }
             isAttackHeld = true;
 
-            if (attackCo == null)
-            {
-                attackCo = StartCoroutine(AttackRoutine());
-            }
+            //if (attackCo == null)
+            //{
+            //    attackCo = StartCoroutine(AttackRoutine());
+            //}
+            RestartRoutine(ref attackCo, AttackRoutine());
         }
         else if (context.canceled)
         {
@@ -196,12 +202,17 @@ public class Player : MonoBehaviour
     }
     public void OnReload(InputAction.CallbackContext context)
     {
-        if (!context.started || currentWeapon == null) { return; }
+        if (!context.started || isJumping || isDodging || isSwapping || isAttacking) { return; }
+        if (currentWeapon == null || currentWeapon is MeleeWeapon || ammo == 0) { return; }/////////
 
+        animator.SetTrigger(DoReloadHash);
+        isReloading = true;
+        RestartRoutine(ref reloadCo, ReloadRoutine());
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (!context.started || nearObj == null || isJumping || isDodging) { return; }
+        if (!context.started || isJumping || isDodging) { return; }
+        if (nearObj == null) { return; }
 
         if (nearObj.CompareTag(Tags.Weapon))
         {
@@ -248,6 +259,17 @@ public class Player : MonoBehaviour
         isDodging = false;
         dodgeCo = null;
     }
+    private IEnumerator ReloadRoutine()
+    {
+        isReloading = true;
+        yield return new WaitForSeconds(reloadDuration);
+
+        int reAmmo = ammo < currentWeapon.MaxMagazine ? ammo : currentWeapon.MaxMagazine;
+
+
+        isReloading = false;
+        reloadCo = null;
+    }
     private IEnumerator SwapRoutine()
     {
         isSwapping = true;
@@ -261,14 +283,15 @@ public class Player : MonoBehaviour
         isAttacking = true;
         while (isAttackHeld)
         {
-            if (currentWeapon != null && !isDodging && !isSwapping && Time.time > nextAttackTime)
+            if (Time.time > nextAttackTime)
             {
-                animator.SetTrigger(currentWeapon.DoAttackHash);
+                animator.SetTrigger(currentWeapon.DoAttackHash);//////////////
                 currentWeapon.Use();
                 nextAttackTime = Time.time + currentWeapon.AttackSpeed;
             }
             yield return null;
         }
+        yield return new WaitForSeconds(currentWeapon.AttackSpeed);
         isAttacking = false;
         attackCo = null;
     }

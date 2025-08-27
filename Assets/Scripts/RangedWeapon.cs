@@ -11,10 +11,12 @@ public class RangedWeapon : WeaponBase
     private Transform ejectPoint;
     [SerializeField] 
     private GameObject casingPrefab;
-    [SerializeField] 
-    private int maxAmmo;
-    [SerializeField] 
-    private int curAmmo;
+    [SerializeField]
+    private int currentMagazine;
+    public override int CurrentMagazine { get => currentMagazine; }
+    [SerializeField]
+    private int maxMagazine;
+    public override int MaxMagazine { get => maxMagazine; }
 
     private float bulletSpeed = 50f;
     private float casingSpinForce = 10f;
@@ -25,11 +27,12 @@ public class RangedWeapon : WeaponBase
 
     public override void Use()
     {
-        if (curAmmo <= 0) { return; }
+        if (currentMagazine <= 0) { return; }
         if (shotCo != null)
         {
             StopCoroutine(shotCo);
         }
+        currentMagazine--;
         shotCo = StartCoroutine(ShotRoutine());
     }
     
