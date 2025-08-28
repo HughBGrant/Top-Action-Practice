@@ -13,7 +13,7 @@ public class RangedWeapon : WeaponBase
     private GameObject casingPrefab;
     [SerializeField]
     private int currentMagazine;
-    public override int CurrentMagazine { get => currentMagazine; }
+    public override int CurrentMagazine { get => currentMagazine; set => maxMagazine = value; }
     [SerializeField]
     private int maxMagazine;
     public override int MaxMagazine { get => maxMagazine; }

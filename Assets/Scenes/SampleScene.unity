@@ -409,8 +409,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7189803251394478203, guid: fd6e6218879737c4b83eee070c88c519, type: 3}
   ejectPoint: {fileID: 545756592}
   casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
-  maxAmmo: 0
-  curAmmo: 0
+  currentMagazine: 0
+  maxMagazine: 0
 --- !u!1 &387175634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1422,6 +1422,7 @@ MonoBehaviour:
   dodgeDuration: 0.5
   dodgeSpeedMultiplier: 2
   swapDuration: 0.5
+  reloadDuration: 0.5
   groundCheckPoint: {fileID: 1841845943}
   groundCheckDistance: 0.2
   groundLayer:
@@ -1725,8 +1726,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 3266974850389035250, guid: 9be37de3ba72ee34eb5df79901133c8d, type: 3}
   ejectPoint: {fileID: 198873682}
   casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
-  maxAmmo: 0
-  curAmmo: 0
+  currentMagazine: 0
+  maxMagazine: 0
 --- !u!1 &1344738193
 GameObject:
   m_ObjectHideFlags: 0
@@ -22151,7 +22152,7 @@ Transform:
   m_GameObject: {fileID: 1841845942}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.0001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

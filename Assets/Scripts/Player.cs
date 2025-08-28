@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
         {
             moveDirection = dodgeDirection;
         }
-        if (isSwapping || isAttacking)
+        if (isSwapping || isAttacking || isReloading)
         {
             moveDirection = Vector3.zero;
         }
@@ -264,8 +264,9 @@ public class Player : MonoBehaviour
         isReloading = true;
         yield return new WaitForSeconds(reloadDuration);
 
-        int reAmmo = ammo < currentWeapon.MaxMagazine ? ammo : currentWeapon.MaxMagazine;
-
+        int newAmmo = Mathf.Min(ammo, currentWeapon.MaxMagazine - currentWeapon.CurrentMagazine);
+        ammo -= newAmmo;
+        currentWeapon.CurrentMagazine += newAmmo;
 
         isReloading = false;
         reloadCo = null;
