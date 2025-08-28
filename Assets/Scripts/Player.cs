@@ -266,7 +266,9 @@ public class Player : MonoBehaviour
 
         int newAmmo = Mathf.Min(ammo, currentWeapon.MaxMagazine - currentWeapon.CurrentMagazine);
         ammo -= newAmmo;
+        Debug.Log(currentWeapon.CurrentMagazine);
         currentWeapon.CurrentMagazine += newAmmo;
+        Debug.Log(currentWeapon.CurrentMagazine);
 
         isReloading = false;
         reloadCo = null;
