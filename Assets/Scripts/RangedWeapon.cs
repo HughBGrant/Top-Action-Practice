@@ -13,10 +13,10 @@ public class RangedWeapon : WeaponBase
     private GameObject casingPrefab;
     [SerializeField]
     private int currentMagazine;
-    public override int CurrentMagazine { get => currentMagazine; set => maxMagazine = value; }
+    public override int CurrentMagazine { get { return currentMagazine; } set { currentMagazine = value; } }
     [SerializeField]
     private int maxMagazine;
-    public override int MaxMagazine { get => maxMagazine; }
+    public override int MaxMagazine { get { return maxMagazine; } }
 
     private float bulletSpeed = 50f;
     private float casingSpinForce = 10f;
