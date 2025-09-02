@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2254661205590545535}
   - component: {fileID: 7276082152049437616}
   - component: {fileID: 8295655836400702192}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet SubMachineGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,4 +208,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461b098ff888f724e8ac570a312dbf3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 7
+  damage: 0

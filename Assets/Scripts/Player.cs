@@ -64,6 +64,8 @@ public class Player : MonoBehaviour
     private bool isAttacking;
     private bool isAttackHeld;
     private bool isReloading;
+    [SerializeField]
+    private bool isInTouch;
 
     private int currentWeaponId = -1;
     private float nextAttackTime;
@@ -73,6 +75,7 @@ public class Player : MonoBehaviour
 
     private WeaponBase currentWeapon;
     private GameObject nearObj;
+    private Camera cam;
 
     private Coroutine dodgeCo;
     private Coroutine swapCo;
@@ -95,6 +98,7 @@ public class Player : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
+        cam = Camera.main;
 
         // 방어적으로 GroundCheckPoint 비어있다면 하위에서 찾아보기
         if (groundCheckPoint == null)
@@ -104,6 +108,9 @@ public class Player : MonoBehaviour
     {
         HandleMovement();
         HandleJumpFall();
+        //rb.angularVelocity = Vector3.zero;
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
+        isInTouch = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
     }
     private void HandleMovement()
     {
@@ -125,13 +132,25 @@ public class Player : MonoBehaviour
         }
 
         float speed = (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
-        Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
+        Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * (isInTouch ? 0 : speed);
+        
         rb.velocity = new Vector3(moveXZ.x, rb.velocity.y, moveXZ.z);
-
+        
         bool isRunning = moveDirection.sqrMagnitude > MoveEpsilon;
         if (isRunning)
         {
             transform.forward = moveDirection;
+        }
+        if (isAttacking)
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100))
+            {
+                Vector3 nextVec = hit.point - transform.position;
+                nextVec.y = 0;
+                transform.forward = nextVec;
+            }
         }
         animator.SetBool(IsRunningHash, isRunning);
         animator.SetBool(IsWalkingHash, isWalking);
@@ -189,11 +208,8 @@ public class Player : MonoBehaviour
             if (currentWeapon == null || isDodging || isSwapping || isAttacking) { return; }
             isAttackHeld = true;
 
-            //if (attackCo == null)
-            //{
-            //    attackCo = StartCoroutine(AttackRoutine());
-            //}
             RestartRoutine(ref attackCo, AttackRoutine());
+
         }
         else if (context.canceled)
         {

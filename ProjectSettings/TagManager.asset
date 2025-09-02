@@ -18,10 +18,10 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Bullet
+  - Casing
+  - Wall
   - 
   - 
   - 

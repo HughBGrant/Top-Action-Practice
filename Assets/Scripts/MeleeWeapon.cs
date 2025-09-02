@@ -19,7 +19,7 @@ public class MeleeWeapon : WeaponBase
     private static readonly WaitForSeconds wait03 = new WaitForSeconds(0.3f);
     private void Awake()
     {
-        //_meleeRange = GetComponent<BoxCollider>();
+        meleeRange = GetComponent<BoxCollider>();
     }
     public override void Use()
     {
