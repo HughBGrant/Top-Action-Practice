@@ -219,7 +219,7 @@ public class Player : MonoBehaviour
     public void OnReload(InputAction.CallbackContext context)
     {
         if (!context.started || isJumping || isDodging || isSwapping || isAttacking) { return; }
-        if (currentWeapon == null || currentWeapon is MeleeWeapon || ammo == 0) { return; }/////////
+        if (currentWeapon == null || currentWeapon is MeleeWeapon || ammo == 0) { return; }
 
         animator.SetTrigger(DoReloadHash);
         isReloading = true;
@@ -302,7 +302,7 @@ public class Player : MonoBehaviour
         {
             if (Time.time > nextAttackTime)
             {
-                animator.SetTrigger(currentWeapon.DoAttackHash);//////////////
+                animator.SetTrigger(currentWeapon.DoAttackHash);
                 currentWeapon.Use();
                 nextAttackTime = Time.time + currentWeapon.AttackSpeed;
             }

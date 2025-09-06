@@ -5,6 +5,7 @@ public class MeleeWeapon : WeaponBase
 {
     [SerializeField]
     private int damage;
+    public int Damage { get { return damage; } }
     [SerializeField]
     private BoxCollider meleeRange;
     [SerializeField]
@@ -41,5 +42,16 @@ public class MeleeWeapon : WeaponBase
 
         yield return wait03;
         trailEffect.enabled = false;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+
+        if (other.TryGetComponent<IDamageable>(out IDamageable target))
+        {
+            Vector3 hitDir = (other.transform.position - transform.position).normalized;
+            target.TakeDamage(damage, hitDir);
+        }
+
+        
     }
 }
