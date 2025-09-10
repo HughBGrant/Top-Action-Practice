@@ -45,13 +45,9 @@ public class MeleeWeapon : WeaponBase
     }
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.TryGetComponent<IDamageable>(out IDamageable target))
         {
-            Vector3 hitDir = (other.transform.position - transform.position).normalized;
-            target.TakeDamage(damage, hitDir);
+            target.TakeDamage(damage, transform.position);
         }
-
-        
     }
 }

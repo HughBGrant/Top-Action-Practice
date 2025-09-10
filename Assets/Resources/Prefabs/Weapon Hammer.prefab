@@ -188,8 +188,8 @@ GameObject:
   - component: {fileID: 4904821307653703414}
   - component: {fileID: 2602868077684651888}
   - component: {fileID: 1198246540289417973}
-  - component: {fileID: 7406299589579062554}
   - component: {fileID: 213058176662129343}
+  - component: {fileID: 7406299589579062554}
   m_Layer: 0
   m_Name: Weapon Hammer
   m_TagString: Weapon
@@ -263,20 +263,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &7406299589579062554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2982394258133580139}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a6f6d11bb326904e9e3e2f49180bbf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 4
-  value: 0
 --- !u!135 &213058176662129343
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -298,6 +284,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3
   m_Center: {x: 0, y: 3, z: 0}
+--- !u!114 &7406299589579062554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2982394258133580139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6f6d11bb326904e9e3e2f49180bbf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 4
+  value: 0
 --- !u!1 &6012076380338319434
 GameObject:
   m_ObjectHideFlags: 0

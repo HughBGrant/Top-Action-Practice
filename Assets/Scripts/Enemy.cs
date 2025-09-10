@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamageable
@@ -31,15 +30,16 @@ public class Enemy : MonoBehaviour, IDamageable
             Debug.LogWarning("DeadEnemy 레이어를 프로젝트에 추가하세요!");
         }
     }
-    public void TakeDamage(int damage, Vector3 hitDirection)
+    public void TakeDamage(int damage, Vector3 hitPoint)
     {
         currentHealth -= damage;
+        Vector3 hitDir = (transform.position - hitPoint).normalized;
 
         if (hitCo != null)
         {
             StopCoroutine(hitCo);
         }
-        hitCo = StartCoroutine(HitRoutine(hitDirection));
+        hitCo = StartCoroutine(HitRoutine(hitDir));
     }
     IEnumerator HitRoutine(Vector3 hitDirection)
     {

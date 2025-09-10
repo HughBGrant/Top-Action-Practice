@@ -4935,8 +4935,8 @@ GameObject:
   - component: {fileID: 4488940172311662557}
   - component: {fileID: 1989200529184536772}
   - component: {fileID: 8133703409578848526}
-  - component: {fileID: 208562443725175779}
   - component: {fileID: 4385134005464730289}
+  - component: {fileID: 208562443725175779}
   m_Layer: 0
   m_Name: Weapon Grenade
   m_TagString: Item
@@ -5010,20 +5010,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &208562443725175779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5120336280721268181}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a6f6d11bb326904e9e3e2f49180bbf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 2
-  value: 1
 --- !u!135 &4385134005464730289
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5045,6 +5031,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3
   m_Center: {x: 0, y: 3, z: 0}
+--- !u!114 &208562443725175779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5120336280721268181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6f6d11bb326904e9e3e2f49180bbf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 2
+  value: 1
 --- !u!1 &6018028680239441044
 GameObject:
   m_ObjectHideFlags: 0

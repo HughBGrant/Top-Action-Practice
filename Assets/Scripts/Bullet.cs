@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Bullet : MonoBehaviour
 {
@@ -19,16 +18,13 @@ public class Bullet : MonoBehaviour
     {
         if (other.TryGetComponent<IDamageable>(out IDamageable target))
         {
-            Vector3 hitDir = (other.transform.position - transform.position).normalized;
-            target.TakeDamage(damage, hitDir);
+            target.TakeDamage(damage, transform.position);
             Destroy(gameObject);
-            return;
         }
 
         if (other.gameObject.CompareTag(Tags.Wall))
         {
             Destroy(gameObject);
         }
-
     }
 }

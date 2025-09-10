@@ -105,8 +105,8 @@ GameObject:
   - component: {fileID: 2569510164195569245}
   - component: {fileID: 6065397697938346768}
   - component: {fileID: 7027752459287944907}
-  - component: {fileID: 5873945855083787359}
   - component: {fileID: 2868536643282499000}
+  - component: {fileID: 5873945855083787359}
   m_Layer: 0
   m_Name: Coin Gold
   m_TagString: Item
@@ -180,20 +180,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &5873945855083787359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4549062201743572920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a6f6d11bb326904e9e3e2f49180bbf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 1
-  value: 50
 --- !u!135 &2868536643282499000
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -215,6 +201,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 3
   m_Center: {x: 0, y: 3, z: 0}
+--- !u!114 &5873945855083787359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549062201743572920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6f6d11bb326904e9e3e2f49180bbf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 1
+  value: 50
 --- !u!1 &5127155719713742093
 GameObject:
   m_ObjectHideFlags: 0
