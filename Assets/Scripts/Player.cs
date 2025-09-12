@@ -103,7 +103,9 @@ public class Player : MonoBehaviour
         cam = Camera.main;
         // 방어적으로 GroundCheckPoint 비어있다면 하위에서 찾아보기
         if (groundCheckPoint == null)
+        {
             groundCheckPoint = transform.Find("GroundCheckPoint");
+        }
     }
     void FixedUpdate()
     {
@@ -383,13 +385,13 @@ public class Player : MonoBehaviour
         }
     }
     // --- Utils ---
-    private void RestartRoutine(ref Coroutine coField, IEnumerator routine)
+    private void RestartRoutine(ref Coroutine co, IEnumerator routine)
     {
-        if (coField != null)
+        if (co != null)
         {
-            StopCoroutine(coField);
+            StopCoroutine(co);
         }
-        coField = StartCoroutine(routine);
+        co = StartCoroutine(routine);
     }
     private bool IsGrounded()
     {
