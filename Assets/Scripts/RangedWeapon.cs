@@ -28,6 +28,7 @@ public class RangedWeapon : WeaponBase
     public override void Use()
     {
         if (currentMagazine <= 0) { return; }
+
         if (shotCo != null)
         {
             StopCoroutine(shotCo);
@@ -35,7 +36,6 @@ public class RangedWeapon : WeaponBase
         currentMagazine--;
         shotCo = StartCoroutine(ShotRoutine());
     }
-    
     private IEnumerator ShotRoutine()
     {
         GameObject bulletInstant = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);

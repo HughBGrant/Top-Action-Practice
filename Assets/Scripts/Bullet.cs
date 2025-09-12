@@ -21,7 +21,6 @@ public class Bullet : MonoBehaviour
             target.TakeDamage(damage, transform.position);
             Destroy(gameObject);
         }
-
         if (other.gameObject.CompareTag(Tags.Wall))
         {
             Destroy(gameObject);

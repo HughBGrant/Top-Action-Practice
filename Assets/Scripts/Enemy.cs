@@ -58,6 +58,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Die(Vector3 hitDirection)
     {
         material.color = Color.gray;
+
         if (deadEnemyLayer != -1)
         {
             gameObject.layer = deadEnemyLayer;

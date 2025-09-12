@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -50,6 +49,8 @@ public class Player : MonoBehaviour
     private bool[] hasWeapons;
     [SerializeField]
     private GameObject[] grenades;
+    [SerializeField]
+    private GameObject grenadePrefab;
 
     // State
     private Vector2 moveInput;
@@ -81,6 +82,7 @@ public class Player : MonoBehaviour
     private Coroutine swapCo;
     private Coroutine attackCo;
     private Coroutine reloadCo;
+
     private const int MaxAmmo = 999;
     private const int MaxCoin = 99999;
     private const int MaxHealth = 100;
@@ -99,7 +101,6 @@ public class Player : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
-
         // 방어적으로 GroundCheckPoint 비어있다면 하위에서 찾아보기
         if (groundCheckPoint == null)
             groundCheckPoint = transform.Find("GroundCheckPoint");
@@ -114,12 +115,13 @@ public class Player : MonoBehaviour
     }
     private void HandleMovement()
     {
+        //예약된 점프 실행
         if (shouldJump)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);
             shouldJump = false;
         }
-
+        //이동 준비
         moveDirection = new Vector3(moveInput.x, 0f, moveInput.y);
 
         if (isDodging)
@@ -130,33 +132,35 @@ public class Player : MonoBehaviour
         {
             moveDirection = Vector3.zero;
         }
-
-        float speed = (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
-        Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * (isInTouch ? 0 : speed);
+        float speed = (isInTouch ? 0f : 1f) * (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
+        //최종 벡터
+        Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z);
         
         rb.velocity = new Vector3(moveXZ.x, rb.velocity.y, moveXZ.z);
-        
+        //시선
         bool isRunning = moveDirection.sqrMagnitude > MoveEpsilon;
         if (isRunning)
         {
             transform.forward = moveDirection;
         }
+        //공격
         if (isAttacking)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100))
             {
                 Vector3 nextVec = hit.point - transform.position;
                 nextVec.y = 0;
                 transform.forward = nextVec;
             }
         }
+        //애니메이션
         animator.SetBool(IsRunningHash, isRunning);
         animator.SetBool(IsWalkingHash, isWalking);
     }
     private void HandleJumpFall()
     {
+        //바닥 착지
         bool wasJumping = isJumping;
 
         if (rb.velocity.y < 0f)
@@ -267,6 +271,21 @@ public class Player : MonoBehaviour
             RestartRoutine(ref swapCo, SwapRoutine());
         }
     }
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (!context.started) { return; }
+
+        if (grenadeCount == 0) { return; }
+
+        if (isReloading || isSwapping) { return; }
+
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, 100))
+        {
+            Vector3 nextVec = hit.point - transform.position;
+            nextVec.y = 0;
+        }
+    }
     private IEnumerator DodgeRoutine()
     {
         isDodging = true;
@@ -316,7 +335,7 @@ public class Player : MonoBehaviour
     {
         if (!other.CompareTag(Tags.Item)) {  return; }
 
-        if (!other.TryGetComponent(out Item item)) { return; }
+        if (!other.TryGetComponent<Item>(out Item item)) { return; }
 
         switch (item.Type)
         {
@@ -330,21 +349,20 @@ public class Player : MonoBehaviour
                 health = Mathf.Min(health + item.Value, MaxHealth);
                 break;
             case ItemType.Grenade:
-                if (grenades != null && grenades.Length > 0)
-                {
-                    int before = grenadeCount;
-                    int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
+                if (grenades == null || grenades.Length <= 0) { break; }
+                
+                int before = grenadeCount;
+                int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
 
-                    // UI 토글: 새로 늘어난 슬롯만 활성화
-                    for (int i = before; i < after && i < grenades.Length; i++)
+                // UI 토글: 새로 늘어난 슬롯만 활성화
+                for (int i = before; i < after && i < grenades.Length; i++)
+                {
+                    if (grenades[i] != null)
                     {
-                        if (grenades[i] != null)
-                        {
-                            grenades[i].SetActive(true);
-                        }
+                        grenades[i].SetActive(true);
                     }
-                    grenadeCount = after;
                 }
+                grenadeCount = after;
                 break;
         }
         Destroy(other.gameObject);
