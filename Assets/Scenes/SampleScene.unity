@@ -2031,18 +2031,17 @@ MonoBehaviour:
   ammo: 100
   coin: 0
   grenadeCount: 0
-  weapons:
+  belongingWeapons:
   - {fileID: 1348174882717130290}
   - {fileID: 1509416925352882783}
   - {fileID: 547435428202098877}
   hasWeapons: 000000
-  grenades:
+  belongingGrenades:
   - {fileID: 852288990}
   - {fileID: 2006751319}
   - {fileID: 1414647320}
   - {fileID: 83008190}
   grenadePrefab: {fileID: 7837284830516385393, guid: 2b9c64a633c89c844aab390985cf3985, type: 3}
-  isInTouch: 0
 --- !u!136 &1290166531
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2275,7 +2274,19 @@ MonoBehaviour:
     m_ActionId: 6e8dd998-61e2-4cd7-a778-06520d837694
     m_ActionName: Player/Reload
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1290166530}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnFire
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b46a3599-c873-4b0f-a552-bdfc26a78c74
     m_ActionName: Player/Fire
   m_NeverAutoSwitchControlSchemes: 0

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
@@ -44,11 +45,13 @@ public class Player : MonoBehaviour
 
     [Header("Weapons & Items")]
     [SerializeField]
-    private GameObject[] weapons;
+    [FormerlySerializedAs("weapons")]
+    private GameObject[] belongingWeapons;
     [SerializeField]
     private bool[] hasWeapons;
     [SerializeField]
-    private GameObject[] grenades;
+    [FormerlySerializedAs("grenades")]
+    private GameObject[] belongingGrenades;
     [SerializeField]
     private GameObject grenadePrefab;
 
@@ -65,7 +68,6 @@ public class Player : MonoBehaviour
     private bool isAttacking;
     private bool isAttackHeld;
     private bool isReloading;
-    [SerializeField]
     private bool isInTouch;
 
     private int currentWeaponId = -1;
@@ -136,16 +138,16 @@ public class Player : MonoBehaviour
         }
         float speed = (isInTouch ? 0f : 1f) * (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
         //최종 벡터
-        Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z);
-        
+        Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
+
         rb.velocity = new Vector3(moveXZ.x, rb.velocity.y, moveXZ.z);
-        //시선
+        //달리는 방향
         bool isRunning = moveDirection.sqrMagnitude > MoveEpsilon;
         if (isRunning)
         {
             transform.forward = moveDirection;
         }
-        //공격
+        //공격시 방향
         if (isAttacking)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -252,11 +254,11 @@ public class Player : MonoBehaviour
     {
         if (!context.started) { return; }
         if (isJumping || isDodging) { return; }
-        if (weapons == null || hasWeapons == null) { return; }
+        if (belongingWeapons == null || hasWeapons == null) { return; }
 
         int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
 
-        if (newWeaponId < 0 || newWeaponId >= weapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == currentWeaponId || !hasWeapons[newWeaponId]) { return; }
+        if (newWeaponId < 0 || newWeaponId >= belongingWeapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == currentWeaponId || !hasWeapons[newWeaponId]) { return; }
 
         if (currentWeapon != null)
         {
@@ -264,7 +266,7 @@ public class Player : MonoBehaviour
         }
         currentWeaponId = newWeaponId;
 
-        GameObject go = weapons[currentWeaponId];
+        GameObject go = belongingWeapons[currentWeaponId];
         if (go != null && go.TryGetComponent(out WeaponBase weapon))
         {
             currentWeapon = weapon;
@@ -277,7 +279,7 @@ public class Player : MonoBehaviour
     {
         if (!context.started) { return; }
 
-        if (grenadeCount == 0) { return; }
+        if (grenadeCount <= 0) { return; }
 
         if (isReloading || isSwapping) { return; }
 
@@ -285,7 +287,13 @@ public class Player : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 100))
         {
             Vector3 nextVec = hit.point - transform.position;
-            nextVec.y = 0;
+            nextVec.y = 10;
+
+            Rigidbody grenadeInstance = Instantiate(grenadePrefab, transform.position, transform.rotation).GetComponent<Rigidbody>();
+            grenadeInstance.AddForce(nextVec, ForceMode.Impulse);
+            grenadeInstance.AddTorque(Vector3.back * 10, ForceMode.Impulse);
+            grenadeCount--;
+            belongingGrenades[grenadeCount].SetActive(false);
         }
     }
     private IEnumerator DodgeRoutine()
@@ -351,17 +359,17 @@ public class Player : MonoBehaviour
                 health = Mathf.Min(health + item.Value, MaxHealth);
                 break;
             case ItemType.Grenade:
-                if (grenades == null || grenades.Length <= 0) { break; }
+                if (belongingGrenades == null || belongingGrenades.Length <= 0) { break; }
                 
                 int before = grenadeCount;
                 int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
 
                 // UI 토글: 새로 늘어난 슬롯만 활성화
-                for (int i = before; i < after && i < grenades.Length; i++)
+                for (int i = before; i < after && i < belongingGrenades.Length; i++)
                 {
-                    if (grenades[i] != null)
+                    if (belongingGrenades[i] != null)
                     {
-                        grenades[i].SetActive(true);
+                        belongingGrenades[i].SetActive(true);
                     }
                 }
                 grenadeCount = after;

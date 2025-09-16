@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Orbit : MonoBehaviour
+public class BelongingGrenade : MonoBehaviour
 {
     [SerializeField]
     private float orbitSpeed;
