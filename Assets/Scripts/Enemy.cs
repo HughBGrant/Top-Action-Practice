@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private float deathDestroyDelay = 2f;
     private float deathReactionMultiplier = 5f;
     private static readonly WaitForSeconds hitFlashTime = new WaitForSeconds(0.1f);
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -33,27 +34,18 @@ public class Enemy : MonoBehaviour, IDamageable
     public void TakeDamage(int damage, Vector3 hitPoint)
     {
         currentHealth -= damage;
+        Debug.Log($"체력 {damage} 감소. 현재 체력 {currentHealth}");
         Vector3 hitDir = (transform.position - hitPoint).normalized;
 
         if (hitCo != null)
         {
             StopCoroutine(hitCo);
         }
-        hitCo = StartCoroutine(HitRoutine(hitDir));
+        hitCo = StartCoroutine(ReactToHit(hitDir));
     }
-    IEnumerator HitRoutine(Vector3 hitDirection)
+    public void HitByGrenade(Vector3 position)
     {
-        material.color = Color.red;
-        yield return hitFlashTime;
 
-        if (currentHealth <= 0)
-        {
-            Die(hitDirection);
-        }
-        else
-        {
-            material.color = Color.white;
-        }
     }
     private void Die(Vector3 hitDirection)
     {
@@ -68,5 +60,19 @@ public class Enemy : MonoBehaviour, IDamageable
             rb.AddForce((hitDirection + Vector3.up) * deathReactionMultiplier, ForceMode.Impulse);
         }
         Destroy(gameObject, deathDestroyDelay);
+    }
+    IEnumerator ReactToHit(Vector3 hitDirection)
+    {
+        material.color = Color.red;
+        yield return hitFlashTime;
+
+        if (currentHealth <= 0)
+        {
+            Die(hitDirection);
+        }
+        else
+        {
+            material.color = Color.white;
+        }
     }
 }

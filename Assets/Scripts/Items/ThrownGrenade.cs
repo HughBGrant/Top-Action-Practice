@@ -6,15 +6,40 @@ public class ThrownGrenade : MonoBehaviour
 {
     [SerializeField]
     private GameObject mesh;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private GameObject effect;
+    private Rigidbody rb;
 
-    // Update is called once per frame
-    void Update()
+    private Coroutine ExplodeCo;
+
+    private static readonly WaitForSeconds wait30 = new WaitForSeconds(3f);
+    // Start is called before the first frame update
+    void Awake()
     {
-        
+        rb = GetComponent<Rigidbody>();
+    }
+    private void Start()
+    {
+        ExplodeCo = StartCoroutine(ExplodeGrenade());
+    }
+    IEnumerator ExplodeGrenade()
+    {
+        yield return wait30;
+
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        mesh.SetActive(false);
+        effect.SetActive(false);
+
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, 15, Vector3.up, 0, LayerMask.GetMask("Enemy"));
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.transform.TryGetComponent<Enemy>(out Enemy enemy))
+            {
+                enemy.HitByGrenade(transform.position);
+            }
+        }
+
     }
 }

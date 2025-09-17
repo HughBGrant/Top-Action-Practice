@@ -6,7 +6,6 @@ public class MeleeWeapon : WeaponBase
     [SerializeField]
     private int damage;
     public int Damage { get { return damage; } }
-    [SerializeField]
     private BoxCollider meleeRange;
     [SerializeField]
     private TrailRenderer trailEffect;
@@ -28,10 +27,10 @@ public class MeleeWeapon : WeaponBase
         {
             StopCoroutine(swingCo);
         }
-        swingCo = StartCoroutine(SwingRoutine());
+        swingCo = StartCoroutine(MeleeSwing());
     }
 
-    private IEnumerator SwingRoutine()
+    private IEnumerator MeleeSwing()
     {
         yield return wait01;
         meleeRange.enabled = true;

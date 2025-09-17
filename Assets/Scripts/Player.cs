@@ -206,7 +206,7 @@ public class Player : MonoBehaviour
         {
             dodgeDirection = moveDirection;
             animator.SetTrigger(DoDodgeHash);
-            RestartRoutine(ref dodgeCo, DodgeRoutine());
+            RestartRoutine(ref dodgeCo, PerformDodge());
         }
     }
     public void OnAttack(InputAction.CallbackContext context)
@@ -216,7 +216,7 @@ public class Player : MonoBehaviour
             if (currentWeapon == null || isDodging || isSwapping || isAttacking) { return; }
             isAttackHeld = true;
 
-            RestartRoutine(ref attackCo, AttackRoutine());
+            RestartRoutine(ref attackCo, HandleAttack());
 
         }
         else if (context.canceled)
@@ -272,7 +272,7 @@ public class Player : MonoBehaviour
             currentWeapon = weapon;
             currentWeapon.gameObject.SetActive(true);
             animator.SetTrigger(DoSwapHash);
-            RestartRoutine(ref swapCo, SwapRoutine());
+            RestartRoutine(ref swapCo, SwapWeapon());
         }
     }
     public void OnFire(InputAction.CallbackContext context)
@@ -296,7 +296,7 @@ public class Player : MonoBehaviour
             belongingGrenades[grenadeCount].SetActive(false);
         }
     }
-    private IEnumerator DodgeRoutine()
+    private IEnumerator PerformDodge()
     {
         isDodging = true;
         yield return new WaitForSeconds(dodgeDuration);
@@ -316,7 +316,7 @@ public class Player : MonoBehaviour
         isReloading = false;
         reloadCo = null;
     }
-    private IEnumerator SwapRoutine()
+    private IEnumerator SwapWeapon()
     {
         isSwapping = true;
         yield return new WaitForSeconds(swapDuration);
@@ -324,7 +324,7 @@ public class Player : MonoBehaviour
         isSwapping = false;
         swapCo = null;
     }
-    private IEnumerator AttackRoutine()
+    private IEnumerator HandleAttack()
     {
         isAttacking = true;
         while (isAttackHeld)

@@ -34,9 +34,9 @@ public class RangedWeapon : WeaponBase
             StopCoroutine(shotCo);
         }
         currentMagazine--;
-        shotCo = StartCoroutine(ShotRoutine());
+        shotCo = StartCoroutine(FireShot());
     }
-    private IEnumerator ShotRoutine()
+    private IEnumerator FireShot()
     {
         GameObject bulletInstant = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody bulletRb = bulletInstant.GetComponent<Rigidbody>();
