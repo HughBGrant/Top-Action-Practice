@@ -169,7 +169,7 @@ public class Player : MonoBehaviour
 
         if (rb.velocity.y < 0f)
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
+            //rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
 
             if (IsGrounded())
             {
@@ -343,7 +343,7 @@ public class Player : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag(Tags.Item)) {  return; }
+        if (!other.CompareTag(Tags.Item)) { return; }
 
         if (!other.TryGetComponent<Item>(out Item item)) { return; }
 
@@ -360,7 +360,7 @@ public class Player : MonoBehaviour
                 break;
             case ItemType.Grenade:
                 if (belongingGrenades == null || belongingGrenades.Length <= 0) { break; }
-                
+
                 int before = grenadeCount;
                 int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
 
@@ -376,7 +376,7 @@ public class Player : MonoBehaviour
                 break;
         }
         Destroy(other.gameObject);
-        
+
     }
     private void OnTriggerStay(Collider other)
     {

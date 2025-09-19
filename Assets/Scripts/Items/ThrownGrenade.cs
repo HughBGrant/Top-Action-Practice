@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ThrownGrenade : MonoBehaviour
@@ -22,7 +21,7 @@ public class ThrownGrenade : MonoBehaviour
     {
         ExplodeCo = StartCoroutine(ExplodeGrenade());
     }
-    IEnumerator ExplodeGrenade()
+    private IEnumerator ExplodeGrenade()
     {
         yield return wait30;
 
@@ -37,9 +36,9 @@ public class ThrownGrenade : MonoBehaviour
         {
             if (hit.transform.TryGetComponent<Enemy>(out Enemy enemy))
             {
-                enemy.HitByGrenade(transform.position);
+                enemy.TakeDamage(100, transform.position, true);
             }
         }
-
+        Destroy(gameObject, 4f);
     }
 }
