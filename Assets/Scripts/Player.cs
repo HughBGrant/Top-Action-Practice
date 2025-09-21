@@ -94,10 +94,10 @@ public class Player : MonoBehaviour
     private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
     private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
     private static readonly int IsJumpingHash = Animator.StringToHash("isJumping");
-    private static readonly int DoJumpHash = Animator.StringToHash("doJump");
-    private static readonly int DoDodgeHash = Animator.StringToHash("doDodge");
-    private static readonly int DoSwapHash = Animator.StringToHash("doSwap");
-    private static readonly int DoReloadHash = Animator.StringToHash("doReload");
+    private static readonly int DoJumpHash = Animator.StringToHash("jump");
+    private static readonly int DoDodgeHash = Animator.StringToHash("dodge");
+    private static readonly int DoSwapHash = Animator.StringToHash("swap");
+    private static readonly int DoReloadHash = Animator.StringToHash("reload");
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -113,7 +113,6 @@ public class Player : MonoBehaviour
     {
         HandleMovement();
         HandleJumpFall();
-        //rb.angularVelocity = Vector3.zero;
         Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
         isInTouch = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
     }
@@ -364,7 +363,6 @@ public class Player : MonoBehaviour
                 int before = grenadeCount;
                 int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
 
-                // UI 토글: 새로 늘어난 슬롯만 활성화
                 for (int i = before; i < after && i < belongingGrenades.Length; i++)
                 {
                     if (belongingGrenades[i] != null)

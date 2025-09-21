@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         rb = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
+        navAgent = GetComponent<NavMeshAgent>();
         material = GetComponentInChildren<MeshRenderer>().material;
         deadEnemyLayer = LayerMask.NameToLayer("DeadEnemy");
         if (deadEnemyLayer == -1)
@@ -35,24 +36,14 @@ public class Enemy : MonoBehaviour, IDamageable
             Debug.LogWarning("DeadEnemy 레이어를 프로젝트에 추가하세요!");
         }
 
-        navAgent = GetComponent<NavMeshAgent>();
     }
     private void Start()
     {
         currentHealth = maxHealth;
-
-    }
-    private void FixedUpdate()
-    {
-        FreezeVelocity();
     }
     private void Update()
     {
         navAgent.SetDestination(targetPoint.position);
-    }
-    void FreezeVelocity()
-    {
-        rb.velocity = Vector3.zero;
     }
 
     public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)

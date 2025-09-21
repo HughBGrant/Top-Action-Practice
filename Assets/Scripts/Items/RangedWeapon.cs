@@ -5,11 +5,11 @@ public class RangedWeapon : WeaponBase
 {
     [SerializeField]
     private Transform firePoint;
-    [SerializeField] 
+    [SerializeField]
     private GameObject bulletPrefab;
-    [SerializeField] 
+    [SerializeField]
     private Transform ejectPoint;
-    [SerializeField] 
+    [SerializeField]
     private GameObject casingPrefab;
     [SerializeField]
     private int currentMagazine;
@@ -22,7 +22,7 @@ public class RangedWeapon : WeaponBase
     private float casingSpinForce = 10f;
 
     private Coroutine shotCo;
-    private static readonly int doShotHash = Animator.StringToHash("doShot");
+    private static readonly int doShotHash = Animator.StringToHash("shoot");
     public override int DoAttackHash { get => doShotHash; }
 
     public override void Use()

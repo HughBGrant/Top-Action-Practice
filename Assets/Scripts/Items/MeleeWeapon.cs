@@ -12,7 +12,7 @@ public class MeleeWeapon : WeaponBase
 
     private Coroutine swingCo;
 
-    private static readonly int doSwingHash = Animator.StringToHash("doSwing");
+    private static readonly int doSwingHash = Animator.StringToHash("swing");
     public override int DoAttackHash { get { return doSwingHash; } }
 
     private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
