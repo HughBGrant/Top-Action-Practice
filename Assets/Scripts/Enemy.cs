@@ -5,6 +5,9 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField]
+    private bool isChasing;
+
+    [SerializeField]
     private int maxHealth;
     [SerializeField]
     private int currentHealth;
@@ -14,10 +17,10 @@ public class Enemy : MonoBehaviour, IDamageable
     private Rigidbody rb;
     private BoxCollider boxCollider;
     private Material material;
-    NavMeshAgent navAgent;
+    private NavMeshAgent navAgent;
+    private Animator animator;
 
     private Coroutine hitCo;
-    private Coroutine reactCo;
 
     private static int deadEnemyLayer;
     private const float deathDestroyDelay = 2f;
@@ -29,6 +32,7 @@ public class Enemy : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
         navAgent = GetComponent<NavMeshAgent>();
+        animator = GetComponentInChildren<Animator>();
         material = GetComponentInChildren<MeshRenderer>().material;
         deadEnemyLayer = LayerMask.NameToLayer("DeadEnemy");
         if (deadEnemyLayer == -1)
@@ -40,10 +44,15 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Start()
     {
         currentHealth = maxHealth;
+
+        Invoke("StartChase", 2f);
     }
     private void Update()
     {
-        navAgent.SetDestination(targetPoint.position);
+        //if (isChasing)
+        {
+            navAgent.SetDestination(targetPoint.position);
+        }
     }
 
     public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
@@ -59,9 +68,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0)
         {
-            Vector3 hitDir = (transform.position - hitPoint).normalized;
 
-            Die(hitDir, isHitGrenade);
+            Die(hitPoint, isHitGrenade);
         }
 
     }
@@ -76,13 +84,19 @@ public class Enemy : MonoBehaviour, IDamageable
         }
 
     }
-    private void Die(Vector3 hitDirection, bool isHitGrenade = false)
+    private void Die(Vector3 hitPoint, bool isHitGrenade = false)
     {
+        //isChasing = false;
+        navAgent.enabled = false;
         material.color = Color.gray;
 
         gameObject.layer = deadEnemyLayer;
 
+
+        animator.SetTrigger("die");
+
         float hitGrenadeReactionMultiplier = isHitGrenade ? 3f : 1f;
+        Vector3 hitDirection = (transform.position - hitPoint).normalized;
         hitDirection += Vector3.up * hitGrenadeReactionMultiplier;
 
         rb.AddForce(hitDirection * deathReactionMultiplier, ForceMode.Impulse);
@@ -93,5 +107,10 @@ public class Enemy : MonoBehaviour, IDamageable
         }
 
         Destroy(gameObject, deathDestroyDelay);
+    }
+    private void StartChase()
+    {
+        isChasing = true;
+        animator.SetBool("isWalking", true);
     }
 }
