@@ -5,6 +5,8 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
+    private enum WeaponSlot { None = -1, Hammer, HandGun, SubMachineGun }
+
     [Header("Movement")]
     [SerializeField]
     private float runSpeed;
@@ -70,7 +72,7 @@ public class Player : MonoBehaviour
     private bool isReloading;
     private bool isInTouch;
 
-    private int currentWeaponId = -1;
+    private WeaponSlot currentWeaponId = WeaponSlot.None;
     private float nextAttackTime;
 
     private Animator animator;
@@ -168,7 +170,7 @@ public class Player : MonoBehaviour
 
         if (rb.velocity.y < 0f)
         {
-            //rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
+            rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
 
             if (IsGrounded())
             {
@@ -257,15 +259,15 @@ public class Player : MonoBehaviour
 
         int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
 
-        if (newWeaponId < 0 || newWeaponId >= belongingWeapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == currentWeaponId || !hasWeapons[newWeaponId]) { return; }
+        if (newWeaponId < 0 || newWeaponId >= belongingWeapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == (int)currentWeaponId || !hasWeapons[newWeaponId]) { return; }
 
         if (currentWeapon != null)
         {
             currentWeapon.gameObject.SetActive(false);
         }
-        currentWeaponId = newWeaponId;
+        currentWeaponId = (WeaponSlot)newWeaponId;
 
-        GameObject go = belongingWeapons[currentWeaponId];
+        GameObject go = belongingWeapons[(int)currentWeaponId];
         if (go != null && go.TryGetComponent(out WeaponBase weapon))
         {
             currentWeapon = weapon;
