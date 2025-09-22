@@ -49,7 +49,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Update()
     {
-        //if (isChasing)
+        if (isChasing)
         {
             navAgent.SetDestination(targetPoint.position);
         }
@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Die(Vector3 hitPoint, bool isHitGrenade = false)
     {
-        //isChasing = false;
+        isChasing = false;
         navAgent.enabled = false;
         material.color = Color.gray;
 
