@@ -15,7 +15,6 @@ public class Enemy : MonoBehaviour, IDamageable
     private Transform targetPoint;
 
     private Rigidbody rb;
-    private BoxCollider boxCollider;
     private Material material;
     private NavMeshAgent navAgent;
     private Animator animator;
@@ -30,7 +29,6 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        boxCollider = GetComponent<BoxCollider>();
         navAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         material = GetComponentInChildren<MeshRenderer>().material;
@@ -49,9 +47,10 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Update()
     {
-        if (isChasing)
+        if (navAgent.enabled)
         {
             navAgent.SetDestination(targetPoint.position);
+            navAgent.isStopped = !isChasing;
         }
     }
 

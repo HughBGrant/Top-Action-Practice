@@ -35,7 +35,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private LayerMask groundLayer;
 
-    [Header("Stats")]
+    [Header("재화, 능력치")]
     [SerializeField]
     private int health;
     [SerializeField]
@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int grenadeCount;
 
-    [Header("Weapons & Items")]
+    [Header("장착")]
     [SerializeField]
     [FormerlySerializedAs("weapons")]
     private GameObject[] belongingWeapons;
@@ -57,11 +57,12 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject grenadePrefab;
 
-    // State
+    // 움직임
     private Vector2 moveInput;
     private Vector3 moveDirection;
     private Vector3 dodgeDirection;
 
+    // 상태
     private bool isWalking;
     private bool isJumping;
     private bool shouldJump;
@@ -70,15 +71,15 @@ public class Player : MonoBehaviour
     private bool isAttacking;
     private bool isAttackHeld;
     private bool isReloading;
-    private bool isInTouch;
-
-    private WeaponSlot currentWeaponId = WeaponSlot.None;
-    private float nextAttackTime;
+    private bool isInTouchWall;
+    private bool isTakingDamage;
 
     private Animator animator;
     private Rigidbody rb;
+    private MeshRenderer[] meshs;
 
     private WeaponBase currentWeapon;
+    private WeaponSlot currentWeaponId = WeaponSlot.None;
     private GameObject nearObj;
     private Camera cam;
 
@@ -86,6 +87,7 @@ public class Player : MonoBehaviour
     private Coroutine swapCo;
     private Coroutine attackCo;
     private Coroutine reloadCo;
+    private Coroutine damageCo;
 
     private const int MaxAmmo = 999;
     private const int MaxCoin = 99999;
@@ -100,23 +102,20 @@ public class Player : MonoBehaviour
     private static readonly int DoDodgeHash = Animator.StringToHash("dodge");
     private static readonly int DoSwapHash = Animator.StringToHash("swap");
     private static readonly int DoReloadHash = Animator.StringToHash("reload");
+    private static readonly WaitForSeconds wait10 = new WaitForSeconds(1f);
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
-        // 방어적으로 GroundCheckPoint 비어있다면 하위에서 찾아보기
-        if (groundCheckPoint == null)
-        {
-            groundCheckPoint = transform.Find("GroundCheckPoint");
-        }
+        meshs = GetComponentsInChildren<MeshRenderer>();
     }
     void FixedUpdate()
     {
         HandleMovement();
         HandleJumpFall();
         Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
-        isInTouch = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
+        isInTouchWall = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
     }
     private void HandleMovement()
     {
@@ -137,7 +136,7 @@ public class Player : MonoBehaviour
         {
             moveDirection = Vector3.zero;
         }
-        float speed = (isInTouch ? 0f : 1f) * (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
+        float speed = (isInTouchWall ? 0f : 1f) * (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
         //최종 벡터
         Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
 
@@ -232,7 +231,7 @@ public class Player : MonoBehaviour
 
         animator.SetTrigger(DoReloadHash);
         isReloading = true;
-        RestartRoutine(ref reloadCo, ReloadRoutine());
+        RestartRoutine(ref reloadCo, ReloadBullet());
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
@@ -305,7 +304,7 @@ public class Player : MonoBehaviour
         isDodging = false;
         dodgeCo = null;
     }
-    private IEnumerator ReloadRoutine()
+    private IEnumerator ReloadBullet()
     {
         isReloading = true;
         yield return new WaitForSeconds(reloadDuration);
@@ -328,6 +327,8 @@ public class Player : MonoBehaviour
     private IEnumerator HandleAttack()
     {
         isAttacking = true;
+        float nextAttackTime = 0;
+
         while (isAttackHeld)
         {
             if (Time.time > nextAttackTime)
@@ -342,41 +343,67 @@ public class Player : MonoBehaviour
         isAttacking = false;
         attackCo = null;
     }
+    private IEnumerator TakeDamage()
+    {
+        isTakingDamage = true;
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.yellow;
+        }
+        yield return wait10;
+
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.white;
+        }
+
+        isTakingDamage = false;
+
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag(Tags.Item)) { return; }
-
-        if (!other.TryGetComponent<Item>(out Item item)) { return; }
-
-        switch (item.Type)
+        if (other.CompareTag(Tags.Item))
         {
-            case ItemType.Ammo:
-                ammo = Mathf.Min(ammo + item.Value, MaxAmmo);
-                break;
-            case ItemType.Coin:
-                coin = Mathf.Min(coin + item.Value, MaxCoin);
-                break;
-            case ItemType.Heart:
-                health = Mathf.Min(health + item.Value, MaxHealth);
-                break;
-            case ItemType.Grenade:
-                if (belongingGrenades == null || belongingGrenades.Length <= 0) { break; }
+            if (!other.TryGetComponent<Item>(out Item item)) { return; }
+            switch (item.Type)
+            {
+                case ItemType.Ammo:
+                    ammo = Mathf.Min(ammo + item.Value, MaxAmmo);
+                    break;
+                case ItemType.Coin:
+                    coin = Mathf.Min(coin + item.Value, MaxCoin);
+                    break;
+                case ItemType.Heart:
+                    health = Mathf.Min(health + item.Value, MaxHealth);
+                    break;
+                case ItemType.Grenade:
+                    if (belongingGrenades == null || belongingGrenades.Length <= 0) { break; }
 
-                int before = grenadeCount;
-                int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
+                    int before = grenadeCount;
+                    int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
 
-                for (int i = before; i < after && i < belongingGrenades.Length; i++)
-                {
-                    if (belongingGrenades[i] != null)
+                    for (int i = before; i < after && i < belongingGrenades.Length; i++)
                     {
-                        belongingGrenades[i].SetActive(true);
+                        if (belongingGrenades[i] != null)
+                        {
+                            belongingGrenades[i].SetActive(true);
+                        }
                     }
-                }
-                grenadeCount = after;
-                break;
+                    grenadeCount = after;
+                    break;
+            }
+            Destroy(other.gameObject);
         }
-        Destroy(other.gameObject);
+        else if (other.CompareTag("EnemyBullet"))
+        {
+            if (isTakingDamage) { return; }
 
+            if (!other.TryGetComponent<Bullet>(out Bullet enemyBullet)) { return; }
+
+            health -= enemyBullet.Damage;
+            damageCo = StartCoroutine(TakeDamage());
+
+        }
     }
     private void OnTriggerStay(Collider other)
     {

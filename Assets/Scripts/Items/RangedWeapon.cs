@@ -21,7 +21,7 @@ public class RangedWeapon : WeaponBase
     private float bulletSpeed = 50f;
     private float casingSpinForce = 10f;
 
-    private Coroutine shotCo;
+    private Coroutine shootCo;
     private static readonly int doShotHash = Animator.StringToHash("shoot");
     public override int DoAttackHash { get => doShotHash; }
 
@@ -29,14 +29,14 @@ public class RangedWeapon : WeaponBase
     {
         if (currentMagazine <= 0) { return; }
 
-        if (shotCo != null)
+        if (shootCo != null)
         {
-            StopCoroutine(shotCo);
+            StopCoroutine(shootCo);
         }
         currentMagazine--;
-        shotCo = StartCoroutine(FireShot());
+        shootCo = StartCoroutine(ShootBullet());
     }
-    private IEnumerator FireShot()
+    private IEnumerator ShootBullet()
     {
         GameObject bulletInstant = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody bulletRb = bulletInstant.GetComponent<Rigidbody>();
