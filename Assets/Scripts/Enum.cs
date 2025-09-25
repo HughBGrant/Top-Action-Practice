@@ -8,7 +8,7 @@ public enum ItemType
 }
 public enum StatType
 {
-    // ÀüÅõ ´É·ÂÄ¡
+    // ì „íˆ¬ ëŠ¥ë ¥ì¹˜
     MaxHealth,
     MaxMana,
     AttackPower,
