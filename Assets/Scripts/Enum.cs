@@ -6,3 +6,18 @@ public enum ItemType
     Heart,
     Weapon
 }
+public enum StatType
+{
+    // 전투 능력치
+    MaxHealth,
+    MaxMana,
+    AttackPower,
+    MagicPower,
+    Defense,
+    MagicDefense,
+    CriticalChance,
+    CriticalDamage,
+    AttackSpeed,
+    MoveSpeed,
+    Count
+}
