@@ -5,6 +5,15 @@ using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour
 {
+    private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
+    private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
+    private static readonly int IsJumpingHash = Animator.StringToHash("isJumping");
+    private static readonly int JumpHash = Animator.StringToHash("jump");
+    private static readonly int DodgeHash = Animator.StringToHash("dodge");
+    private static readonly int SwapHash = Animator.StringToHash("swap");
+    private static readonly int ReloadHash = Animator.StringToHash("reload");
+    private static readonly WaitForSeconds Wait10 = new WaitForSeconds(1f);
+
     private enum WeaponSlot { None = -1, Hammer, HandGun, SubMachineGun }
 
     [Header("Movement")]
@@ -95,14 +104,6 @@ public class Player : MonoBehaviour
     private const int MaxGrenadeCount = 4;
     private const float MoveEpsilon = 0.0001f;
 
-    private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
-    private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
-    private static readonly int IsJumpingHash = Animator.StringToHash("isJumping");
-    private static readonly int DoJumpHash = Animator.StringToHash("jump");
-    private static readonly int DoDodgeHash = Animator.StringToHash("dodge");
-    private static readonly int DoSwapHash = Animator.StringToHash("swap");
-    private static readonly int DoReloadHash = Animator.StringToHash("reload");
-    private static readonly WaitForSeconds wait10 = new WaitForSeconds(1f);
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -201,13 +202,13 @@ public class Player : MonoBehaviour
         {
             shouldJump = true;
             isJumping = true;
-            animator.SetTrigger(DoJumpHash);
+            animator.SetTrigger(JumpHash);
             animator.SetBool(IsJumpingHash, isJumping);
         }
         else
         {
             dodgeDirection = moveDirection;
-            animator.SetTrigger(DoDodgeHash);
+            animator.SetTrigger(DodgeHash);
             RestartRoutine(ref dodgeCo, PerformDodge());
         }
     }
@@ -231,7 +232,7 @@ public class Player : MonoBehaviour
         if (!context.started || isJumping || isDodging || isSwapping || isAttacking) { return; }
         if (currentWeapon == null || currentWeapon is MeleeWeapon || ammo == 0) { return; }
 
-        animator.SetTrigger(DoReloadHash);
+        animator.SetTrigger(ReloadHash);
         isReloading = true;
         RestartRoutine(ref reloadCo, ReloadBullet());
     }
@@ -273,7 +274,7 @@ public class Player : MonoBehaviour
         {
             currentWeapon = weapon;
             currentWeapon.gameObject.SetActive(true);
-            animator.SetTrigger(DoSwapHash);
+            animator.SetTrigger(SwapHash);
             RestartRoutine(ref swapCo, SwapWeapon());
         }
     }
@@ -335,7 +336,7 @@ public class Player : MonoBehaviour
         {
             if (Time.time > nextAttackTime)
             {
-                animator.SetTrigger(currentWeapon.DoAttackHash);
+                animator.SetTrigger(currentWeapon.AttackHash);
                 currentWeapon.Use();
                 nextAttackTime = Time.time + currentWeapon.AttackSpeed;
             }
@@ -352,7 +353,7 @@ public class Player : MonoBehaviour
         {
             mesh.material.color = Color.yellow;
         }
-        yield return wait10;
+        yield return Wait10;
 
         foreach (MeshRenderer mesh in meshs)
         {

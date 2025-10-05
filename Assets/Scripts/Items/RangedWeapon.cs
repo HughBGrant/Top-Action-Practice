@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class RangedWeapon : WeaponBase
 {
+    private static readonly int ShootHash = Animator.StringToHash("shoot");
+
     [SerializeField]
     private Transform firePoint;
     [SerializeField]
@@ -18,12 +20,11 @@ public class RangedWeapon : WeaponBase
     private int maxMagazine;
     public override int MaxMagazine { get { return maxMagazine; } }
 
-    private float bulletSpeed = 50f;
-    private float casingSpinForce = 10f;
+    private const float BulletSpeed = 50f;
+    private const float CasingSpinForce = 10f;
 
     private Coroutine shootCo;
-    private static readonly int doShotHash = Animator.StringToHash("shoot");
-    public override int DoAttackHash { get => doShotHash; }
+    public override int AttackHash { get { return ShootHash; } }
 
     public override void Use()
     {
@@ -40,13 +41,13 @@ public class RangedWeapon : WeaponBase
     {
         GameObject bulletInstant = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody bulletRb = bulletInstant.GetComponent<Rigidbody>();
-        bulletRb.velocity = firePoint.forward * bulletSpeed;
+        bulletRb.velocity = firePoint.forward * BulletSpeed;
         yield return null;
 
         GameObject casingInstant = Instantiate(casingPrefab, ejectPoint.position, ejectPoint.rotation);
         Rigidbody casingRb = casingInstant.GetComponent<Rigidbody>();
         Vector3 casingVec = ejectPoint.forward * -Random.Range(1, 4) + Vector3.up * Random.Range(1, 4);
         casingRb.AddForce(casingVec, ForceMode.Impulse);
-        casingRb.AddTorque(Vector3.up * casingSpinForce, ForceMode.Impulse);
+        casingRb.AddTorque(Vector3.up * CasingSpinForce, ForceMode.Impulse);
     }
 }

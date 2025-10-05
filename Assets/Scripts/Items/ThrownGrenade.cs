@@ -3,15 +3,17 @@ using UnityEngine;
 
 public class ThrownGrenade : MonoBehaviour
 {
+    private static readonly WaitForSeconds Wait30 = new WaitForSeconds(3f);
+
     [SerializeField]
     private GameObject mesh;
     [SerializeField]
     private GameObject effect;
+
     private Rigidbody rb;
 
     private Coroutine ExplodeCo;
 
-    private static readonly WaitForSeconds wait30 = new WaitForSeconds(3f);
     // Start is called before the first frame update
     void Awake()
     {
@@ -23,7 +25,7 @@ public class ThrownGrenade : MonoBehaviour
     }
     private IEnumerator ExplodeGrenade()
     {
-        yield return wait30;
+        yield return Wait30;
 
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;

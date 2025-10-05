@@ -6,7 +6,7 @@ public abstract class WeaponBase : MonoBehaviour
     public float AttackSpeed { get { return attackSpeed; } }
     public virtual int CurrentMagazine { get; set; }
     public virtual int MaxMagazine { get; }
-    public abstract int DoAttackHash { get; }
+    public abstract int AttackHash { get; }
 
     public abstract void Use();
 }

@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class MeleeWeapon : WeaponBase
 {
+    private static readonly int SwingHash = Animator.StringToHash("swing");
+    private static readonly WaitForSeconds Wait01 = new WaitForSeconds(0.1f);
+    private static readonly WaitForSeconds Wait03 = new WaitForSeconds(0.3f);
+
     [SerializeField]
     private int damage;
     public int Damage { get { return damage; } }
@@ -12,11 +16,8 @@ public class MeleeWeapon : WeaponBase
 
     private Coroutine swingCo;
 
-    private static readonly int doSwingHash = Animator.StringToHash("swing");
-    public override int DoAttackHash { get { return doSwingHash; } }
+    public override int AttackHash { get { return SwingHash; } }
 
-    private static readonly WaitForSeconds wait01 = new WaitForSeconds(0.1f);
-    private static readonly WaitForSeconds wait03 = new WaitForSeconds(0.3f);
     private void Awake()
     {
         hitBox = GetComponent<BoxCollider>();
@@ -32,14 +33,14 @@ public class MeleeWeapon : WeaponBase
 
     private IEnumerator MeleeSwing()
     {
-        yield return wait01;
+        yield return Wait01;
         hitBox.enabled = true;
         trailEffect.enabled = true;
 
-        yield return wait03;
+        yield return Wait03;
         hitBox.enabled = false;
 
-        yield return wait03;
+        yield return Wait03;
         trailEffect.enabled = false;
     }
     private void OnTriggerEnter(Collider other)

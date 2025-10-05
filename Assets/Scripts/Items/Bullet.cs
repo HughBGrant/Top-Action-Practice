@@ -5,13 +5,14 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     private int damage;
     public int Damage { get { return damage; } }
-    private float groundDestroyDelay = 3f;
+
+    private const float GroundDestroyDelay = 3f;
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag(Tags.Ground))
         {
-            Destroy(gameObject, groundDestroyDelay);
+            Destroy(gameObject, GroundDestroyDelay);
         }
     }
     private void OnTriggerEnter(Collider other)
