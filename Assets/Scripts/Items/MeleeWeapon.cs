@@ -6,7 +6,7 @@ public class MeleeWeapon : WeaponBase
     [SerializeField]
     private int damage;
     public int Damage { get { return damage; } }
-    private BoxCollider meleeRange;
+    private BoxCollider hitBox;
     [SerializeField]
     private TrailRenderer trailEffect;
 
@@ -19,7 +19,7 @@ public class MeleeWeapon : WeaponBase
     private static readonly WaitForSeconds wait03 = new WaitForSeconds(0.3f);
     private void Awake()
     {
-        meleeRange = GetComponent<BoxCollider>();
+        hitBox = GetComponent<BoxCollider>();
     }
     public override void Use()
     {
@@ -33,11 +33,11 @@ public class MeleeWeapon : WeaponBase
     private IEnumerator MeleeSwing()
     {
         yield return wait01;
-        meleeRange.enabled = true;
+        hitBox.enabled = true;
         trailEffect.enabled = true;
 
         yield return wait03;
-        meleeRange.enabled = false;
+        hitBox.enabled = false;
 
         yield return wait03;
         trailEffect.enabled = false;

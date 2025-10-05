@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField]
     private bool isChasing;
+    [SerializeField]
+    private bool isAttacking;
 
     [SerializeField]
     private int maxHealth;
@@ -13,6 +15,8 @@ public class Enemy : MonoBehaviour, IDamageable
     private int currentHealth;
     [SerializeField]
     private Transform targetPoint;
+    [SerializeField]
+    private BoxCollider bullet;
 
     private Rigidbody rb;
     private Material material;
@@ -43,7 +47,12 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         currentHealth = maxHealth;
 
-        Invoke("StartChase", 2f);
+        Invoke("StartChase", 2f);////////
+    }
+    private void FixedUpdate()
+    {
+        Target();
+
     }
     private void Update()
     {
@@ -53,7 +62,6 @@ public class Enemy : MonoBehaviour, IDamageable
             navAgent.isStopped = !isChasing;
         }
     }
-
     public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
         currentHealth -= damage;
@@ -106,6 +114,13 @@ public class Enemy : MonoBehaviour, IDamageable
         }
 
         Destroy(gameObject, deathDestroyDelay);
+    }
+    private void Target()
+    {
+        float radius = 1.5f;
+        float range = 3f;
+
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, transform.forward, range, LayerMask.GetMask("Player"));
     }
     private void StartChase()
     {

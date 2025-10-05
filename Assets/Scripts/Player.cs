@@ -114,8 +114,6 @@ public class Player : MonoBehaviour
     {
         HandleMovement();
         HandleJumpFall();
-        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
-        isInTouchWall = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
     }
     private void HandleMovement()
     {
@@ -136,7 +134,11 @@ public class Player : MonoBehaviour
         {
             moveDirection = Vector3.zero;
         }
-        float speed = (isInTouchWall ? 0f : 1f) * (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
+
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
+        isInTouchWall = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
+
+        float speed = (isInTouchWall ? 1f : 1f) * (isWalking ? walkSpeed : runSpeed) * (isDodging ? dodgeSpeedMultiplier : 1f);
         //최종 벡터
         Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
 

@@ -13,13 +13,13 @@ public class Item : MonoBehaviour
     private float rotationSpeed = 20f;
 
     private Rigidbody rb;
-    private SphereCollider sphereCollider;
+    private SphereCollider groundChecker;
 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        sphereCollider = rb.GetComponent<SphereCollider>();
+        groundChecker = rb.GetComponent<SphereCollider>();
     }
     void Update()
     {
@@ -30,7 +30,7 @@ public class Item : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             rb.isKinematic = true;
-            sphereCollider.enabled = false;
+            groundChecker.enabled = false;
         }
     }
 }
