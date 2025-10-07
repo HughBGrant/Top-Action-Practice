@@ -1,12 +1,14 @@
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour//////////
 {
     [SerializeField]
     private int damage;
     public int Damage { get { return damage; } }
 
     private const float GroundDestroyDelay = 3f;
+    [SerializeField]
+    private bool isMelee;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -17,12 +19,12 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<IDamageable>(out IDamageable target))
+        if (other.TryGetComponent(out IDamageable target))
         {
             target.TakeDamage(damage, transform.position);
             Destroy(gameObject);
         }
-        if (other.gameObject.CompareTag(Tags.Wall))
+        if (!isMelee && other.gameObject.CompareTag(Tags.Wall))
         {
             Destroy(gameObject);
         }

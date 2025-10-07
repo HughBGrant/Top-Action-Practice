@@ -397,13 +397,18 @@ public class Player : MonoBehaviour
             }
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag("EnemyBullet"))
+        else if (other.CompareTag("EnemyHitBox"))
         {
             if (isTakingDamage) { return; }
 
             if (!other.TryGetComponent<Bullet>(out Bullet enemyBullet)) { return; }
 
             health -= enemyBullet.Damage;
+
+            if (other.GetComponent<Rigidbody>() != null)
+            {
+                Destroy(other.gameObject);
+            }
             damageCo = StartCoroutine(TakeDamage());
 
         }

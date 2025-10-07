@@ -7,14 +7,15 @@ public class Enemy : MonoBehaviour, IDamageable
     private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
     private static readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
     private static readonly int DieHash = Animator.StringToHash("die");
-    private static readonly WaitForSeconds HitFlashTime = new WaitForSeconds(0.1f);
+    private static readonly WaitForSeconds Wait01 = new WaitForSeconds(0.1f);
+    private static readonly WaitForSeconds Wait02 = new WaitForSeconds(0.2f);
+    private static readonly WaitForSeconds Wait05 = new WaitForSeconds(0.5f);
+    private static readonly WaitForSeconds Wait10 = new WaitForSeconds(1.0f);
+    private static readonly WaitForSeconds Wait20 = new WaitForSeconds(2.0f);
     private static int deadEnemyLayer;
 
     [SerializeField]
-    private bool isChasing;
-    [SerializeField]
-    private bool isAttacking;
-
+    private EnemyType enemyType;
     [SerializeField]
     private int maxHealth;
     [SerializeField]
@@ -22,7 +23,12 @@ public class Enemy : MonoBehaviour, IDamageable
     [SerializeField]
     private Transform targetPoint;
     [SerializeField]
-    private BoxCollider bullet;
+    private BoxCollider hitBox;
+    [SerializeField]
+    private GameObject bulletPrefab;
+
+    private bool isChasing;
+    private bool isAttacking;
 
     private Rigidbody rb;
     private Material material;
@@ -41,17 +47,12 @@ public class Enemy : MonoBehaviour, IDamageable
         animator = GetComponentInChildren<Animator>();
         material = GetComponentInChildren<MeshRenderer>().material;
         deadEnemyLayer = LayerMask.NameToLayer("DeadEnemy");
-        if (deadEnemyLayer == -1)
-        {
-            Debug.LogWarning("DeadEnemy 레이어를 프로젝트에 추가하세요!");
-        }
-
     }
     private void Start()
     {
         currentHealth = maxHealth;
 
-        Invoke("StartChase", 2f);////////
+        StartCoroutine(StartChase());
     }
     private void FixedUpdate()
     {
@@ -87,7 +88,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private IEnumerator HitFlash()
     {
         material.color = Color.red;
-        yield return HitFlashTime;
+        yield return Wait01;
 
         if (currentHealth > 0)
         {
@@ -120,13 +121,36 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private void Target()
     {
-        float radius = 1.5f;
-        float range = 3f;
+        float radius = 0f;
+        float range = 0f;
+
+        switch (enemyType)
+        {
+            case EnemyType.A:
+                radius = 1.5f;
+                range = 3f;
+                break;
+            case EnemyType.B:
+                radius = 1f;
+                range = 12f;
+                break;
+            case EnemyType.C:
+                radius = 0.5f;
+                range = 25f;
+                break;
+        }
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, transform.forward, range, LayerMask.GetMask("Player"));
+
+        if (hits.Length > 0 && !isAttacking)
+        {
+            StartCoroutine(Attack());
+        }
     }
-    private void StartChase()
+    private IEnumerator StartChase()
     {
+        yield return Wait20;
+
         isChasing = true;
         animator.SetBool(IsWalkingHash, true);
     }
@@ -134,9 +158,70 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         isChasing = false;
         isAttacking = true;
-
         animator.SetBool(IsAttackingHash, true);
-        yield return null;
 
+        switch (enemyType)
+        {
+            case EnemyType.A:
+
+                yield return Wait02;
+                hitBox.enabled = true;
+
+                yield return Wait10;
+                hitBox.enabled = false;
+                yield return Wait10;
+                break;
+            case EnemyType.B:
+                yield return Wait01;
+                rb.AddForce(transform.forward * 20, ForceMode.Impulse);//////
+
+                hitBox.enabled = true;
+
+                yield return Wait05;
+                rb.velocity = Vector3.zero;
+
+                hitBox.enabled = false;
+                yield return Wait20;
+                break;
+
+            case EnemyType.C:
+                yield return Wait05;
+                GameObject bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0, 3, 0), transform.rotation);
+                Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
+                bulletRb.velocity = transform.forward * 20;/////
+
+                yield return Wait20;
+                break;
+        }
+        isChasing = true;
+        isAttacking = false;
+        animator.SetBool(IsAttackingHash, false);
+
+    }
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying || enemyType == EnemyType.C) return;
+
+        float radius = 0f;
+        float range = 0f;
+
+        switch (enemyType)
+        {
+            case EnemyType.A: radius = 1.5f; range = 3f; break;
+            case EnemyType.B: radius = 1f; range = 6f; break;
+            case EnemyType.C: radius = 1.5f; range = 3f; break;
+        }
+
+        // 구체 위치
+        Vector3 start = hitBox.transform.position;
+        Vector3 end = start + transform.forward * range;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(start, radius);
+        Gizmos.DrawWireSphere(end, radius);
+
+        // 방향선
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(start, end);
     }
 }

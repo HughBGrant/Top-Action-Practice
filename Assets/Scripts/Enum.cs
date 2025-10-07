@@ -21,3 +21,9 @@ public enum StatType
     MoveSpeed,
     Count
 }
+public enum EnemyType
+{
+    A,
+    B,
+    C
+}
