@@ -7,10 +7,10 @@ public class EnemyA_Behavior : IEnemyBehavior
 
     public IEnumerator Attack(Enemy enemy)
     {
-        yield return Enemy.Wait02;
+        yield return YieldCache.WaitForSeconds(0.2f);
         enemy.HitBox.enabled = true;
-        yield return Enemy.Wait10;
+        yield return YieldCache.WaitForSeconds(1.0f);
         enemy.HitBox.enabled = false;
-        yield return Enemy.Wait10;
+        yield return YieldCache.WaitForSeconds(1.0f);
     }
 }

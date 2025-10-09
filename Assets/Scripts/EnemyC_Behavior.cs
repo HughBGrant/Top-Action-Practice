@@ -8,10 +8,10 @@ public class EnemyC_Behavior : IEnemyBehavior
 
     public IEnumerator Attack(Enemy enemy)
     {
-        yield return Enemy.Wait05;
+        yield return YieldCache.WaitForSeconds(0.5f);
         GameObject bullet = Object.Instantiate(enemy.BulletPrefab, enemy.transform.position + new Vector3(0, 3, 0), enemy.transform.rotation);
         Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
         bulletRb.velocity = enemy.transform.forward * 20;
-        yield return Enemy.Wait20;
+        yield return YieldCache.WaitForSeconds(2.0f);
     }
 }

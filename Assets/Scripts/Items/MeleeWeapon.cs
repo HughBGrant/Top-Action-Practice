@@ -38,7 +38,7 @@ public class MeleeWeapon : WeaponBase
         yield return YieldCache.WaitForSeconds(0.3f);
         hitBox.enabled = false;
 
-        yield return Wait03;
+        yield return YieldCache.WaitForSeconds(0.3f);
         trailEffect.enabled = false;
 
         swingCo = null;
