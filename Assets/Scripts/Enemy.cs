@@ -7,11 +7,6 @@ public class Enemy : MonoBehaviour, IDamageable
     private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
     private static readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
     private static readonly int DieHash = Animator.StringToHash("die");
-    public static readonly WaitForSeconds Wait01 = new WaitForSeconds(0.1f);
-    public static readonly WaitForSeconds Wait02 = new WaitForSeconds(0.2f);
-    public static readonly WaitForSeconds Wait05 = new WaitForSeconds(0.5f);
-    public static readonly WaitForSeconds Wait10 = new WaitForSeconds(1.0f);
-    public static readonly WaitForSeconds Wait20 = new WaitForSeconds(2.0f);
     private static int deadEnemyLayer;
 
     [SerializeField]
@@ -92,7 +87,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0)
         {
-
             Die(hitPoint, isHitGrenade);
         }
 
@@ -100,7 +94,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private IEnumerator HitFlash()
     {
         material.color = Color.red;
-        yield return Wait01;
+        yield return YieldCache.WaitForSeconds(0.1f);
 
         if (currentHealth > 0)
         {
@@ -145,7 +139,7 @@ public class Enemy : MonoBehaviour, IDamageable
     }
     private IEnumerator StartChase()
     {
-        yield return Wait20;
+        yield return YieldCache.WaitForSeconds(2.0f);
 
         isChasing = true;
         animator.SetBool(IsWalkingHash, true);

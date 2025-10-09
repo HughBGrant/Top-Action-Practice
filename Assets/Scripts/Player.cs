@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
     private static readonly int DodgeHash = Animator.StringToHash("dodge");
     private static readonly int SwapHash = Animator.StringToHash("swap");
     private static readonly int ReloadHash = Animator.StringToHash("reload");
-    private static readonly WaitForSeconds Wait10 = new WaitForSeconds(1f);
 
     private enum WeaponSlot { None = -1, Hammer, HandGun, SubMachineGun }
 
@@ -302,7 +301,7 @@ public class Player : MonoBehaviour
     private IEnumerator PerformDodge()
     {
         isDodging = true;
-        yield return new WaitForSeconds(dodgeDuration);
+        yield return YieldCache.WaitForSeconds(dodgeDuration);
 
         isDodging = false;
         dodgeCo = null;
@@ -310,7 +309,7 @@ public class Player : MonoBehaviour
     private IEnumerator ReloadBullet()
     {
         isReloading = true;
-        yield return new WaitForSeconds(reloadDuration);
+        yield return YieldCache.WaitForSeconds(reloadDuration);
 
         int newAmmo = Mathf.Min(ammo, currentWeapon.MaxMagazine - currentWeapon.CurrentMagazine);
         ammo -= newAmmo;
@@ -322,7 +321,7 @@ public class Player : MonoBehaviour
     private IEnumerator SwapWeapon()
     {
         isSwapping = true;
-        yield return new WaitForSeconds(swapDuration);
+        yield return YieldCache.WaitForSeconds(swapDuration);
 
         isSwapping = false;
         swapCo = null;
@@ -342,7 +341,7 @@ public class Player : MonoBehaviour
             }
             yield return null;
         }
-        yield return new WaitForSeconds(currentWeapon.AttackSpeed);
+        yield return YieldCache.WaitForSeconds(currentWeapon.AttackSpeed);
         isAttacking = false;
         attackCo = null;
     }
@@ -353,7 +352,7 @@ public class Player : MonoBehaviour
         {
             mesh.material.color = Color.yellow;
         }
-        yield return Wait10;
+        yield return YieldCache.WaitForSeconds(1.0f);
 
         foreach (MeshRenderer mesh in meshs)
         {
@@ -409,8 +408,7 @@ public class Player : MonoBehaviour
             {
                 Destroy(other.gameObject);
             }
-            damageCo = StartCoroutine(TakeDamage());
-
+            damageCo ??= StartCoroutine(TakeDamage());
         }
     }
     private void OnTriggerStay(Collider other)

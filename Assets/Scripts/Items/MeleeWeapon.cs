@@ -4,8 +4,6 @@ using UnityEngine;
 public class MeleeWeapon : WeaponBase
 {
     private static readonly int SwingHash = Animator.StringToHash("swing");
-    private static readonly WaitForSeconds Wait01 = new WaitForSeconds(0.1f);
-    private static readonly WaitForSeconds Wait03 = new WaitForSeconds(0.3f);
 
     [SerializeField]
     private int damage;
@@ -33,11 +31,11 @@ public class MeleeWeapon : WeaponBase
 
     private IEnumerator MeleeSwing()
     {
-        yield return Wait01;
+        yield return YieldCache.WaitForSeconds(0.1f);
         hitBox.enabled = true;
         trailEffect.enabled = true;
 
-        yield return Wait03;
+        yield return YieldCache.WaitForSeconds(0.3f);
         hitBox.enabled = false;
 
         yield return Wait03;

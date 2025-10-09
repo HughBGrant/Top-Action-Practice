@@ -30,11 +30,12 @@ public class RangedWeapon : WeaponBase
     {
         if (currentMagazine <= 0) { return; }
 
+        currentMagazine--;
+
         if (shootCo != null)
         {
             StopCoroutine(shootCo);
         }
-        currentMagazine--;
         shootCo = StartCoroutine(ShootBullet());
     }
     private IEnumerator ShootBullet()
