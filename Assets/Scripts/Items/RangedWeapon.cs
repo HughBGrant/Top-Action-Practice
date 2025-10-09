@@ -49,5 +49,7 @@ public class RangedWeapon : WeaponBase
         Vector3 casingVec = ejectPoint.forward * -Random.Range(1, 4) + Vector3.up * Random.Range(1, 4);
         casingRb.AddForce(casingVec, ForceMode.Impulse);
         casingRb.AddTorque(Vector3.up * CasingSpinForce, ForceMode.Impulse);
+
+        shootCo = null;
     }
 }

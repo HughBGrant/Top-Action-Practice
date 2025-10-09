@@ -361,7 +361,7 @@ public class Player : MonoBehaviour
         }
 
         isTakingDamage = false;
-
+        damageCo = null;
     }
     private void OnTriggerEnter(Collider other)
     {

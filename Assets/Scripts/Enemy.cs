@@ -88,11 +88,7 @@ public class Enemy : MonoBehaviour, IDamageable
         currentHealth -= damage;
         Debug.Log($"체력 {damage} 감소. 현재 체력 {currentHealth}");
 
-        if (hitCo != null)
-        {
-            StopCoroutine(hitCo);
-        }
-        hitCo = StartCoroutine(HitFlash());
+        hitCo ??= StartCoroutine(HitFlash());
 
         if (currentHealth <= 0)
         {
@@ -110,6 +106,8 @@ public class Enemy : MonoBehaviour, IDamageable
         {
             material.color = Color.white;
         }
+
+        hitCo = null;
     }
     private void Die(Vector3 hitPoint, bool isHitGrenade = false)
     {
@@ -164,7 +162,6 @@ public class Enemy : MonoBehaviour, IDamageable
         isAttacking = false;
         isChasing = true;
         attackCo = null;
-
     }
     private void OnDrawGizmos()
     {

@@ -42,6 +42,8 @@ public class MeleeWeapon : WeaponBase
 
         yield return Wait03;
         trailEffect.enabled = false;
+
+        swingCo = null;
     }
     private void OnTriggerEnter(Collider other)
     {

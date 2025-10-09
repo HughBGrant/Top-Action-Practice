@@ -12,7 +12,7 @@ public class ThrownGrenade : MonoBehaviour
 
     private Rigidbody rb;
 
-    private Coroutine ExplodeCo;
+    private Coroutine explodeCo;
 
     // Start is called before the first frame update
     void Awake()
@@ -21,7 +21,7 @@ public class ThrownGrenade : MonoBehaviour
     }
     private void Start()
     {
-        ExplodeCo = StartCoroutine(ExplodeGrenade());
+        explodeCo = StartCoroutine(ExplodeGrenade());
     }
     private IEnumerator ExplodeGrenade()
     {
@@ -42,5 +42,7 @@ public class ThrownGrenade : MonoBehaviour
             }
         }
         Destroy(gameObject, 4f);
+
+        explodeCo = null;
     }
 }
