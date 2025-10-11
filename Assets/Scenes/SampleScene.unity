@@ -602,24 +602,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &450523612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 450523609}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b0e29290ffdb8b469a64d7be20db628, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hitBox: {fileID: 1161959386}
-  BulletPrefab: {fileID: 0}
-  enemyType: 0
-  maxHealth: 50
-  currentHealth: 50
-  targetPoint: {fileID: 1290166534}
 --- !u!195 &450523613
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -647,6 +629,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4462523135328065168, guid: 464cc7c4f7ea10b47a36d7848aa9ca9a, type: 3}
   m_PrefabInstance: {fileID: 1091053515}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &450523615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 450523609}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2e443ba002457f4baed633da0efa020, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  targetPoint: {fileID: 1290166534}
+  hitBox: {fileID: 1161959386}
 --- !u!4 &523951551 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 883724508928496280, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
@@ -767,15 +764,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 594488904}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b0e29290ffdb8b469a64d7be20db628, type: 3}
+  m_Script: {fileID: 11500000, guid: 806581c06e2b3994bb734ff1078704c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitBox: {fileID: 0}
-  BulletPrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
-  enemyType: 2
-  maxHealth: 200
-  currentHealth: 200
+  maxHealth: 100
   targetPoint: {fileID: 1290166534}
+  bulletPrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
 --- !u!1001 &601288016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -897,7 +891,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 601288021}
+      addedObject: {fileID: 601288023}
     - targetCorrespondingSourceObject: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 601288020}
@@ -986,7 +980,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &601288021
+--- !u!4 &601288022 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5052845572594401124, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
+  m_PrefabInstance: {fileID: 601288016}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &601288023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -995,20 +994,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 601288017}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b0e29290ffdb8b469a64d7be20db628, type: 3}
+  m_Script: {fileID: 11500000, guid: d2e443ba002457f4baed633da0efa020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitBox: {fileID: 1992542770}
-  BulletPrefab: {fileID: 0}
-  enemyType: 1
-  maxHealth: 80
-  currentHealth: 80
+  maxHealth: 100
   targetPoint: {fileID: 1290166534}
---- !u!4 &601288022 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5052845572594401124, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
-  m_PrefabInstance: {fileID: 601288016}
-  m_PrefabAsset: {fileID: 0}
+  hitBox: {fileID: 1992542770}
 --- !u!1001 &622605787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1620,7 +1611,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 328409505970683906, guid: 464cc7c4f7ea10b47a36d7848aa9ca9a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 328409505970683906, guid: 464cc7c4f7ea10b47a36d7848aa9ca9a, type: 3}
       propertyPath: m_TagString
@@ -1719,7 +1710,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 328409505970683906, guid: 464cc7c4f7ea10b47a36d7848aa9ca9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 450523612}
+      addedObject: {fileID: 450523615}
     - targetCorrespondingSourceObject: {fileID: 328409505970683906, guid: 464cc7c4f7ea10b47a36d7848aa9ca9a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 450523611}
@@ -1812,7 +1803,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3320669544841490502, guid: 06d503bba93001142b96e3510906db62, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3320669544841490502, guid: 06d503bba93001142b96e3510906db62, type: 3}
       propertyPath: m_TagString

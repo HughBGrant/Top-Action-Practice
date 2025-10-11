@@ -9,10 +9,14 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     protected static readonly int DieHash = Animator.StringToHash("die");
     protected static int deadEnemyLayer;
 
-    [SerializeField] protected int maxHealth = 100;
+    [SerializeField]
+    private EnemyType enemyType;
+    [SerializeField]
+    protected int maxHealth = 100;
     protected int currentHealth;
 
-    [SerializeField] protected Transform targetPoint;
+    [SerializeField]
+    protected Transform targetPoint;
     protected Rigidbody rb;
     protected NavMeshAgent navAgent;
     protected Animator animator;
@@ -34,6 +38,19 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         deadEnemyLayer = LayerMask.NameToLayer("DeadEnemy");
 
         currentHealth = maxHealth;
+
+        switch (enemyType)
+        {
+            case EnemyType.A:
+                behavior = new EnemyA_Behavior();
+                break;
+            case EnemyType.B:
+                behavior = new EnemyB_Behavior();
+                break;
+            case EnemyType.C:
+                behavior = new EnemyC_Behavior();
+                break;
+        }
     }
 
     protected virtual void Start()
@@ -58,19 +75,22 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.Radius, transform.forward, behavior.Range, LayerMask.GetMask("Player"));
         if (hits.Length > 0)
+        {
             attackCo ??= StartCoroutine(AttackRoutine());
+        }
     }
 
     protected IEnumerator AttackRoutine()
     {
         isChasing = false;
         isAttacking = true;
+        navAgent.isStopped = true;
         animator.SetBool(IsAttackingHash, true);
 
-        //yield return behavior.Attack(this);
-        yield return null;
+        yield return behavior.Attack(this);
 
         animator.SetBool(IsAttackingHash, false);
+        navAgent.isStopped = false;
         isAttacking = false;
         isChasing = true;
         attackCo = null;
@@ -91,7 +111,9 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         hitCo ??= StartCoroutine(HitFlash());
 
         if (currentHealth <= 0)
+        {
             Die(hitPoint, isHitGrenade);
+        }
     }
 
     private IEnumerator HitFlash()
@@ -100,7 +122,9 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         yield return YieldCache.WaitForSeconds(0.1f);
 
         if (currentHealth > 0)
+        {
             material.color = Color.white;
+        }
 
         hitCo = null;
     }
@@ -116,7 +140,9 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         Vector3 hitDir = (transform.position - hitPoint).normalized + Vector3.up * (isHitGrenade ? 3f : 1f);
         rb.AddForce(hitDir * 5f, ForceMode.Impulse);
         if (isHitGrenade)
+        {
             rb.AddTorque(hitDir * 15, ForceMode.Impulse);
+        }
 
         Destroy(gameObject, 2f);
     }

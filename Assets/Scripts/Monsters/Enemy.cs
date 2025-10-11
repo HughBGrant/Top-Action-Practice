@@ -150,7 +150,8 @@ public class Enemy : MonoBehaviour, IDamageable
         isAttacking = true;
         animator.SetBool(IsAttackingHash, true);
 
-        yield return behavior.Attack(this);
+        //yield return behavior.Attack(this);
+        yield return null;
 
         animator.SetBool(IsAttackingHash, false);
         isAttacking = false;
