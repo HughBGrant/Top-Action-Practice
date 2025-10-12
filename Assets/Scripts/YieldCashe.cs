@@ -24,14 +24,18 @@ static class YieldCache
     {
         WaitForSeconds wfs;
         if (!_timeInterval.TryGetValue(seconds, out wfs))
+        {
             _timeInterval.Add(seconds, wfs = new WaitForSeconds(seconds));
+        }
         return wfs;
     }
     public static WaitForSecondsRealtime WaitForSecondsRealTime(float seconds)
     {
         WaitForSecondsRealtime wfsReal;
         if (!_timeIntervalReal.TryGetValue(seconds, out wfsReal))
+        {
             _timeIntervalReal.Add(seconds, wfsReal = new WaitForSecondsRealtime(seconds));
+        }
         return wfsReal;
     }
 }

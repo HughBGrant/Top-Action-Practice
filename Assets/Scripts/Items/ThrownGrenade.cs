@@ -27,7 +27,8 @@ public class ThrownGrenade : MonoBehaviour
         mesh.SetActive(false);
         effect.SetActive(false);
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, 15, Vector3.up, 0, LayerMask.GetMask("Enemy"));
+        float radius = 15f;
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, Vector3.up, 0f, LayerMask.GetMask("Enemy"));
 
         foreach (RaycastHit hit in hits)
         {

@@ -2,11 +2,9 @@ using UnityEngine;
 
 public class BelongingGrenade : MonoBehaviour
 {
-    [SerializeField]
-    private float orbitSpeed;
-
     void Update()
     {
-        transform.Rotate(Vector3.up, orbitSpeed * Time.deltaTime);
+        float angleSpeed = 20f;
+        transform.Rotate(Vector3.up, angleSpeed * Time.deltaTime);
     }
 }
