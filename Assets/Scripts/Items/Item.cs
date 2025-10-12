@@ -10,11 +10,8 @@ public class Item : MonoBehaviour
     int value;
     public int Value { get { return value; } }
 
-
     private Rigidbody rb;
     private SphereCollider groundChecker;
-
-    private const float RotationSpeed = 20f;
 
     private void Awake()
     {
@@ -23,11 +20,11 @@ public class Item : MonoBehaviour
     }
     void Update()
     {
-        transform.Rotate(Vector3.up * RotationSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up * 20f * Time.deltaTime);
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(Tags.Ground))
         {
             rb.isKinematic = true;
             groundChecker.enabled = false;

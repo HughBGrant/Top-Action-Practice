@@ -641,6 +641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e443ba002457f4baed633da0efa020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
   maxHealth: 100
   targetPoint: {fileID: 1290166534}
   hitBox: {fileID: 1161959386}
@@ -767,6 +768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806581c06e2b3994bb734ff1078704c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 2
   maxHealth: 100
   targetPoint: {fileID: 1290166534}
   bulletPrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
@@ -876,7 +878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       propertyPath: m_TagString
@@ -997,6 +999,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e443ba002457f4baed633da0efa020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 1
   maxHealth: 100
   targetPoint: {fileID: 1290166534}
   hitBox: {fileID: 1992542770}
@@ -1521,7 +1524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ecc3fd1c0b2aec44b5328a7e1fe0fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 1290166534}
+  target: {fileID: 1290166534}
   offset: {x: 0, y: 20, z: -20}
 --- !u!4 &979628787 stripped
 Transform:
@@ -1803,7 +1806,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3320669544841490502, guid: 06d503bba93001142b96e3510906db62, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3320669544841490502, guid: 06d503bba93001142b96e3510906db62, type: 3}
       propertyPath: m_TagString
@@ -2073,7 +2076,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1161959387}
   - component: {fileID: 1161959386}
-  - component: {fileID: 1161959385}
+  - component: {fileID: 1161959388}
   m_Layer: 13
   m_Name: HitBox
   m_TagString: EnemyHitBox
@@ -2081,20 +2084,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1161959385
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1161959384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 461b098ff888f724e8ac570a312dbf3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 10
-  isMelee: 1
 --- !u!65 &1161959386
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2131,6 +2120,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 450523614}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1161959388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161959384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9216419f06516641be7df512b66df21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 10
 --- !u!1 &1170508250
 GameObject:
   m_ObjectHideFlags: 0
@@ -23373,7 +23375,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1992542768}
   - component: {fileID: 1992542770}
-  - component: {fileID: 1992542769}
+  - component: {fileID: 1992542771}
   m_Layer: 13
   m_Name: HitBox
   m_TagString: EnemyHitBox
@@ -23396,20 +23398,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 601288022}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1992542769
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992542767}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 461b098ff888f724e8ac570a312dbf3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 10
-  isMelee: 1
 --- !u!65 &1992542770
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23431,6 +23419,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 2, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1992542771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992542767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9216419f06516641be7df512b66df21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 20
 --- !u!1 &2006751319 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}

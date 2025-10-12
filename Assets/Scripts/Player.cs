@@ -366,7 +366,7 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag(Tags.Item))
         {
-            if (!other.TryGetComponent<Item>(out Item item)) { return; }
+            if (!other.TryGetComponent(out Item item)) { return; }
             switch (item.Type)
             {
                 case ItemType.Ammo:
@@ -400,9 +400,9 @@ public class Player : MonoBehaviour
         {
             if (isTakingDamage) { return; }
 
-            if (!other.TryGetComponent<Bullet>(out Bullet enemyBullet)) { return; }
+            if (!other.TryGetComponent(out IDamageSource source)) { return; }
 
-            health -= enemyBullet.Damage;
+            health -= source.Damage;
 
             if (other.GetComponent<Rigidbody>() != null)
             {

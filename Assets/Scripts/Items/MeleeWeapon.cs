@@ -45,7 +45,7 @@ public class MeleeWeapon : WeaponBase
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<IDamageable>(out IDamageable target))
+        if (other.TryGetComponent(out IDamageable target))
         {
             target.TakeDamage(damage, transform.position);
         }

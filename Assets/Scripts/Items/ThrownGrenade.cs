@@ -31,7 +31,7 @@ public class ThrownGrenade : MonoBehaviour
 
         foreach (RaycastHit hit in hits)
         {
-            if (hit.transform.TryGetComponent<EnemyBase>(out EnemyBase enemy))
+            if (hit.transform.TryGetComponent(out EnemyBase enemy))
             {
                 enemy.TakeDamage(100, transform.position, true);
             }
