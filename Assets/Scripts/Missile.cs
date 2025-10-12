@@ -4,6 +4,7 @@ public class Missile : MonoBehaviour
 {
     void Update()
     {
-        transform.Rotate(Vector3.right * 30 * Time.deltaTime);
+        float speed = 30f;
+        transform.Rotate(Vector3.right * speed * Time.deltaTime);
     }
 }

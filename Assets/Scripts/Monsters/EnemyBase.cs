@@ -7,7 +7,6 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     protected static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
     protected static readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
     protected static readonly int DieHash = Animator.StringToHash("die");
-    protected static int deadEnemyLayer;
 
     [SerializeField]
     private EnemyType enemyType;
@@ -35,22 +34,10 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         navAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         material = GetComponentInChildren<MeshRenderer>().material;
-        deadEnemyLayer = LayerMask.NameToLayer("DeadEnemy");
+        GetBehavior();
 
         currentHealth = maxHealth;
 
-        switch (enemyType)
-        {
-            case EnemyType.A:
-                behavior = new EnemyA_Behavior();
-                break;
-            case EnemyType.B:
-                behavior = new EnemyB_Behavior();
-                break;
-            case EnemyType.C:
-                behavior = new EnemyC_Behavior();
-                break;
-        }
     }
 
     protected virtual void Start()
@@ -68,7 +55,6 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
 
         Target();
     }
-
     protected virtual void Target()
     {
         if (behavior == null || isAttacking) return;
@@ -134,7 +120,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         isChasing = false;
         navAgent.enabled = false;
         material.color = Color.gray;
-        gameObject.layer = deadEnemyLayer;
+        gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
         animator.SetTrigger(DieHash);
 
         Vector3 hitDir = (transform.position - hitPoint).normalized + Vector3.up * (isHitGrenade ? 3f : 1f);
@@ -159,5 +145,20 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         Gizmos.DrawWireSphere(end, behavior.Radius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(start, end);
+    }
+    void GetBehavior()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.A:
+                behavior = new EnemyA_Behavior();
+                break;
+            case EnemyType.B:
+                behavior = new EnemyB_Behavior();
+                break;
+            case EnemyType.C:
+                behavior = new EnemyC_Behavior();
+                break;
+        }
     }
 }

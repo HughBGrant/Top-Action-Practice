@@ -15,7 +15,7 @@ public class EnemyB_Behavior : IEnemyBehavior
             yield break;
         }
         yield return YieldCache.WaitForSeconds(0.1f);
-        melee.GetComponent<Rigidbody>().AddForce(enemy.transform.forward * 20, ForceMode.Impulse);
+        melee.GetComponent<Rigidbody>().AddForce(enemy.transform.forward * 20, ForceMode.Impulse);///////
         melee.HitBox.enabled = true;
         yield return YieldCache.WaitForSeconds(0.5f);
         melee.GetComponent<Rigidbody>().velocity = Vector3.zero;

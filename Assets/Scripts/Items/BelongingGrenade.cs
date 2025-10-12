@@ -4,7 +4,7 @@ public class BelongingGrenade : MonoBehaviour
 {
     void Update()
     {
-        float angleSpeed = 20f;
-        transform.Rotate(Vector3.up, angleSpeed * Time.deltaTime);
+        float revolution = 20f;
+        transform.Rotate(Vector3.up, revolution * Time.deltaTime);
     }
 }

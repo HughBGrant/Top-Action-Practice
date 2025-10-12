@@ -8,6 +8,7 @@ public class MeleeWeapon : WeaponBase
     [SerializeField]
     private int damage;
     public int Damage { get { return damage; } }
+
     private BoxCollider hitBox;
     [SerializeField]
     private TrailRenderer trailEffect;

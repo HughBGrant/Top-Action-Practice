@@ -16,11 +16,12 @@ public class Item : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        groundChecker = rb.GetComponent<SphereCollider>();
+        groundChecker = GetComponent<SphereCollider>();
     }
     void Update()
     {
-        transform.Rotate(Vector3.up * 20f * Time.deltaTime);
+        float speed = 20f;
+        transform.Rotate(Vector3.up * speed * Time.deltaTime);
     }
     private void OnCollisionEnter(Collision collision)
     {

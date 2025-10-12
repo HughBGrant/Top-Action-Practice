@@ -18,7 +18,9 @@ public class EnemyC_Behavior : IEnemyBehavior
         Vector3 spawnPos = ranged.transform.position + Vector3.up * 3f;
         GameObject bullet = Object.Instantiate(ranged.BulletPrefab, spawnPos, ranged.transform.rotation);
         Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-        bulletRb.velocity = ranged.transform.forward * 20;
+
+        float speed = 20f;
+        bulletRb.velocity = ranged.transform.forward * speed;
         yield return YieldCache.WaitForSeconds(2.0f);
     }
 }

@@ -97,18 +97,18 @@ public class Player : MonoBehaviour
     private Coroutine reloadCo;
     private Coroutine damageCo;
 
-    private const int MaxAmmo = 999;
-    private const int MaxCoin = 99999;
-    private const int MaxHealth = 100;
-    private const int MaxGrenadeCount = 4;
+    private const int AmmoCap = 999;
+    private const int CoinCap = 99999;
+    private const int HealthCap = 100;
+    private const int GrenadeCountCap = 4;
     private const float MoveEpsilon = 0.0001f;
 
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
-        cam = Camera.main;
         meshs = GetComponentsInChildren<MeshRenderer>();
+        cam = Camera.main;
     }
     void FixedUpdate()
     {
@@ -153,10 +153,10 @@ public class Player : MonoBehaviour
         if (isAttacking)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {
                 Vector3 nextVec = hit.point - transform.position;
-                nextVec.y = 0;
+                nextVec.y = 0f;
                 transform.forward = nextVec;
             }
         }
@@ -370,19 +370,19 @@ public class Player : MonoBehaviour
             switch (item.Type)
             {
                 case ItemType.Ammo:
-                    ammo = Mathf.Min(ammo + item.Value, MaxAmmo);
+                    ammo = Mathf.Min(ammo + item.Value, AmmoCap);
                     break;
                 case ItemType.Coin:
-                    coin = Mathf.Min(coin + item.Value, MaxCoin);
+                    coin = Mathf.Min(coin + item.Value, CoinCap);
                     break;
                 case ItemType.Heart:
-                    health = Mathf.Min(health + item.Value, MaxHealth);
+                    health = Mathf.Min(health + item.Value, HealthCap);
                     break;
                 case ItemType.Grenade:
                     if (belongingGrenades == null || belongingGrenades.Length <= 0) { break; }
 
                     int before = grenadeCount;
-                    int after = Mathf.Clamp(grenadeCount + item.Value, 0, MaxGrenadeCount);
+                    int after = Mathf.Clamp(grenadeCount + item.Value, 0, GrenadeCountCap);
 
                     for (int i = before; i < after && i < belongingGrenades.Length; i++)
                     {

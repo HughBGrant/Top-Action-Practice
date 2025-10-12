@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11edd44b76f721b47bf4bbc1fe572bab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 100
   mesh: {fileID: 7970021305599908398}
   effect: {fileID: 5300005638007739235}
-  rb: {fileID: 0}
 --- !u!1 &7970021305599908398
 GameObject:
   m_ObjectHideFlags: 0

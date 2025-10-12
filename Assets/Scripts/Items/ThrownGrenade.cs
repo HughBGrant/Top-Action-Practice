@@ -4,6 +4,8 @@ using UnityEngine;
 public class ThrownGrenade : MonoBehaviour
 {
     [SerializeField]
+    private int damage;
+    [SerializeField]
     private GameObject mesh;
     [SerializeField]
     private GameObject effect;
@@ -34,7 +36,7 @@ public class ThrownGrenade : MonoBehaviour
         {
             if (hit.transform.TryGetComponent(out EnemyBase enemy))
             {
-                enemy.TakeDamage(100, transform.position, true);
+                enemy.TakeDamage(damage, transform.position, true);
             }
         }
         Destroy(gameObject, 4f);

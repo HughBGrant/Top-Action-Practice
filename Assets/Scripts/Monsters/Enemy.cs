@@ -1,178 +1,177 @@
-using System.Collections;
-using UnityEngine;
-using UnityEngine.AI;
+//using System.Collections;
+//using UnityEngine;
+//using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour, IDamageable
-{
-    private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
-    private static readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
-    private static readonly int DieHash = Animator.StringToHash("die");
-    private static int deadEnemyLayer;
+//public class Enemy : MonoBehaviour, IDamageable
+//{
+//    private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
+//    private static readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
+//    private static readonly int DieHash = Animator.StringToHash("die");
+//    private static int deadEnemyLayer;
 
-    [SerializeField]
-    private Collider hitBox;
-    public Collider HitBox => hitBox;
+//    [SerializeField]
+//    private Collider hitBox;
+//    public Collider HitBox => hitBox;
 
-    public Rigidbody Rigidbody { get; private set; }
+//    public Rigidbody Rigidbody { get; private set; }
 
-    public GameObject BulletPrefab;
+//    public GameObject BulletPrefab;
 
-    [SerializeField]
-    private EnemyType enemyType;
-    [SerializeField]
-    private int maxHealth;
-    [SerializeField]
-    private int currentHealth;
-    [SerializeField]
-    private Transform targetPoint;
+//    [SerializeField]
+//    private EnemyType enemyType;
+//    [SerializeField]
+//    private int maxHealth;
+//    [SerializeField]
+//    private int currentHealth;
+//    [SerializeField]
+//    private Transform targetPoint;
 
-    private bool isChasing;
-    private bool isAttacking;
+//    private bool isChasing;
+//    private bool isAttacking;
 
-    private Material material;
-    private NavMeshAgent navAgent;
-    private Animator animator;
+//    private Material material;
+//    private NavMeshAgent navAgent;
+//    private Animator animator;
 
-    private Coroutine attackCo;
-    private Coroutine hitCo;
+//    private Coroutine attackCo;
+//    private Coroutine hitCo;
 
-    private const float DeathDestroyDelay = 2f;
-    private const float DeathReactionMultiplier = 5f;
 
-    private IEnemyBehavior behavior;
+//    private IEnemyBehavior behavior;
 
-    private void Awake()
-    {
-        Rigidbody = GetComponent<Rigidbody>();
-        navAgent = GetComponent<NavMeshAgent>();
-        animator = GetComponentInChildren<Animator>();
-        material = GetComponentInChildren<MeshRenderer>().material;
-        deadEnemyLayer = LayerMask.NameToLayer("DeadEnemy");
+//    private void Awake()
+//    {
+//        Rigidbody = GetComponent<Rigidbody>();
+//        navAgent = GetComponent<NavMeshAgent>();
+//        animator = GetComponentInChildren<Animator>();
+//        material = GetComponentInChildren<MeshRenderer>().material;
+//        deadEnemyLayer = LayerMask.NameToLayer("DeadEnemy");
 
-        switch (enemyType)
-        {
-            case EnemyType.A:
-                behavior = new EnemyA_Behavior();
-                break;
-            case EnemyType.B:
-                behavior = new EnemyB_Behavior();
-                break;
-            case EnemyType.C:
-                behavior = new EnemyC_Behavior();
-                break;
-        }
-    }
-    private void Start()
-    {
-        currentHealth = maxHealth;
+//        switch (enemyType)
+//        {
+//            case EnemyType.A:
+//                behavior = new EnemyA_Behavior();
+//                break;
+//            case EnemyType.B:
+//                behavior = new EnemyB_Behavior();
+//                break;
+//            case EnemyType.C:
+//                behavior = new EnemyC_Behavior();
+//                break;
+//        }
+//    }
+//    private void Start()
+//    {
+//        currentHealth = maxHealth;
 
-        StartCoroutine(StartChase());
-    }
-    private void Update()
-    {
-        Target();
+//        StartCoroutine(StartChase());
+//    }
+//    private void Update()
+//    {
+//        Target();
 
-        if (navAgent.enabled)
-        {
-            navAgent.SetDestination(targetPoint.position);
-            navAgent.isStopped = !isChasing;
-        }
-    }
-    public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
-    {
-        currentHealth -= damage;
-        Debug.Log($"체력 {damage} 감소. 현재 체력 {currentHealth}");
+//        if (navAgent.enabled)
+//        {
+//            navAgent.SetDestination(targetPoint.position);
+//            navAgent.isStopped = !isChasing;
+//        }
+//    }
+//    public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
+//    {
+//        currentHealth -= damage;
+//        Debug.Log($"체력 {damage} 감소. 현재 체력 {currentHealth}");
 
-        hitCo ??= StartCoroutine(HitFlash());
+//        hitCo ??= StartCoroutine(HitFlash());
 
-        if (currentHealth <= 0)
-        {
-            Die(hitPoint, isHitGrenade);
-        }
+//        if (currentHealth <= 0)
+//        {
+//            Die(hitPoint, isHitGrenade);
+//        }
 
-    }
-    private IEnumerator HitFlash()
-    {
-        material.color = Color.red;
-        yield return YieldCache.WaitForSeconds(0.1f);
+//    }
+//    private IEnumerator HitFlash()
+//    {
+//        material.color = Color.red;
+//        yield return YieldCache.WaitForSeconds(0.1f);
 
-        if (currentHealth > 0)
-        {
-            material.color = Color.white;
-        }
+//        if (currentHealth > 0)
+//        {
+//            material.color = Color.white;
+//        }
 
-        hitCo = null;
-    }
-    private void Die(Vector3 hitPoint, bool isHitGrenade = false)
-    {
-        isChasing = false;
-        navAgent.enabled = false;
-        material.color = Color.gray;
+//        hitCo = null;
+//    }
+//    private void Die(Vector3 hitPoint, bool isHitGrenade = false)
+//    {
+//        isChasing = false;
+//        navAgent.enabled = false;
+//        material.color = Color.gray;
 
-        gameObject.layer = deadEnemyLayer;
+//        gameObject.layer = deadEnemyLayer;
 
-        animator.SetTrigger(DieHash);
+//        animator.SetTrigger(DieHash);
 
-        float hitGrenadeReactionMultiplier = isHitGrenade ? 3f : 1f;
-        Vector3 hitDirection = (transform.position - hitPoint).normalized;
-        hitDirection += Vector3.up * hitGrenadeReactionMultiplier;
+//        float hitGrenadeReactionMultiplier = isHitGrenade ? 3f : 1f;
+//        Vector3 hitDirection = (transform.position - hitPoint).normalized + Vector3.up * hitGrenadeReactionMultiplier;
+//        float DeathReactionMultiplier = 5f;
 
-        Rigidbody.AddForce(hitDirection * DeathReactionMultiplier, ForceMode.Impulse);
+//        Rigidbody.AddForce(hitDirection * DeathReactionMultiplier, ForceMode.Impulse);
 
-        if (isHitGrenade)
-        {
-            Rigidbody.AddTorque(hitDirection * 15, ForceMode.Impulse);
-        }
+//        if (isHitGrenade)
+//        {
+//            float torqueMultiplier = 15f;
+//            Rigidbody.AddTorque(hitDirection * torqueMultiplier, ForceMode.Impulse);
+//        }
 
-        Destroy(gameObject, DeathDestroyDelay);
-    }
-    private void Target()
-    {
-        if (behavior == null || isAttacking) return;
+//        Destroy(gameObject, 2f);
+//    }
+//    private void Target()
+//    {
+//        if (behavior == null || isAttacking) return;
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.Radius, transform.forward, behavior.Range, LayerMask.GetMask("Player"));
+//        RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.Radius, transform.forward, behavior.Range, LayerMask.GetMask("Player"));
 
-        if (hits.Length > 0)
-        {
-            attackCo ??= StartCoroutine(AttackRoutine());
-        }
-    }
-    private IEnumerator StartChase()
-    {
-        yield return YieldCache.WaitForSeconds(2.0f);
+//        if (hits.Length > 0)
+//        {
+//            attackCo ??= StartCoroutine(AttackRoutine());
+//        }
+//    }
+//    private IEnumerator StartChase()
+//    {
+//        yield return YieldCache.WaitForSeconds(2.0f);
 
-        isChasing = true;
-        animator.SetBool(IsWalkingHash, true);
-    }
-    private IEnumerator AttackRoutine()
-    {
-        isChasing = false;
-        isAttacking = true;
-        animator.SetBool(IsAttackingHash, true);
+//        isChasing = true;
+//        animator.SetBool(IsWalkingHash, true);
+//    }
+//    private IEnumerator AttackRoutine()
+//    {
+//        isChasing = false;
+//        isAttacking = true;
+//        animator.SetBool(IsAttackingHash, true);
 
-        //yield return behavior.Attack(this);
-        yield return null;
+//        //yield return behavior.Attack(this);
+//        yield return null;
 
-        animator.SetBool(IsAttackingHash, false);
-        isAttacking = false;
-        isChasing = true;
-        attackCo = null;
-    }
-    private void OnDrawGizmos()
-    {
-        if (!Application.isPlaying || enemyType == EnemyType.C) return;
-        if (behavior == null) return;
+//        animator.SetBool(IsAttackingHash, false);
+//        isAttacking = false;
+//        isChasing = true;
+//        attackCo = null;
+//    }
+//    private void OnDrawGizmos()
+//    {
+//        if (!Application.isPlaying || enemyType == EnemyType.C) return;
+//        if (behavior == null) return;
 
-        // 구체 위치
-        Vector3 start = transform.position;
-        Vector3 end = start + transform.forward * behavior.Range;
+//        // 구체 위치
+//        Vector3 start = transform.position;
+//        Vector3 end = start + transform.forward * behavior.Range;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(start, behavior.Radius);
-        Gizmos.DrawWireSphere(end, behavior.Radius);
+//        Gizmos.color = Color.red;
+//        Gizmos.DrawWireSphere(start, behavior.Radius);
+//        Gizmos.DrawWireSphere(end, behavior.Radius);
 
-        // 방향선
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(start, end);
-    }
-}
+//        // 방향선
+//        Gizmos.color = Color.yellow;
+//        Gizmos.DrawLine(start, end);
+//    }
+//}
