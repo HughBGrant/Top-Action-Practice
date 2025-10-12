@@ -2,14 +2,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class EnemyBase : MonoBehaviour, IDamageable
+public abstract class MonsterBase : MonoBehaviour, IDamageable
 {
     protected static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
     protected static readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
     protected static readonly int DieHash = Animator.StringToHash("die");
 
     [SerializeField]
-    private EnemyType enemyType;
+    private MonsterType monsterType;
     [SerializeField]
     protected int maxHealth = 100;
     protected int currentHealth;
@@ -26,7 +26,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     protected Coroutine attackCo;
     protected Coroutine hitCo;
 
-    protected IEnemyBehavior behavior;
+    protected IMonsterBehavior behavior;
 
     protected virtual void Awake()
     {
@@ -120,7 +120,7 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
         isChasing = false;
         navAgent.enabled = false;
         material.color = Color.gray;
-        gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
+        gameObject.layer = LayerMask.NameToLayer("DeadMonster");
         animator.SetTrigger(DieHash);
 
         Vector3 hitDir = (transform.position - hitPoint).normalized + Vector3.up * (isHitGrenade ? 3f : 1f);
@@ -148,16 +148,16 @@ public abstract class EnemyBase : MonoBehaviour, IDamageable
     }
     void GetBehavior()
     {
-        switch (enemyType)
+        switch (monsterType)
         {
-            case EnemyType.A:
-                behavior = new EnemyA_Behavior();
+            case MonsterType.A:
+                behavior = new MonsterBehaviorA();
                 break;
-            case EnemyType.B:
-                behavior = new EnemyB_Behavior();
+            case MonsterType.B:
+                behavior = new MonsterBehaviorB();
                 break;
-            case EnemyType.C:
-                behavior = new EnemyC_Behavior();
+            case MonsterType.C:
+                behavior = new MonsterBehaviorC();
                 break;
         }
     }

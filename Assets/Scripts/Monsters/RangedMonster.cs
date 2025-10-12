@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RangedEnemy : EnemyBase
+public class RangedMonster : MonsterBase
 {
     [SerializeField]
     protected GameObject bulletPrefab;
@@ -12,7 +12,7 @@ public class RangedEnemy : EnemyBase
 
         if (bulletPrefab == null)
         {
-            Debug.LogWarning($"{name}: RangedEnemy인데 BulletPrefab이 지정되지 않음");
+            Debug.LogWarning($"{name}: RangedMonster인데 BulletPrefab이 지정되지 않음");
         }
     }
 }

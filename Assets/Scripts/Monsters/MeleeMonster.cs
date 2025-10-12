@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MeleeEnemy : EnemyBase
+public class MeleeMonster : MonsterBase
 {
     [SerializeField]
     protected Collider hitBox;
@@ -11,7 +11,7 @@ public class MeleeEnemy : EnemyBase
         base.Awake();
         if (hitBox == null)
         {
-            Debug.LogWarning($"{name}: MeleeEnemy인데 HitBox가 지정되지 않음");
+            Debug.LogWarning($"{name}: MeleeMonster인데 HitBox가 지정되지 않음");
         }
     }
 }

@@ -30,13 +30,13 @@ public class ThrownGrenade : MonoBehaviour
         effect.SetActive(false);
 
         float radius = 15f;
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, Vector3.up, 0f, LayerMask.GetMask("Enemy"));
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, Vector3.up, 0f, LayerMask.GetMask("Monster"));
 
         foreach (RaycastHit hit in hits)
         {
-            if (hit.transform.TryGetComponent(out EnemyBase enemy))
+            if (hit.transform.TryGetComponent(out MonsterBase monster))
             {
-                enemy.TakeDamage(damage, transform.position, true);
+                monster.TakeDamage(damage, transform.position, true);
             }
         }
         Destroy(gameObject, 4f);

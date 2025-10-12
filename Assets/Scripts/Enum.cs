@@ -21,7 +21,7 @@ public enum StatType
     MoveSpeed,
     Count
 }
-public enum EnemyType
+public enum MonsterType
 {
     A,
     B,

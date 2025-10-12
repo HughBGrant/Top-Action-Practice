@@ -6,5 +6,5 @@ public static class Tags
     public const string Wall = "Wall";
     public const string Melee = "Melee";
     public const string Bullet = "Bullet";
-    public const string EnemyHigBox = "EnemyHitBox";
+    public const string MonsterHigBox = "MonsterHitBox";
 }

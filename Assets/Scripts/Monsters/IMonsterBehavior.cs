@@ -1,9 +1,9 @@
 using System.Collections;
 
-public interface IEnemyBehavior
+public interface IMonsterBehavior
 {
     float Radius { get; }
     float Range { get; }
 
-    IEnumerator Attack(EnemyBase enemy);
+    IEnumerator Attack(MonsterBase monster);
 }

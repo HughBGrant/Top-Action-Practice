@@ -37,7 +37,7 @@
 //    private Coroutine hitCo;
 
 
-//    private IEnemyBehavior behavior;
+//    private IMonsterBehavior behavior;
 
 //    private void Awake()
 //    {
@@ -50,13 +50,13 @@
 //        switch (enemyType)
 //        {
 //            case EnemyType.A:
-//                behavior = new EnemyA_Behavior();
+//                behavior = new MonsterBehaviorA();
 //                break;
 //            case EnemyType.B:
-//                behavior = new EnemyB_Behavior();
+//                behavior = new MonsterBehaviorB();
 //                break;
 //            case EnemyType.C:
-//                behavior = new EnemyC_Behavior();
+//                behavior = new MonsterBehaviorC();
 //                break;
 //        }
 //    }
