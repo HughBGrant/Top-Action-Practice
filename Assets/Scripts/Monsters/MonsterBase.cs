@@ -26,7 +26,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected Coroutine attackCo;
     protected Coroutine hitCo;
 
-    protected IMonsterBehavior behavior;
+    protected MonsterBehavior behavior;
 
     protected virtual void Awake()
     {
@@ -34,7 +34,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         navAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         material = GetComponentInChildren<MeshRenderer>().material;
-        GetBehavior();
+        behavior = new MonsterBehavior(monsterType);
 
         currentHealth = maxHealth;
 
@@ -145,20 +145,5 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         Gizmos.DrawWireSphere(end, behavior.Radius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(start, end);
-    }
-    void GetBehavior()
-    {
-        switch (monsterType)
-        {
-            case MonsterType.A:
-                behavior = new MonsterBehaviorA();
-                break;
-            case MonsterType.B:
-                behavior = new MonsterBehaviorB();
-                break;
-            case MonsterType.C:
-                behavior = new MonsterBehaviorC();
-                break;
-        }
     }
 }
