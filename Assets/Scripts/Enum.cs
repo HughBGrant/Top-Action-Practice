@@ -25,5 +25,6 @@ public enum MonsterType
 {
     A,
     B,
-    C
+    C,
+    Boss
 }

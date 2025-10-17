@@ -24,7 +24,7 @@
 //    [SerializeField]
 //    private int currentHealth;
 //    [SerializeField]
-//    private Transform targetPoint;
+//    private Transform target;
 
 //    private bool isChasing;
 //    private bool isAttacking;
@@ -68,11 +68,11 @@
 //    }
 //    private void Update()
 //    {
-//        Target();
+//        DetectTarget();
 
 //        if (navAgent.enabled)
 //        {
-//            navAgent.SetDestination(targetPoint.position);
+//            navAgent.SetDestination(target.position);
 //            navAgent.isStopped = !isChasing;
 //        }
 //    }
@@ -125,7 +125,7 @@
 
 //        Destroy(gameObject, 2f);
 //    }
-//    private void Target()
+//    private void DetectTarget()
 //    {
 //        if (behavior == null || isAttacking) return;
 

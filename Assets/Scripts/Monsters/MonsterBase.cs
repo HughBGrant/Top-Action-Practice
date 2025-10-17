@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public abstract class MonsterBase : MonoBehaviour, IDamageable
 {
@@ -12,14 +13,16 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     private MonsterType monsterType;
     [SerializeField]
     protected int maxHealth = 100;
+    [SerializeField]
+    [FormerlySerializedAs("targetPoint")]
+    protected Transform target;
+
     protected int currentHealth;
 
-    [SerializeField]
-    protected Transform targetPoint;
     protected Rigidbody rb;
     protected NavMeshAgent navAgent;
     protected Animator animator;
-    protected Material material;
+    protected MeshRenderer[] meshs;
 
     protected bool isChasing;
     protected bool isAttacking;
@@ -33,31 +36,32 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         rb = GetComponent<Rigidbody>();
         navAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
-        material = GetComponentInChildren<MeshRenderer>().material;
+        meshs = GetComponentsInChildren<MeshRenderer>();
         behavior = new MonsterBehavior(monsterType);
 
         currentHealth = maxHealth;
 
     }
-
     protected virtual void Start()
     {
-        StartCoroutine(StartChase());
+        if (monsterType != MonsterType.Boss)
+        {
+            StartCoroutine(StartChase());
+        }
     }
-
     protected virtual void Update()
     {
-        if (navAgent && targetPoint)
+        if (navAgent && target && monsterType != MonsterType.Boss)
         {
-            navAgent.SetDestination(targetPoint.position);
+            navAgent.SetDestination(target.position);
             navAgent.isStopped = !isChasing;
         }
 
-        Target();
+        DetectTarget();
     }
-    protected virtual void Target()
+    protected virtual void DetectTarget()
     {
-        if (behavior == null || isAttacking) return;
+        if (behavior == null || isAttacking || monsterType == MonsterType.Boss) return;
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.Radius, transform.forward, behavior.Range, LayerMask.GetMask("Player"));
         if (hits.Length > 0)
@@ -65,7 +69,6 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
             attackCo ??= StartCoroutine(AttackRoutine());
         }
     }
-
     protected IEnumerator AttackRoutine()
     {
         isChasing = false;
@@ -81,14 +84,12 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         isChasing = true;
         attackCo = null;
     }
-
     protected IEnumerator StartChase()
     {
         yield return YieldCache.WaitForSeconds(2.0f);
         isChasing = true;
         animator.SetBool(IsWalkingHash, true);
     }
-
     public virtual void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
         currentHealth -= damage;
@@ -101,38 +102,47 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
             Die(hitPoint, isHitGrenade);
         }
     }
-
     private IEnumerator HitFlash()
     {
-        material.color = Color.red;
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.red;
+        }
         yield return YieldCache.WaitForSeconds(0.1f);
 
         if (currentHealth > 0)
         {
-            material.color = Color.white;
+            foreach (MeshRenderer mesh in meshs)
+            {
+                mesh.material.color = Color.white;
+            }
         }
-
         hitCo = null;
     }
-
     protected virtual void Die(Vector3 hitPoint, bool isHitGrenade = false)
     {
         isChasing = false;
         navAgent.enabled = false;
-        material.color = Color.gray;
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.gray;
+        }
         gameObject.layer = LayerMask.NameToLayer("DeadMonster");
         animator.SetTrigger(DieHash);
 
         Vector3 hitDir = (transform.position - hitPoint).normalized + Vector3.up * (isHitGrenade ? 3f : 1f);
         rb.AddForce(hitDir * 5f, ForceMode.Impulse);
+
         if (isHitGrenade)
         {
             rb.AddTorque(hitDir * 15, ForceMode.Impulse);
         }
 
-        Destroy(gameObject, 2f);
+        if (monsterType != MonsterType.Boss)
+        {
+            Destroy(gameObject, 2f);
+        }
     }
-
     protected virtual void OnDrawGizmos()
     {
         if (!Application.isPlaying || behavior == null) return;
