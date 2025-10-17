@@ -396,7 +396,7 @@ public class Player : MonoBehaviour
             }
             Destroy(other.gameObject);
         }
-        else if (other.CompareTag(Tags.MonsterHigBox))
+        else if (other.CompareTag(Tags.MonsterHitBox))
         {
             if (isTakingDamage) { return; }
 
@@ -423,6 +423,23 @@ public class Player : MonoBehaviour
         if (other.CompareTag(Tags.Weapon))
         {
             nearObj = null;
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag(Tags.MonsterHitBox))
+        {
+            if (isTakingDamage) { return; }
+
+            if (!collision.gameObject.TryGetComponent(out IDamageSource source)) { return; }
+
+            health -= source.Damage;
+
+            if (collision.gameObject.GetComponent<Rigidbody>() != null)
+            {
+                Destroy(collision.gameObject);
+            }
+            damageCo ??= StartCoroutine(TakeDamage());
         }
     }
     // --- Utils ---

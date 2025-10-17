@@ -10,7 +10,7 @@ public class HitBox : MonoBehaviour, IDamageSource
     {
         if (other.TryGetComponent(out IDamageable target))
         {
-            target.TakeDamage(damage, transform.position);
+            target.TakeDamage(Damage, transform.position);
             Destroy(gameObject);
         }
     }
