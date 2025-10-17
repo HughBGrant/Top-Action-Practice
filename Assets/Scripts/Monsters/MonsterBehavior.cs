@@ -63,7 +63,7 @@ public class MonsterBehavior
         if (monster is MeleeMonster melee)
         {
             yield return YieldCache.WaitForSeconds(0.1f);
-            melee.GetComponent<Rigidbody>().AddForce(monster.transform.forward * 20, ForceMode.Impulse);
+            melee.GetComponent<Rigidbody>().AddForce(melee.transform.forward * 20, ForceMode.Impulse);
             melee.HitBox.enabled = true;
             yield return YieldCache.WaitForSeconds(0.5f);
             melee.GetComponent<Rigidbody>().velocity = Vector3.zero;
