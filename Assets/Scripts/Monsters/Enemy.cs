@@ -76,7 +76,7 @@
 //            navAgent.isStopped = !isChasing;
 //        }
 //    }
-//    public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
+//    public void HitFlash(int damage, Vector3 hitPoint, bool isHitGrenade = false)
 //    {
 //        currentHealth -= damage;
 //        Debug.Log($"체력 {damage} 감소. 현재 체력 {currentHealth}");

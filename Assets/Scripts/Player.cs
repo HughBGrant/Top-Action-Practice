@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
     private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
@@ -45,13 +45,17 @@ public class Player : MonoBehaviour
 
     [Header("재화, 능력치")]
     [SerializeField]
-    private int health;
+    [FormerlySerializedAs("health")]
+    private int currentHealth;
     [SerializeField]
     private int ammo;
     [SerializeField]
     private int coin;
     [SerializeField]
     private int grenadeCount;
+
+    //private float[] stats = new float[(int)StatType.Count];
+    //public float this[StatType e] { get => stats[(int)e]; set => stats[(int)e] = value; }
 
     [Header("장착")]
     [SerializeField]
@@ -95,7 +99,7 @@ public class Player : MonoBehaviour
     private Coroutine swapCo;
     private Coroutine attackCo;
     private Coroutine reloadCo;
-    private Coroutine damageCo;
+    private Coroutine hitCo;
 
     private const int AmmoCap = 999;
     private const int CoinCap = 99999;
@@ -345,9 +349,20 @@ public class Player : MonoBehaviour
         isAttacking = false;
         attackCo = null;
     }
-    private IEnumerator TakeDamage()
+    public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
+    {
+        if (isTakingDamage) { return; }
+
+
+        hitCo ??= StartCoroutine(HitFlash());
+
+        currentHealth -= damage;
+
+    }
+    private IEnumerator HitFlash()
     {
         isTakingDamage = true;
+
         foreach (MeshRenderer mesh in meshs)
         {
             mesh.material.color = Color.yellow;
@@ -358,58 +373,8 @@ public class Player : MonoBehaviour
         {
             mesh.material.color = Color.white;
         }
-
         isTakingDamage = false;
-        damageCo = null;
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag(Tags.Item))
-        {
-            if (!other.TryGetComponent(out Item item)) { return; }
-            switch (item.Type)
-            {
-                case ItemType.Ammo:
-                    ammo = Mathf.Min(ammo + item.Value, AmmoCap);
-                    break;
-                case ItemType.Coin:
-                    coin = Mathf.Min(coin + item.Value, CoinCap);
-                    break;
-                case ItemType.Heart:
-                    health = Mathf.Min(health + item.Value, HealthCap);
-                    break;
-                case ItemType.Grenade:
-                    if (belongingGrenades == null || belongingGrenades.Length <= 0) { break; }
-
-                    int before = grenadeCount;
-                    int after = Mathf.Clamp(grenadeCount + item.Value, 0, GrenadeCountCap);
-
-                    for (int i = before; i < after && i < belongingGrenades.Length; i++)
-                    {
-                        if (belongingGrenades[i] != null)
-                        {
-                            belongingGrenades[i].SetActive(true);
-                        }
-                    }
-                    grenadeCount = after;
-                    break;
-            }
-            Destroy(other.gameObject);
-        }
-        else if (other.CompareTag(Tags.MonsterHitBox))
-        {
-            if (isTakingDamage) { return; }
-
-            if (!other.TryGetComponent(out IDamageSource source)) { return; }
-
-            health -= source.Damage;
-
-            if (other.GetComponent<Rigidbody>() != null)
-            {
-                Destroy(other.gameObject);
-            }
-            damageCo ??= StartCoroutine(TakeDamage());
-        }
+        hitCo = null;
     }
     private void OnTriggerStay(Collider other)
     {
@@ -418,28 +383,21 @@ public class Player : MonoBehaviour
             nearObj = other.gameObject;
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(Tags.Item))
+        {
+            if (!other.TryGetComponent(out Item item)) { return; }
+
+            ApplyItemEffect(item.Type, item.Value);
+            Destroy(other.gameObject);
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag(Tags.Weapon))
         {
             nearObj = null;
-        }
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag(Tags.MonsterHitBox))
-        {
-            if (isTakingDamage) { return; }
-
-            if (!collision.gameObject.TryGetComponent(out IDamageSource source)) { return; }
-
-            health -= source.Damage;
-
-            if (collision.gameObject.GetComponent<Rigidbody>() != null)
-            {
-                Destroy(collision.gameObject);
-            }
-            damageCo ??= StartCoroutine(TakeDamage());
         }
     }
     // --- Utils ---
@@ -463,5 +421,32 @@ public class Player : MonoBehaviour
             return false;
         }
         return Physics.Raycast(groundCheckPoint.position, Vector3.down, groundCheckDistance, groundLayer);
+    }
+    public void ApplyItemEffect(ItemType type, int value)
+    {
+        switch (type)
+        {
+            case ItemType.Ammo:
+                ammo = Mathf.Min(ammo + value, AmmoCap);
+                break;
+            case ItemType.Coin:
+                coin = Mathf.Min(coin + value, CoinCap);
+                break;
+            case ItemType.Heart:
+                currentHealth = Mathf.Min(currentHealth + value, HealthCap);
+                break;
+            case ItemType.Grenade:
+                if (belongingGrenades == null || belongingGrenades.Length <= 0) { return; }
+
+                int before = grenadeCount;
+                int after = Mathf.Clamp(grenadeCount + value, 0, GrenadeCountCap);
+
+                for (int i = before; i < after && i < belongingGrenades.Length; i++)
+                {
+                    belongingGrenades[i]?.SetActive(true);
+                }
+                grenadeCount = after;
+                break;
+        }
     }
 }
