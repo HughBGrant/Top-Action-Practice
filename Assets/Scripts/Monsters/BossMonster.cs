@@ -26,6 +26,7 @@ public class BossMonster : MonsterBase
     private bool isLooking;
     protected override void Awake()
     {
+        base.Awake();
         StartCoroutine(Think());
     }
     protected override void Update()
@@ -33,9 +34,9 @@ public class BossMonster : MonsterBase
         if (isLooking)
         {
             lookVec = player.moveDirection * 5f;
-            Debug.Log(lookVec);
-            //lookVec = target.position;
             transform.LookAt(target.position + lookVec);
+            //lookVec = target.position;
+            //transform.LookAt(target.position);
         }
     }
     private IEnumerator Think()

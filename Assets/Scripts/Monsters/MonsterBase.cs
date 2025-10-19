@@ -64,6 +64,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         if (behavior == null || isAttacking || monsterType == MonsterType.Boss) return;
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.Radius, transform.forward, behavior.Range, LayerMask.GetMask("Player"));
+
         if (hits.Length > 0)
         {
             attackCo ??= StartCoroutine(AttackRoutine());
