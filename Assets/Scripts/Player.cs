@@ -71,7 +71,7 @@ public class Player : MonoBehaviour, IDamageable
 
     // 움직임
     private Vector2 moveInput;
-    private Vector3 moveDirection;
+    public Vector3 moveDirection;
     private Vector3 dodgeDirection;
 
     // 상태
