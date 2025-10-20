@@ -38,18 +38,16 @@ public class RangedWeapon : WeaponBase
     }
     private IEnumerator ShootBullet()
     {
-        GameObject bulletInstant = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody bulletRb = bulletInstant.GetComponent<Rigidbody>();
+        Rigidbody bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).GetComponent<Rigidbody>();
         float bulletSpeed = 50f;
-        bulletRb.velocity = firePoint.forward * bulletSpeed;
+        bullet.velocity = firePoint.forward * bulletSpeed;
         yield return null;
 
-        GameObject casingInstant = Instantiate(casingPrefab, ejectPoint.position, ejectPoint.rotation);
-        Rigidbody casingRb = casingInstant.GetComponent<Rigidbody>();
-        Vector3 casingVec = ejectPoint.forward * -Random.Range(1, 4) + Vector3.up * Random.Range(1, 4);
-        casingRb.AddForce(casingVec, ForceMode.Impulse);
+        Rigidbody casing = Instantiate(casingPrefab, ejectPoint.position, ejectPoint.rotation).GetComponent<Rigidbody>();
+        Vector3 casingVec = ejectPoint.forward * Random.Range(1, 4) * -1 + Vector3.up * Random.Range(1, 4);
+        casing.AddForce(casingVec, ForceMode.Impulse);
         float casingSpinForce = 10f;
-        casingRb.AddTorque(Vector3.up * casingSpinForce, ForceMode.Impulse);
+        casing.AddTorque(Vector3.up * casingSpinForce, ForceMode.Impulse);
 
         shootCo = null;
     }

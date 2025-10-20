@@ -78,7 +78,7 @@ public class MonsterBehavior
         {
             yield return YieldCache.WaitForSeconds(0.5f);
             Vector3 spawnPos = ranged.transform.position + Vector3.up * 3f;
-            GameObject bullet = Object.Instantiate(ranged.BulletPrefab, spawnPos, ranged.transform.rotation);
+            GameObject bullet = Object.Instantiate(ranged.MissilePrefab, spawnPos, ranged.transform.rotation);
             Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
             bulletRb.velocity = ranged.transform.forward * 20f;
             yield return YieldCache.WaitForSeconds(2.0f);

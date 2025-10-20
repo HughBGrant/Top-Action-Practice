@@ -295,9 +295,9 @@ public class Player : MonoBehaviour, IDamageable
             Vector3 nextVec = hit.point - transform.position;
             nextVec.y = 10;
 
-            Rigidbody grenadeInstance = Instantiate(grenadePrefab, transform.position, transform.rotation).GetComponent<Rigidbody>();
-            grenadeInstance.AddForce(nextVec, ForceMode.Impulse);
-            grenadeInstance.AddTorque(Vector3.back * 10, ForceMode.Impulse);
+            Rigidbody grenade = Instantiate(grenadePrefab, transform.position, transform.rotation).GetComponent<Rigidbody>();
+            grenade.AddForce(nextVec, ForceMode.Impulse);
+            grenade.AddTorque(Vector3.back * 10, ForceMode.Impulse);
             grenadeCount--;
             belongingGrenades[grenadeCount].SetActive(false);
         }

@@ -3,8 +3,7 @@ using UnityEngine.AI;
 
 public class BossMissile : Bullet
 {
-    [SerializeField]
-    Transform target;
+    public Transform target;
     private NavMeshAgent navAgent;
     // Start is called before the first frame update
     void Awake()

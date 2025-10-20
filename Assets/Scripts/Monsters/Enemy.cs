@@ -15,7 +15,7 @@
 
 //    public Rigidbody Rigidbody { get; private set; }
 
-//    public GameObject BulletPrefab;
+//    public GameObject MissilePrefab;
 
 //    [SerializeField]
 //    private EnemyType enemyType;

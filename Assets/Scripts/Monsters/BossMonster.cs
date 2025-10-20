@@ -11,8 +11,10 @@ public class BossMonster : MonsterBase
     public Collider HitBox => hitBox;
 
     [SerializeField]
-    protected GameObject bulletPrefab;
-    public GameObject BulletPrefab => bulletPrefab;
+    private GameObject missilePrefab;
+    public GameObject MissilePrefab => missilePrefab;
+    [SerializeField]
+    private GameObject rockPrefab;
 
     [SerializeField]
     Transform launchPointA;
@@ -23,7 +25,7 @@ public class BossMonster : MonsterBase
     private Vector3 lookVec;
     private Vector3 groundSlamVec;
 
-    private bool isLooking;
+    public bool isLooking;
     protected override void Awake()
     {
         base.Awake();
@@ -63,13 +65,26 @@ public class BossMonster : MonsterBase
     private IEnumerator LaunchMissile()
     {
         animator.SetTrigger(LaunchMissileHash);
-        yield return YieldCache.WaitForSeconds(2.5f);
+        yield return YieldCache.WaitForSeconds(0.2f);
+        BossMissile missileA = Instantiate(missilePrefab, launchPointA.position, launchPointA.rotation).GetComponent<BossMissile>();
+
+        missileA.target = target;
+
+        yield return YieldCache.WaitForSeconds(0.3f);
+        BossMissile missileB = Instantiate(missilePrefab, launchPointB.position, launchPointB.rotation).GetComponent<BossMissile>();
+
+        missileB.target = target;
+
+        yield return YieldCache.WaitForSeconds(2f);
         StartCoroutine(Think());
     }
     private IEnumerator RollRock()
     {
+        isLooking = false;
         animator.SetTrigger(RollRockHash);
+        Instantiate(rockPrefab, transform.position, transform.rotation);
         yield return YieldCache.WaitForSeconds(3.0f);
+        isLooking = false;
         StartCoroutine(Think());
     }
     private IEnumerator JumpAttack()
