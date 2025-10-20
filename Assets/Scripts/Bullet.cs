@@ -10,6 +10,7 @@ public class Bullet : MonoBehaviour, IDamageSource
     {
         if (other.TryGetComponent(out IDamageable target))
         {
+            Debug.Log("asdf");
             target.TakeDamage(damage, transform.position);
             Destroy(gameObject);
         }

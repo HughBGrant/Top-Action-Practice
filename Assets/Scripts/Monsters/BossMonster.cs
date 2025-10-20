@@ -8,14 +8,13 @@ public class BossMonster : MonsterBase
     protected static readonly int JumpAttackHash = Animator.StringToHash("jumpAttack");
     [SerializeField]
     protected Collider hitBox;
-    public Collider HitBox => hitBox;
+    public Collider HitBox { get { return hitBox; } }
 
     [SerializeField]
     private GameObject missilePrefab;
-    public GameObject MissilePrefab => missilePrefab;
+    public GameObject MissilePrefab { get { return missilePrefab; } }
     [SerializeField]
     private GameObject rockPrefab;
-
     [SerializeField]
     Transform launchPointA;
     [SerializeField]
@@ -23,22 +22,34 @@ public class BossMonster : MonsterBase
 
     public Player player;
     private Vector3 lookVec;
-    private Vector3 groundSlamVec;
+    private Vector3 jumpAttackVec;
+    private BoxCollider boxCollider;
 
     public bool isLooking;
     protected override void Awake()
     {
         base.Awake();
+        boxCollider = GetComponent<BoxCollider>();
+        navAgent.isStopped = true;
         StartCoroutine(Think());
     }
     protected override void Update()
     {
+        if (isDead)
+        {
+            StopAllCoroutines();
+            return;
+        }
         if (isLooking)
         {
             lookVec = player.moveDirection * 5f;
             transform.LookAt(target.position + lookVec);
             //lookVec = target.position;
             //transform.LookAt(target.position);
+        }
+        else
+        {
+            navAgent.SetDestination(jumpAttackVec);
         }
     }
     private IEnumerator Think()
@@ -84,13 +95,30 @@ public class BossMonster : MonsterBase
         animator.SetTrigger(RollRockHash);
         Instantiate(rockPrefab, transform.position, transform.rotation);
         yield return YieldCache.WaitForSeconds(3.0f);
-        isLooking = false;
+        isLooking = true;
+
         StartCoroutine(Think());
     }
     private IEnumerator JumpAttack()
     {
+        jumpAttackVec = target.position + lookVec;
+
+        isLooking = false;
+        navAgent.isStopped = false;
+        boxCollider.enabled = false;
         animator.SetTrigger(JumpAttackHash);
-        yield return YieldCache.WaitForSeconds(3.0f);
+        yield return YieldCache.WaitForSeconds(1.5f);
+
+        hitBox.enabled = true;
+        yield return YieldCache.WaitForSeconds(0.5f);
+        hitBox.enabled = false;
+
+        yield return YieldCache.WaitForSeconds(1.0f);
+
+        boxCollider.enabled = true;
+        navAgent.isStopped = true;
+        isLooking = true;
+
         StartCoroutine(Think());
     }
 }

@@ -6,13 +6,21 @@ public class HitBox : MonoBehaviour, IDamageSource
     private int damage;
     public int Damage { get { return damage; } }
 
-    private void OnTriggerEnter(Collider other)         // Monster
+    private void OnTriggerEnter(Collider other)         // Monster Hitbox
     {
+        bool isBossAtk = gameObject.name == "Jump Attack Hit Box";
+        if (isBossAtk)
+        {
+            if (other.TryGetComponent(out Rigidbody targetRb))
+            {
+                targetRb.AddForce(other.transform.forward * 250 * -1, ForceMode.Impulse);
+            }
+        }
         if (other.TryGetComponent(out IDamageable target))
         {
             target.TakeDamage(Damage, transform.position);
-            Destroy(gameObject);
         }
+
     }
     private void OnCollisionEnter(Collision collision)  // BossRock
     {

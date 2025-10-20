@@ -4,7 +4,7 @@ public class MeleeMonster : MonsterBase
 {
     [SerializeField]
     protected Collider hitBox;
-    public Collider HitBox => hitBox;
+    public Collider HitBox { get { return hitBox; } }
 
     protected override void Awake()
     {

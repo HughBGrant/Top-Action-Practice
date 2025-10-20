@@ -353,7 +353,6 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (isTakingDamage) { return; }
 
-
         hitCo ??= StartCoroutine(HitFlash());
 
         currentHealth -= damage;

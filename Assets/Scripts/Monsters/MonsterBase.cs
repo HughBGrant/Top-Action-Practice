@@ -26,6 +26,8 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
 
     protected bool isChasing;
     protected bool isAttacking;
+    protected bool isDead;
+
     protected Coroutine attackCo;
     protected Coroutine hitCo;
 
@@ -61,7 +63,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void DetectTarget()
     {
-        if (behavior == null || isAttacking || monsterType == MonsterType.Boss) return;
+        if (behavior == null || isAttacking || monsterType == MonsterType.Boss || isDead) return;
 
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.Radius, transform.forward, behavior.Range, LayerMask.GetMask("Player"));
 
@@ -122,6 +124,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void Die(Vector3 hitPoint, bool isHitGrenade = false)
     {
+        isDead = true;
         isChasing = false;
         navAgent.enabled = false;
         foreach (MeshRenderer mesh in meshs)

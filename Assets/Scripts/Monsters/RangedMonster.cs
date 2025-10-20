@@ -6,7 +6,7 @@ public class RangedMonster : MonsterBase
     [SerializeField]
     [FormerlySerializedAs("bulletPrefab")]
     protected GameObject missilePrefab;
-    public GameObject MissilePrefab => missilePrefab;
+    public GameObject MissilePrefab { get { return missilePrefab; } }
 
     protected override void Awake()
     {
