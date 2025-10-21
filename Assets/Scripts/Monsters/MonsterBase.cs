@@ -42,7 +42,6 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         behavior = new MonsterBehavior(monsterType);
 
         currentHealth = maxHealth;
-
     }
     protected virtual void Start()
     {

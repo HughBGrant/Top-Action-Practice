@@ -9,12 +9,11 @@ public class HitBox : MonoBehaviour, IDamageSource
     private void OnTriggerEnter(Collider other)         // Monster Hitbox
     {
         bool isBossAtk = gameObject.name == "Jump Attack Hit Box";
-        if (isBossAtk)
+
+        if (isBossAtk && other.TryGetComponent(out Rigidbody targetRb))
         {
-            if (other.TryGetComponent(out Rigidbody targetRb))
-            {
-                targetRb.AddForce(other.transform.forward * 250 * -1, ForceMode.Impulse);
-            }
+            targetRb.AddForce(other.transform.forward * -250, ForceMode.Impulse);
+
         }
         if (other.TryGetComponent(out IDamageable target))
         {
