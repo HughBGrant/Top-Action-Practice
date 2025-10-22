@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class BossRock : IDamageSource
 {
-    [SerializeField]
-    private LayerMask wallMask;
-
     private Rigidbody rb;
     // Start is called before the first frame update
     void Awake()
@@ -15,13 +12,13 @@ public class BossRock : IDamageSource
     }
     private void OnCollisionEnter(Collision collision)
     {
-        int collisionLayer = collision.gameObject.layer;
-
-        if (collision.gameObject.CompareTag(Tag.Wall))
+        if (collision.gameObject.layer == LayerIndex.Wall)
         {
             Destroy(gameObject);
             return;
         }
+
+
         DealDamageTo(collision.gameObject);
     }
     private IEnumerator ChargeSpin()

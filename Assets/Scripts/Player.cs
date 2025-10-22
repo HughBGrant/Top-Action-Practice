@@ -246,12 +246,9 @@ public class Player : MonoBehaviour, IDamageable
 
         if (nearObj.CompareTag(Tag.Weapon))
         {
-            if (nearObj.TryGetComponent(out Item item))
+            if (nearObj.TryGetComponent(out Item item) && hasWeapons != null && item.Value >= 0 && item.Value < hasWeapons.Length)
             {
-                if (hasWeapons != null && item.Value >= 0 && item.Value < hasWeapons.Length)
-                {
-                    hasWeapons[item.Value] = true;
-                }
+                hasWeapons[item.Value] = true;
             }
             Destroy(nearObj);
         }
@@ -377,14 +374,14 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag(Tag.Weapon))
+        if (other.gameObject.layer == LayerIndex.Weapon)
         {
             nearObj = other.gameObject;
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Tag.Item))
+        if (other.gameObject.layer == LayerIndex.Item)
         {
             if (!other.TryGetComponent(out Item item)) { return; }
 
@@ -394,7 +391,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(Tag.Weapon))
+        if (other.gameObject.layer == LayerIndex.Weapon)
         {
             nearObj = null;
         }
