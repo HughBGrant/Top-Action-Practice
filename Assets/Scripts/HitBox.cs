@@ -1,36 +1,16 @@
 using UnityEngine;
 
-public class HitBox : MonoBehaviour, IDamageSource
+public class HitBox : IDamageSource
 {
     [SerializeField]
-    private int damage;
-    public int Damage { get { return damage; } }
-
-    private void OnTriggerEnter(Collider other)         // Monster Hitbox
+    private bool isJumpAttack;
+    private void OnTriggerEnter(Collider other)
     {
-        bool isBossAtk = gameObject.name == "Jump Attack Hit Box";
+        DealDamageTo(other.gameObject, false);
 
-        if (isBossAtk && other.TryGetComponent(out Rigidbody targetRb))
+        if (isJumpAttack && other.TryGetComponent(out Rigidbody targetRb))
         {
             targetRb.AddForce(other.transform.forward * -250, ForceMode.Impulse);
-
-        }
-        if (other.TryGetComponent(out IDamageable target))
-        {
-            target.TakeDamage(Damage, transform.position);
-        }
-
-    }
-    private void OnCollisionEnter(Collision collision)  // BossRock
-    {
-        if (collision.gameObject.CompareTag(Tag.Wall))
-        {
-            Destroy(gameObject);
-        }
-        if (collision.gameObject.TryGetComponent(out IDamageable target))
-        {
-            target.TakeDamage(Damage, transform.position);
-            Destroy(gameObject);
         }
     }
 }

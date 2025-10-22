@@ -859,7 +859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterType: 0
   maxHealth: 100
-  target: {fileID: 1290166534}
+  targetTransform: {fileID: 1290166534}
   hitBox: {fileID: 1161959386}
 --- !u!4 &523951551 stripped
 Transform:
@@ -1017,7 +1017,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterType: 2
   maxHealth: 100
-  target: {fileID: 1290166534}
+  targetTransform: {fileID: 1290166534}
   missilePrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
 --- !u!4 &594488909 stripped
 Transform:
@@ -1253,7 +1253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterType: 1
   maxHealth: 100
-  target: {fileID: 1290166534}
+  targetTransform: {fileID: 1290166534}
   hitBox: {fileID: 1992542770}
 --- !u!1001 &622605787
 PrefabInstance:
@@ -1760,7 +1760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   monsterType: 3
   maxHealth: 100
-  target: {fileID: 1290166534}
+  targetTransform: {fileID: 1290166534}
   hitBox: {fileID: 1416929148}
   missilePrefab: {fileID: 2179863741677129894, guid: 373f6ae6e0c31bc43ba40cbca358b2e1, type: 3}
   rockPrefab: {fileID: 2882364650027379269, guid: a10c504b3ee67f844941503ff11d58c2, type: 3}
@@ -1782,9 +1782,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 963194228}
+  - component: {fileID: 963194229}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1878,7 +1878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ecc3fd1c0b2aec44b5328a7e1fe0fab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1290166534}
+  targetTransform: {fileID: 1290166534}
   offset: {x: 0, y: 20, z: -20}
 --- !u!4 &979628787 stripped
 Transform:
@@ -2492,6 +2492,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  isJumpAttack: 0
 --- !u!1 &1170508250
 GameObject:
   m_ObjectHideFlags: 0
@@ -8199,6 +8200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 25
+  isJumpAttack: 0
 --- !u!4 &1512554786 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
@@ -23930,6 +23932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
+  isJumpAttack: 0
 --- !u!1 &2006751319 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}

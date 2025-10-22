@@ -1,27 +1,44 @@
 using System.Collections;
 using UnityEngine;
 
-public class BossRock : HitBox
+public class BossRock : IDamageSource
 {
+    [SerializeField]
+    private LayerMask wallMask;
+
     private Rigidbody rb;
     // Start is called before the first frame update
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        StartCoroutine(GainPower());
+        StartCoroutine(ChargeSpin());
     }
-    private IEnumerator GainPower()
+    private void OnCollisionEnter(Collision collision)
     {
-        float angularPower = 2f;
-        float scale = 0.1f;
-        float time = 0f;
-        while (time < 2.2f)
+        int collisionLayer = collision.gameObject.layer;
+
+        if (collision.gameObject.CompareTag(Tag.Wall))
         {
-            angularPower += 0.02f;
-            scale += 0.005f;
-            rb.AddTorque(transform.right * angularPower, ForceMode.Acceleration);
-            transform.localScale = Vector3.one * scale;
-            time += Time.deltaTime;
+            Destroy(gameObject);
+            return;
+        }
+        DealDamageTo(collision.gameObject);
+    }
+    private IEnumerator ChargeSpin()
+    {
+        float chargeDuration = 2f;
+
+        float currentTorque = 2f;
+        float currentScale = 0.1f;
+
+        while (chargeDuration > 0f && rb != null)
+        {
+            currentTorque += 0.02f;
+            currentScale += 0.005f;
+            rb.AddTorque(transform.right * currentTorque, ForceMode.Acceleration);
+            transform.localScale = Vector3.one * currentScale;
+            chargeDuration -= Time.deltaTime;
+
             yield return null;
         }
     }

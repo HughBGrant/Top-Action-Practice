@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 public abstract class MonsterBase : MonoBehaviour, IDamageable
 {
@@ -14,8 +13,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     [SerializeField]
     protected int maxHealth = 100;
     [SerializeField]
-    [FormerlySerializedAs("targetPoint")]
-    protected Transform target;
+    protected Transform targetTransform;
 
     protected int currentHealth;
 
@@ -52,9 +50,9 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void Update()
     {
-        if (navAgent && target && monsterType != MonsterType.Boss)
+        if (navAgent && targetTransform && monsterType != MonsterType.Boss)
         {
-            navAgent.SetDestination(target.position);
+            navAgent.SetDestination(targetTransform.position);
             navAgent.isStopped = !isChasing;
         }
 

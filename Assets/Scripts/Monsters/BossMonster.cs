@@ -43,9 +43,9 @@ public class BossMonster : MonsterBase
         if (isLooking)
         {
             lookVec = player.moveDirection * 5f;
-            transform.LookAt(target.position + lookVec);
-            //lookVec = target.position;
-            //transform.LookAt(target.position);
+            transform.LookAt(targetTransform.position + lookVec);
+            //lookVec = targetTransform.position;
+            //transform.LookAt(targetTransform.position);
         }
         else
         {
@@ -77,14 +77,14 @@ public class BossMonster : MonsterBase
     {
         animator.SetTrigger(LaunchMissileHash);
         yield return YieldCache.WaitForSeconds(0.2f);
-        BossMissile missileA = Instantiate(missilePrefab, launchPointA.position, launchPointA.rotation).GetComponent<BossMissile>();
+        GuidedMissile missileA = Instantiate(missilePrefab, launchPointA.position, launchPointA.rotation).GetComponent<GuidedMissile>();
 
-        missileA.target = target;
+        missileA.targetTransform = targetTransform;
 
         yield return YieldCache.WaitForSeconds(0.3f);
-        BossMissile missileB = Instantiate(missilePrefab, launchPointB.position, launchPointB.rotation).GetComponent<BossMissile>();
+        GuidedMissile missileB = Instantiate(missilePrefab, launchPointB.position, launchPointB.rotation).GetComponent<GuidedMissile>();
 
-        missileB.target = target;
+        missileB.targetTransform = targetTransform;
 
         yield return YieldCache.WaitForSeconds(2f);
         StartCoroutine(Think());
@@ -101,7 +101,7 @@ public class BossMonster : MonsterBase
     }
     private IEnumerator JumpAttack()
     {
-        jumpAttackVec = target.position + lookVec;
+        jumpAttackVec = targetTransform.position + lookVec;
 
         isLooking = false;
         navAgent.isStopped = false;
