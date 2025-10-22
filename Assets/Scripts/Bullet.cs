@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour, IDamageSource
 
     private void OnTriggerEnter(Collider other)         // Bullet, Boss Missile
     {
-        if (other.gameObject.CompareTag(Tags.Wall))
+        if (other.gameObject.CompareTag(Tag.Wall))
         {
             Destroy(gameObject);
         }

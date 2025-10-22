@@ -244,7 +244,7 @@ public class Player : MonoBehaviour, IDamageable
         if (!context.started || isJumping || isDodging) { return; }
         if (nearObj == null) { return; }
 
-        if (nearObj.CompareTag(Tags.Weapon))
+        if (nearObj.CompareTag(Tag.Weapon))
         {
             if (nearObj.TryGetComponent(out Item item))
             {
@@ -377,14 +377,14 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag(Tags.Weapon))
+        if (other.CompareTag(Tag.Weapon))
         {
             nearObj = other.gameObject;
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Tags.Item))
+        if (other.CompareTag(Tag.Item))
         {
             if (!other.TryGetComponent(out Item item)) { return; }
 
@@ -394,7 +394,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag(Tags.Weapon))
+        if (other.CompareTag(Tag.Weapon))
         {
             nearObj = null;
         }

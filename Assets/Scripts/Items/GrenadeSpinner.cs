@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BelongingGrenade : MonoBehaviour
+public class GrenadeSpinner : MonoBehaviour
 {
     void Update()
     {

@@ -25,7 +25,7 @@ public class Item : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag(Tags.Ground))
+        if (collision.gameObject.CompareTag(Tag.Ground))
         {
             rb.isKinematic = true;
             groundChecker.enabled = false;

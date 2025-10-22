@@ -1,4 +1,4 @@
-public static class Tags
+public static class Tag
 {
     public const string Item = "Item";
     public const string Weapon = "Weapon";

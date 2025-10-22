@@ -23,7 +23,7 @@ public class HitBox : MonoBehaviour, IDamageSource
     }
     private void OnCollisionEnter(Collision collision)  // BossRock
     {
-        if (collision.gameObject.CompareTag(Tags.Wall))
+        if (collision.gameObject.CompareTag(Tag.Wall))
         {
             Destroy(gameObject);
         }

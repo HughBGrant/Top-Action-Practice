@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RotatingMissile : MonoBehaviour
+public class MissileSpinner : MonoBehaviour
 {
     void Update()
     {

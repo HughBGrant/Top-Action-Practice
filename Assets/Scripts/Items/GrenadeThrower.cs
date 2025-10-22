@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ThrownGrenade : MonoBehaviour
+public class GrenadeThrower : MonoBehaviour
 {
     [SerializeField]
     private int damage;
