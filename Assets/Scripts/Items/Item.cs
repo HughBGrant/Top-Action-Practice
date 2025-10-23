@@ -10,12 +10,12 @@ public class Item : MonoBehaviour
     int value;
     public int Value { get { return value; } }
 
-    private Rigidbody rb;
+    private Rigidbody rigid;
     private SphereCollider groundChecker;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        rigid = GetComponent<Rigidbody>();
         groundChecker = GetComponent<SphereCollider>();
     }
     void Update()
@@ -27,7 +27,7 @@ public class Item : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerIndex.Ground)
         {
-            rb.isKinematic = true;
+            rigid.isKinematic = true;
             groundChecker.enabled = false;
         }
     }

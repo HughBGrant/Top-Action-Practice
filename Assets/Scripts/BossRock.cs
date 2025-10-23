@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class BossRock : IDamageSource
 {
-    private Rigidbody rb;
+    private Rigidbody rigid;
     // Start is called before the first frame update
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        rigid = GetComponent<Rigidbody>();
         StartCoroutine(ChargeSpin());
     }
     private void OnCollisionEnter(Collision collision)
@@ -28,11 +28,11 @@ public class BossRock : IDamageSource
         float currentTorque = 2f;
         float currentScale = 0.1f;
 
-        while (chargeDuration > 0f && rb != null)
+        while (chargeDuration > 0f && rigid != null)
         {
             currentTorque += 0.02f;
             currentScale += 0.005f;
-            rb.AddTorque(transform.right * currentTorque, ForceMode.Acceleration);
+            rigid.AddTorque(transform.right * currentTorque, ForceMode.Acceleration);
             transform.localScale = Vector3.one * currentScale;
             chargeDuration -= Time.deltaTime;
 

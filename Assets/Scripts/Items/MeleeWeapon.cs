@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class MeleeWeapon : WeaponBase
 {
-    private static readonly int SwingHash = Animator.StringToHash("swing");
+    private static readonly int SwingHash = Animator.StringToHash("Swing");
 
     [SerializeField]
     private int damage;
     public int Damage { get { return damage; } }
 
-    private BoxCollider hitBox;
+    private BoxCollider attackCollider;
     [SerializeField]
     private TrailRenderer trailEffect;
 
@@ -19,7 +19,7 @@ public class MeleeWeapon : WeaponBase
 
     private void Awake()
     {
-        hitBox = GetComponent<BoxCollider>();
+        attackCollider = GetComponent<BoxCollider>();
     }
     public override void Use()
     {
@@ -33,11 +33,11 @@ public class MeleeWeapon : WeaponBase
     private IEnumerator MeleeSwing()
     {
         yield return YieldCache.WaitForSeconds(0.1f);
-        hitBox.enabled = true;
+        attackCollider.enabled = true;
         trailEffect.enabled = true;
 
         yield return YieldCache.WaitForSeconds(0.3f);
-        hitBox.enabled = false;
+        attackCollider.enabled = false;
 
         yield return YieldCache.WaitForSeconds(0.3f);
         trailEffect.enabled = false;

@@ -3,36 +3,36 @@ using UnityEngine;
 
 public class MonsterBehavior
 {
-    private MonsterType type;
+    private MonsterType monsterType;
 
-    public float Radius { get; private set; }
-    public float Range { get; private set; }
+    public float AttackRadius { get; private set; }
+    public float AttackRange { get; private set; }
 
-    public MonsterBehavior(MonsterType type)
+    public MonsterBehavior(MonsterType monsterType)
     {
-        this.type = type;
+        this.monsterType = monsterType;
 
         // 몬스터 타입별 기본 공격 범위 설정
-        switch (type)
+        switch (monsterType)
         {
             case MonsterType.A:
-                Radius = 1.5f;
-                Range = 3f;
+                AttackRadius = 1.5f;
+                AttackRange = 3f;
                 break;
             case MonsterType.B:
-                Radius = 1f;
-                Range = 12f;
+                AttackRadius = 1f;
+                AttackRange = 12f;
                 break;
             case MonsterType.C:
-                Radius = 0.5f;
-                Range = 25f;
+                AttackRadius = 0.5f;
+                AttackRange = 25f;
                 break;
         }
     }
 
-    public IEnumerator Attack(MonsterBase monster)
+    public IEnumerator ExecuteAttack(MonsterBase monster)
     {
-        switch (type)
+        switch (monsterType)
         {
             case MonsterType.A:
                 yield return AttackTypeA(monster);
@@ -51,36 +51,34 @@ public class MonsterBehavior
         if (monster is MeleeMonster melee)
         {
             yield return YieldCache.WaitForSeconds(0.2f);
-            melee.HitBox.enabled = true;
+            melee.AttackCollider.enabled = true;
             yield return YieldCache.WaitForSeconds(1.0f);
-            melee.HitBox.enabled = false;
+            melee.AttackCollider.enabled = false;
             yield return YieldCache.WaitForSeconds(1.0f);
         }
     }
-
     private IEnumerator AttackTypeB(MonsterBase monster)
     {
         if (monster is MeleeMonster melee)
         {
             yield return YieldCache.WaitForSeconds(0.1f);
-            melee.GetComponent<Rigidbody>().AddForce(melee.transform.forward * 20, ForceMode.Impulse);
-            melee.HitBox.enabled = true;
+            melee.rigid.AddForce(melee.transform.forward * 20, ForceMode.Impulse);
+            melee.AttackCollider.enabled = true;
             yield return YieldCache.WaitForSeconds(0.5f);
-            melee.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            melee.HitBox.enabled = false;
+            melee.rigid.velocity = Vector3.zero;
+            melee.AttackCollider.enabled = false;
             yield return YieldCache.WaitForSeconds(2.0f);
         }
     }
-
     private IEnumerator AttackTypeC(MonsterBase monster)
     {
         if (monster is RangedMonster ranged)
         {
             yield return YieldCache.WaitForSeconds(0.5f);
             Vector3 spawnPos = ranged.transform.position + Vector3.up * 3f;
-            GameObject bullet = Object.Instantiate(ranged.MissilePrefab, spawnPos, ranged.transform.rotation);
-            Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
-            bulletRb.velocity = ranged.transform.forward * 20f;
+            GameObject bullet = Object.Instantiate(ranged.ProjectilePrefab, spawnPos, ranged.transform.rotation);
+            Rigidbody bulletRigid = bullet.GetComponent<Rigidbody>();
+            bulletRigid.velocity = ranged.transform.forward * 20f;
             yield return YieldCache.WaitForSeconds(2.0f);
         }
     }

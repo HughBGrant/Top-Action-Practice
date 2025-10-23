@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class BossMonster : MonsterBase
 {
-    protected static readonly int LaunchMissileHash = Animator.StringToHash("launchMissile");
-    protected static readonly int RollRockHash = Animator.StringToHash("rollRock");
-    protected static readonly int JumpAttackHash = Animator.StringToHash("jumpAttack");
+    protected static readonly int LaunchMissileHash = Animator.StringToHash("LaunchMissile");
+    protected static readonly int ThrowRockHash = Animator.StringToHash("ThrowRock");
+    protected static readonly int JumpAttackHash = Animator.StringToHash("JumpAttack");
     [SerializeField]
-    protected Collider hitBox;
-    public Collider HitBox { get { return hitBox; } }
+    protected Collider attackCollider;
+    public Collider AttackCollider { get { return attackCollider; } }
 
     [SerializeField]
-    private GameObject missilePrefab;
-    public GameObject MissilePrefab { get { return missilePrefab; } }
+    private GameObject projectilePrefab;
+    public GameObject ProjectilePrefab { get { return projectilePrefab; } }
     [SerializeField]
     private GameObject rockPrefab;
     [SerializeField]
@@ -20,18 +20,18 @@ public class BossMonster : MonsterBase
     [SerializeField]
     Transform launchPointB;
 
-    public Player player;
-    private Vector3 lookVec;
-    private Vector3 jumpAttackVec;
-    private BoxCollider boxCollider;
+    private Vector3 jumpTargetPosition;
+    private BoxCollider mainCollider;
 
-    public bool isLooking;
+    private bool isTrackingTarget;
+    private Coroutine thinkCo;
+
     protected override void Awake()
     {
         base.Awake();
-        boxCollider = GetComponent<BoxCollider>();
-        navAgent.isStopped = true;
-        StartCoroutine(Think());
+        mainCollider = GetComponent<BoxCollider>();
+        meshAgent.isStopped = true;
+        thinkCo = StartCoroutine(DecideNextAction());
     }
     protected override void Update()
     {
@@ -40,85 +40,74 @@ public class BossMonster : MonsterBase
             StopAllCoroutines();
             return;
         }
-        if (isLooking)
+        if (isTrackingTarget)
         {
-            lookVec = player.moveDirection * 5f;
-            transform.LookAt(targetTransform.position + lookVec);
-            //lookVec = targetTransform.position;
-            //transform.LookAt(targetTransform.position);
-        }
-        else
-        {
-            navAgent.SetDestination(jumpAttackVec);
+            transform.LookAt(targetTransform.position);
         }
     }
-    private IEnumerator Think()
+    private IEnumerator DecideNextAction()
     {
-        yield return YieldCache.WaitForSeconds(0.1f);
+        yield return YieldCache.WaitForSeconds(0.2f);
 
-        int sample = Random.Range(0, 5);
-
-        switch (sample)
+        while (!isDead)
         {
-            case 0:
-            case 1:
-                StartCoroutine(LaunchMissile());
-                break;
-            case 2:
-            case 3:
-                StartCoroutine(RollRock());
-                break;
-            case 4:
-                StartCoroutine(JumpAttack());
-                break;
+            yield return ExecuteRandomAction();
+            yield return YieldCache.WaitForSeconds(0.2f);
         }
     }
-    private IEnumerator LaunchMissile()
+    private IEnumerator ExecuteRandomAction()
+    {
+        float rand = Random.value;
+
+        if (rand < 0.4f)
+            yield return PerformMissileAttack();
+        else if (rand < 0.8f)
+            yield return PerformRockThrow();
+        else
+            yield return PerformJumpAttack();
+    }
+    private IEnumerator PerformMissileAttack()
     {
         animator.SetTrigger(LaunchMissileHash);
         yield return YieldCache.WaitForSeconds(0.2f);
-        GuidedMissile missileA = Instantiate(missilePrefab, launchPointA.position, launchPointA.rotation).GetComponent<GuidedMissile>();
+        GuidedMissile missileA = Instantiate(projectilePrefab, launchPointA.position, launchPointA.rotation).GetComponent<GuidedMissile>();
 
         missileA.targetTransform = targetTransform;
 
         yield return YieldCache.WaitForSeconds(0.3f);
-        GuidedMissile missileB = Instantiate(missilePrefab, launchPointB.position, launchPointB.rotation).GetComponent<GuidedMissile>();
+        GuidedMissile missileB = Instantiate(projectilePrefab, launchPointB.position, launchPointB.rotation).GetComponent<GuidedMissile>();
 
         missileB.targetTransform = targetTransform;
 
         yield return YieldCache.WaitForSeconds(2f);
-        StartCoroutine(Think());
     }
-    private IEnumerator RollRock()
+    private IEnumerator PerformRockThrow()
     {
-        isLooking = false;
-        animator.SetTrigger(RollRockHash);
+        isTrackingTarget = false;
+        animator.SetTrigger(ThrowRockHash);
         Instantiate(rockPrefab, transform.position, transform.rotation);
         yield return YieldCache.WaitForSeconds(3.0f);
-        isLooking = true;
-
-        StartCoroutine(Think());
+        isTrackingTarget = true;
     }
-    private IEnumerator JumpAttack()
+    private IEnumerator PerformJumpAttack()
     {
-        jumpAttackVec = targetTransform.position + lookVec;
+        jumpTargetPosition = targetTransform.position;
+        meshAgent.SetDestination(jumpTargetPosition);
 
-        isLooking = false;
-        navAgent.isStopped = false;
-        boxCollider.enabled = false;
+        isTrackingTarget = false;
+        meshAgent.isStopped = false;
+        mainCollider.enabled = false;
         animator.SetTrigger(JumpAttackHash);
         yield return YieldCache.WaitForSeconds(1.5f);
 
-        hitBox.enabled = true;
+        attackCollider.enabled = true;
         yield return YieldCache.WaitForSeconds(0.5f);
-        hitBox.enabled = false;
+        attackCollider.enabled = false;
 
         yield return YieldCache.WaitForSeconds(1.0f);
 
-        boxCollider.enabled = true;
-        navAgent.isStopped = true;
-        isLooking = true;
-
-        StartCoroutine(Think());
+        mainCollider.enabled = true;
+        meshAgent.isStopped = true;
+        isTrackingTarget = true;
     }
 }

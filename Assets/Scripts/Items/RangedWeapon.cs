@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RangedWeapon : WeaponBase
 {
-    private static readonly int ShootHash = Animator.StringToHash("shoot");
+    private static readonly int ShootHash = Animator.StringToHash("Shoot");
 
     [SerializeField]
     private Transform firePoint;

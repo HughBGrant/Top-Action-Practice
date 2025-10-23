@@ -1,17 +1,16 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    private static readonly int IsRunningHash = Animator.StringToHash("isRunning");
-    private static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
-    private static readonly int IsJumpingHash = Animator.StringToHash("isJumping");
-    private static readonly int JumpHash = Animator.StringToHash("jump");
-    private static readonly int DodgeHash = Animator.StringToHash("dodge");
-    private static readonly int SwapHash = Animator.StringToHash("swap");
-    private static readonly int ReloadHash = Animator.StringToHash("reload");
+    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+    private static readonly int IsJumpingHash = Animator.StringToHash("IsJumping");
+    private static readonly int JumpHash = Animator.StringToHash("Jump");
+    private static readonly int DodgeHash = Animator.StringToHash("Dodge");
+    private static readonly int SwapHash = Animator.StringToHash("Swap");
+    private static readonly int ReloadHash = Animator.StringToHash("Reload");
 
     private enum WeaponSlot { None = -1, Hammer, HandGun, SubMachineGun }
 
@@ -45,7 +44,6 @@ public class Player : MonoBehaviour, IDamageable
 
     [Header("재화, 능력치")]
     [SerializeField]
-    [FormerlySerializedAs("health")]
     private int currentHealth;
     [SerializeField]
     private int ammo;
@@ -59,12 +57,10 @@ public class Player : MonoBehaviour, IDamageable
 
     [Header("장착")]
     [SerializeField]
-    [FormerlySerializedAs("weapons")]
     private GameObject[] belongingWeapons;
     [SerializeField]
     private bool[] hasWeapons;
     [SerializeField]
-    [FormerlySerializedAs("grenades")]
     private GameObject[] belongingGrenades;
     [SerializeField]
     private GameObject grenadePrefab;
@@ -87,12 +83,12 @@ public class Player : MonoBehaviour, IDamageable
     private bool isTakingDamage;
 
     private Animator animator;
-    private Rigidbody rb;
+    private Rigidbody rigid;
     private MeshRenderer[] meshs;
 
     private WeaponBase currentWeapon;
     private WeaponSlot currentWeaponId = WeaponSlot.None;
-    private GameObject nearObj;
+    private GameObject nearObject;
     private Camera cam;
 
     private Coroutine dodgeCo;
@@ -110,7 +106,7 @@ public class Player : MonoBehaviour, IDamageable
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-        rb = GetComponent<Rigidbody>();
+        rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         cam = Camera.main;
     }
@@ -124,7 +120,7 @@ public class Player : MonoBehaviour, IDamageable
         //예약된 점프 실행
         if (shouldJump)
         {
-            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);
+            rigid.velocity = new Vector3(rigid.velocity.x, jumpPower, rigid.velocity.z);
             shouldJump = false;
         }
         //이동 준비
@@ -146,7 +142,7 @@ public class Player : MonoBehaviour, IDamageable
         //최종 벡터
         Vector3 moveXZ = new Vector3(moveDirection.x, 0f, moveDirection.z) * speed;
 
-        rb.velocity = new Vector3(moveXZ.x, rb.velocity.y, moveXZ.z);
+        rigid.velocity = new Vector3(moveXZ.x, rigid.velocity.y, moveXZ.z);
         //달리는 방향
         bool isRunning = moveDirection.sqrMagnitude > MoveEpsilon;
         if (isRunning)
@@ -173,9 +169,9 @@ public class Player : MonoBehaviour, IDamageable
         //바닥 착지
         bool wasJumping = isJumping;
 
-        if (rb.velocity.y < 0f)
+        if (rigid.velocity.y < 0f)
         {
-            rb.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
+            rigid.velocity += Vector3.up * Physics.gravity.y * (fallGravityMultiplier - 1f) * Time.fixedDeltaTime;
 
             if (IsGrounded())
             {
@@ -242,15 +238,15 @@ public class Player : MonoBehaviour, IDamageable
     public void OnInteraction(InputAction.CallbackContext context)
     {
         if (!context.started || isJumping || isDodging) { return; }
-        if (nearObj == null) { return; }
+        if (nearObject == null) { return; }
 
-        if (nearObj.CompareTag(Tag.Weapon))
+        if (nearObject.CompareTag(Tag.Weapon))
         {
-            if (nearObj.TryGetComponent(out Item item) && hasWeapons != null && item.Value >= 0 && item.Value < hasWeapons.Length)
+            if (nearObject.TryGetComponent(out Item item) && hasWeapons != null && item.Value >= 0 && item.Value < hasWeapons.Length)
             {
                 hasWeapons[item.Value] = true;
             }
-            Destroy(nearObj);
+            Destroy(nearObject);
         }
     }
     public void OnSwapWeapon(InputAction.CallbackContext context)
@@ -376,7 +372,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (other.gameObject.layer == LayerIndex.Weapon)
         {
-            nearObj = other.gameObject;
+            nearObject = other.gameObject;
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -393,7 +389,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (other.gameObject.layer == LayerIndex.Weapon)
         {
-            nearObj = null;
+            nearObject = null;
         }
     }
     // --- Utils ---
@@ -412,7 +408,7 @@ public class Player : MonoBehaviour, IDamageable
             return false;
         }
         // 하강 중일 때만 바닥 감지
-        if (rb.velocity.y > 0f)
+        if (rigid.velocity.y > 0f)
         {
             return false;
         }

@@ -10,11 +10,11 @@ public class GrenadeThrower : MonoBehaviour
     [SerializeField]
     private GameObject effect;
 
-    private Rigidbody rb;
+    private Rigidbody rigid;
     // Start is called before the first frame update
     void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        rigid = GetComponent<Rigidbody>();
     }
     private void Start()
     {
@@ -24,8 +24,8 @@ public class GrenadeThrower : MonoBehaviour
     {
         yield return YieldCache.WaitForSeconds(3.0f);
 
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        rigid.velocity = Vector3.zero;
+        rigid.angularVelocity = Vector3.zero;
         mesh.SetActive(false);
         effect.SetActive(false);
 

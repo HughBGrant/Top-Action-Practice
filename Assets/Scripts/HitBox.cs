@@ -8,9 +8,9 @@ public class HitBox : IDamageSource
     {
         DealDamageTo(other.gameObject, false);
 
-        if (isJumpAttack && other.TryGetComponent(out Rigidbody targetRb))
+        if (isJumpAttack && other.TryGetComponent(out Rigidbody targetRigid))
         {
-            targetRb.AddForce(other.transform.forward * -250, ForceMode.Impulse);
+            targetRigid.AddForce(other.transform.forward * -250, ForceMode.Impulse);
         }
     }
 }

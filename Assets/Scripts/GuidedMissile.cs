@@ -7,11 +7,11 @@ public class GuidedMissile : Projectile
 {
     [NonSerialized]
     public Transform targetTransform;
-    private NavMeshAgent navAgent;
+    private NavMeshAgent meshAgent;
     // Start is called before the first frame update
     void Awake()
     {
-        navAgent = GetComponent<NavMeshAgent>();
+        meshAgent = GetComponent<NavMeshAgent>();
     }
     private void OnEnable()
     {
@@ -23,7 +23,7 @@ public class GuidedMissile : Projectile
         yield return null;
         while (targetTransform != null)
         {
-            navAgent.SetDestination(targetTransform.position);
+            meshAgent.SetDestination(targetTransform.position);
             yield return YieldCache.WaitForSeconds(0.1f);
         }
         Destroy(gameObject);

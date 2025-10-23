@@ -857,10 +857,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c258be6ffd37e45818de8c365e6951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterType: 0
+  type: 0
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  hitBox: {fileID: 1161959386}
+  rigid: {fileID: 0}
+  attackCollider: {fileID: 1161959386}
 --- !u!4 &523951551 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 883724508928496280, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
@@ -1015,10 +1016,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806581c06e2b3994bb734ff1078704c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterType: 2
+  type: 2
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  missilePrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
+  rigid: {fileID: 0}
+  projectilePrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
 --- !u!4 &594488909 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2062362018885022397, guid: 06d503bba93001142b96e3510906db62, type: 3}
@@ -1251,10 +1253,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c258be6ffd37e45818de8c365e6951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterType: 1
+  type: 1
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  hitBox: {fileID: 1992542770}
+  rigid: {fileID: 0}
+  attackCollider: {fileID: 1992542770}
 --- !u!1001 &622605787
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1758,16 +1761,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2761076dd6ffda24abddbb14017a7431, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterType: 3
+  type: 3
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  hitBox: {fileID: 1416929148}
-  missilePrefab: {fileID: 2179863741677129894, guid: 373f6ae6e0c31bc43ba40cbca358b2e1, type: 3}
+  rigid: {fileID: 0}
+  attackCollider: {fileID: 1416929148}
+  projectilePrefab: {fileID: 2179863741677129894, guid: 373f6ae6e0c31bc43ba40cbca358b2e1, type: 3}
   rockPrefab: {fileID: 2882364650027379269, guid: a10c504b3ee67f844941503ff11d58c2, type: 3}
   launchPointA: {fileID: 532700402}
   launchPointB: {fileID: 1256555379}
-  player: {fileID: 1290166530}
-  isLooking: 1
+  isTrackingTarget: 0
 --- !u!1 &852288990 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}

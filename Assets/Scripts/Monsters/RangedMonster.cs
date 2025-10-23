@@ -1,18 +1,16 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class RangedMonster : MonsterBase
 {
     [SerializeField]
-    [FormerlySerializedAs("bulletPrefab")]
-    protected GameObject missilePrefab;
-    public GameObject MissilePrefab { get { return missilePrefab; } }
+    private GameObject projectilePrefab;
+    public GameObject ProjectilePrefab { get { return projectilePrefab; } }
 
     protected override void Awake()
     {
         base.Awake();
 
-        if (missilePrefab == null)
+        if (projectilePrefab == null)
         {
             Debug.LogWarning($"{name}: RangedMonster인데 BulletPrefab이 지정되지 않음");
         }

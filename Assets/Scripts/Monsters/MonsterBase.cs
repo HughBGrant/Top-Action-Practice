@@ -4,23 +4,23 @@ using UnityEngine.AI;
 
 public abstract class MonsterBase : MonoBehaviour, IDamageable
 {
-    protected static readonly int IsWalkingHash = Animator.StringToHash("isWalking");
-    protected static readonly int IsAttackingHash = Animator.StringToHash("isAttacking");
-    protected static readonly int DieHash = Animator.StringToHash("die");
+    protected static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+    protected static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
+    protected static readonly int DieHash = Animator.StringToHash("Die");
 
     [SerializeField]
-    private MonsterType monsterType;
+    private MonsterType type;
     [SerializeField]
-    protected int maxHealth = 100;
+    protected int maxHealth;
     [SerializeField]
     protected Transform targetTransform;
 
     protected int currentHealth;
 
-    protected Rigidbody rb;
-    protected NavMeshAgent navAgent;
+    public Rigidbody rigid;
+    protected NavMeshAgent meshAgent;
     protected Animator animator;
-    protected MeshRenderer[] meshs;
+    protected MeshRenderer[] meshes;
 
     protected bool isChasing;
     protected bool isAttacking;
@@ -33,58 +33,58 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
 
     protected virtual void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        navAgent = GetComponent<NavMeshAgent>();
+        rigid = GetComponent<Rigidbody>();
+        meshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
-        meshs = GetComponentsInChildren<MeshRenderer>();
-        behavior = new MonsterBehavior(monsterType);
+        meshes = GetComponentsInChildren<MeshRenderer>();
+        behavior = new MonsterBehavior(type);
 
         currentHealth = maxHealth;
     }
     protected virtual void Start()
     {
-        if (monsterType != MonsterType.Boss)
+        if (type != MonsterType.Boss)
         {
-            StartCoroutine(StartChase());
+            StartCoroutine(BeginChase());
         }
     }
     protected virtual void Update()
     {
-        if (navAgent && targetTransform && monsterType != MonsterType.Boss)
+        if (meshAgent && targetTransform && type != MonsterType.Boss)
         {
-            navAgent.SetDestination(targetTransform.position);
-            navAgent.isStopped = !isChasing;
+            meshAgent.SetDestination(targetTransform.position);
+            meshAgent.isStopped = !isChasing;
         }
 
         DetectTarget();
     }
     protected virtual void DetectTarget()
     {
-        if (behavior == null || isAttacking || monsterType == MonsterType.Boss || isDead) return;
+        if (behavior == null || isAttacking || type == MonsterType.Boss || isDead) return;
 
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.Radius, transform.forward, behavior.Range, LayerMask.GetMask("Player"));
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, behavior.AttackRadius, transform.forward, behavior.AttackRange, LayerMask.GetMask("Player"));
 
         if (hits.Length > 0)
         {
-            attackCo ??= StartCoroutine(AttackRoutine());
+            attackCo ??= StartCoroutine(PerformAttack());
         }
     }
-    protected IEnumerator AttackRoutine()
+    protected IEnumerator PerformAttack()
     {
         isChasing = false;
         isAttacking = true;
-        navAgent.isStopped = true;
+        meshAgent.isStopped = true;
         animator.SetBool(IsAttackingHash, true);
 
-        yield return behavior.Attack(this);
+        yield return behavior.ExecuteAttack(this);
 
         animator.SetBool(IsAttackingHash, false);
-        navAgent.isStopped = false;
+        meshAgent.isStopped = false;
         isAttacking = false;
         isChasing = true;
         attackCo = null;
     }
-    protected IEnumerator StartChase()
+    protected IEnumerator BeginChase()
     {
         yield return YieldCache.WaitForSeconds(2.0f);
         isChasing = true;
@@ -95,16 +95,16 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         currentHealth -= damage;
         Debug.Log($"{name} 체력 {damage} 감소 → 현재 체력 {currentHealth}");
 
-        hitCo ??= StartCoroutine(HitFlash());
+        hitCo ??= StartCoroutine(FlashOnHit());
 
         if (currentHealth <= 0)
         {
-            Die(hitPoint, isHitGrenade);
+            HandleDeath(hitPoint, isHitGrenade);
         }
     }
-    private IEnumerator HitFlash()
+    private IEnumerator FlashOnHit()
     {
-        foreach (MeshRenderer mesh in meshs)
+        foreach (MeshRenderer mesh in meshes)
         {
             mesh.material.color = Color.red;
         }
@@ -112,19 +112,19 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
 
         if (currentHealth > 0)
         {
-            foreach (MeshRenderer mesh in meshs)
+            foreach (MeshRenderer mesh in meshes)
             {
                 mesh.material.color = Color.white;
             }
         }
         hitCo = null;
     }
-    protected virtual void Die(Vector3 hitPoint, bool isHitGrenade = false)
+    protected virtual void HandleDeath(Vector3 hitPoint, bool isHitGrenade = false)
     {
         isDead = true;
         isChasing = false;
-        navAgent.enabled = false;
-        foreach (MeshRenderer mesh in meshs)
+        meshAgent.enabled = false;
+        foreach (MeshRenderer mesh in meshes)
         {
             mesh.material.color = Color.gray;
         }
@@ -132,14 +132,14 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         animator.SetTrigger(DieHash);
 
         Vector3 hitDir = (transform.position - hitPoint).normalized + Vector3.up * (isHitGrenade ? 3f : 1f);
-        rb.AddForce(hitDir * 5f, ForceMode.Impulse);
+        rigid.AddForce(hitDir * 5f, ForceMode.Impulse);
 
         if (isHitGrenade)
         {
-            rb.AddTorque(hitDir * 15, ForceMode.Impulse);
+            rigid.AddTorque(hitDir * 15, ForceMode.Impulse);
         }
 
-        if (monsterType != MonsterType.Boss)
+        if (type != MonsterType.Boss)
         {
             Destroy(gameObject, 2f);
         }
@@ -149,11 +149,11 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         if (!Application.isPlaying || behavior == null) return;
 
         Vector3 start = transform.position;
-        Vector3 end = start + transform.forward * behavior.Range;
+        Vector3 end = start + transform.forward * behavior.AttackRange;
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(start, behavior.Radius);
-        Gizmos.DrawWireSphere(end, behavior.Radius);
+        Gizmos.DrawWireSphere(start, behavior.AttackRadius);
+        Gizmos.DrawWireSphere(end, behavior.AttackRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(start, end);
     }
