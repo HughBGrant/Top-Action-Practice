@@ -29,7 +29,6 @@ public class MonsterBehavior
                 break;
         }
     }
-
     public IEnumerator ExecuteAttack(MonsterBase monster)
     {
         switch (monsterType)
@@ -45,7 +44,6 @@ public class MonsterBehavior
                 break;
         }
     }
-
     private IEnumerator AttackTypeA(MonsterBase monster)
     {
         if (monster is MeleeMonster melee)

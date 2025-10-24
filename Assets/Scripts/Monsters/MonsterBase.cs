@@ -9,11 +9,10 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected static readonly int DieHash = Animator.StringToHash("Die");
 
     [SerializeField]
-    private MonsterType type;
+    protected MonsterType type;
     [SerializeField]
     protected int maxHealth;
-    [SerializeField]
-    protected Transform targetTransform;
+    public Transform targetTransform;
 
     protected int currentHealth;
 
@@ -29,6 +28,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected Coroutine attackCo;
     protected Coroutine hitCo;
 
+    protected MonsterStateMachine stateMachine;
     protected MonsterBehavior behavior;
 
     protected virtual void Awake()
@@ -156,5 +156,9 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         Gizmos.DrawWireSphere(end, behavior.AttackRadius);
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(start, end);
+    }
+    public void ChangeState(MonsterStateType type)
+    {
+        stateMachine.ChangeState(type);
     }
 }

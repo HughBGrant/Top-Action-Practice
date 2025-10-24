@@ -16,9 +16,9 @@ public class BossMonster : MonsterBase
     [SerializeField]
     private GameObject rockPrefab;
     [SerializeField]
-    Transform launchPointA;
+    private Transform launchPointA;
     [SerializeField]
-    Transform launchPointB;
+    private Transform launchPointB;
 
     private Vector3 jumpTargetPosition;
     private BoxCollider mainCollider;
@@ -72,12 +72,12 @@ public class BossMonster : MonsterBase
         yield return YieldCache.WaitForSeconds(0.2f);
         GuidedMissile missileA = Instantiate(projectilePrefab, launchPointA.position, launchPointA.rotation).GetComponent<GuidedMissile>();
 
-        missileA.targetTransform = targetTransform;
+        missileA.TargetTransform = targetTransform;
 
         yield return YieldCache.WaitForSeconds(0.3f);
         GuidedMissile missileB = Instantiate(projectilePrefab, launchPointB.position, launchPointB.rotation).GetComponent<GuidedMissile>();
 
-        missileB.targetTransform = targetTransform;
+        missileB.TargetTransform = targetTransform;
 
         yield return YieldCache.WaitForSeconds(2f);
     }

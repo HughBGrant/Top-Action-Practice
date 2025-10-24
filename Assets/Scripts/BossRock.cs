@@ -4,7 +4,6 @@ using UnityEngine;
 public class BossRock : IDamageSource
 {
     private Rigidbody rigid;
-    // Start is called before the first frame update
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();

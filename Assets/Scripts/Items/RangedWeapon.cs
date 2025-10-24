@@ -20,7 +20,6 @@ public class RangedWeapon : WeaponBase
     private int maxMagazine;
     public override int MaxMagazine { get { return maxMagazine; } }
 
-
     private Coroutine shootCo;
     public override int AttackHash { get { return ShootHash; } }
 

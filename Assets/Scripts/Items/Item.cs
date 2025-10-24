@@ -7,7 +7,7 @@ public class Item : MonoBehaviour
     public ItemType Type { get { return type; } }
 
     [SerializeField]
-    int value;
+    private int value;
     public int Value { get { return value; } }
 
     private Rigidbody rigid;

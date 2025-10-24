@@ -28,3 +28,10 @@ public enum MonsterType
     C,
     Boss
 }
+public enum MonsterStateType
+{
+    Idle,
+    Chase,
+    Attack,
+    Dead
+}

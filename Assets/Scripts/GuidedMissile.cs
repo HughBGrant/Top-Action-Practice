@@ -1,12 +1,12 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class GuidedMissile : Projectile
 {
-    [NonSerialized]
-    public Transform targetTransform;
+    private Transform targetTransform;
+    public Transform TargetTransform { get { return targetTransform; } set { targetTransform = value; } }
+
     private NavMeshAgent meshAgent;
     // Start is called before the first frame update
     void Awake()
