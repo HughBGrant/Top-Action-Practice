@@ -42,7 +42,7 @@ public class BossMonster : MonsterBase
         }
         if (isTrackingTarget)
         {
-            transform.LookAt(targetTransform.position);
+            transform.LookAt(TargetTransform.position);
         }
     }
     private IEnumerator DecideNextAction()
@@ -72,12 +72,12 @@ public class BossMonster : MonsterBase
         yield return YieldCache.WaitForSeconds(0.2f);
         GuidedMissile missileA = Instantiate(projectilePrefab, launchPointA.position, launchPointA.rotation).GetComponent<GuidedMissile>();
 
-        missileA.TargetTransform = targetTransform;
+        missileA.TargetTransform = TargetTransform;
 
         yield return YieldCache.WaitForSeconds(0.3f);
         GuidedMissile missileB = Instantiate(projectilePrefab, launchPointB.position, launchPointB.rotation).GetComponent<GuidedMissile>();
 
-        missileB.TargetTransform = targetTransform;
+        missileB.TargetTransform = TargetTransform;
 
         yield return YieldCache.WaitForSeconds(2f);
     }
@@ -91,7 +91,7 @@ public class BossMonster : MonsterBase
     }
     private IEnumerator PerformJumpAttack()
     {
-        jumpTargetPosition = targetTransform.position;
+        jumpTargetPosition = TargetTransform.position;
         meshAgent.SetDestination(jumpTargetPosition);
 
         isTrackingTarget = false;

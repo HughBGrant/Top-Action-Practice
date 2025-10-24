@@ -860,7 +860,6 @@ MonoBehaviour:
   type: 0
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  rigid: {fileID: 0}
   attackCollider: {fileID: 1161959386}
 --- !u!4 &523951551 stripped
 Transform:
@@ -1019,7 +1018,6 @@ MonoBehaviour:
   type: 2
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  rigid: {fileID: 0}
   projectilePrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
 --- !u!4 &594488909 stripped
 Transform:
@@ -1256,7 +1254,6 @@ MonoBehaviour:
   type: 1
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  rigid: {fileID: 0}
   attackCollider: {fileID: 1992542770}
 --- !u!1001 &622605787
 PrefabInstance:
@@ -1764,13 +1761,11 @@ MonoBehaviour:
   type: 3
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
-  rigid: {fileID: 0}
   attackCollider: {fileID: 1416929148}
   projectilePrefab: {fileID: 2179863741677129894, guid: 373f6ae6e0c31bc43ba40cbca358b2e1, type: 3}
   rockPrefab: {fileID: 2882364650027379269, guid: a10c504b3ee67f844941503ff11d58c2, type: 3}
   launchPointA: {fileID: 532700402}
   launchPointB: {fileID: 1256555379}
-  isTrackingTarget: 0
 --- !u!1 &852288990 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}
@@ -2792,7 +2787,6 @@ MonoBehaviour:
   - {fileID: 1414647320}
   - {fileID: 83008190}
   grenadePrefab: {fileID: 7837284830516385393, guid: 2b9c64a633c89c844aab390985cf3985, type: 3}
-  moveDirection: {x: 0, y: 0, z: 0}
 --- !u!136 &1290166531
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ public class MonsterStateMachine
 {
     private Dictionary<MonsterStateType, MonsterState> states = new();
     private MonsterState currentState;
-    public MonsterStateType CurrentType => currentState?.StateType ?? 0;
+    public MonsterStateType CurrentType { get { return currentState?.StateType ?? 0; } }
 
     public void AddState(MonsterState state)
     {

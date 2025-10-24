@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class IdleState : MonsterState
 {
-    public override MonsterStateType StateType => MonsterStateType.Idle;
+    public override MonsterStateType StateType { get { return MonsterStateType.Idle; } }
 
     private float timer;
     public IdleState(MonsterBase monster) : base(monster) { }
@@ -15,11 +15,11 @@ public class IdleState : MonsterState
 
     public override void Update()
     {
-        float distance = Vector3.Distance(monster.transform.position, monster.targetTransform.position);
+        float distance = Vector3.Distance(monster.transform.position, monster.TargetTransform.position);
 
         if (distance < 10f)
         {
-            monster.ChangeState(MonsterStateType.Chase);
+            monster.StateMachine.ChangeState(MonsterStateType.Chase);
             return;
         }
         timer -= Time.deltaTime;

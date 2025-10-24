@@ -60,10 +60,10 @@ public class MonsterBehavior
         if (monster is MeleeMonster melee)
         {
             yield return YieldCache.WaitForSeconds(0.1f);
-            melee.rigid.AddForce(melee.transform.forward * 20, ForceMode.Impulse);
+            melee.Rigid.AddForce(melee.transform.forward * 20, ForceMode.Impulse);
             melee.AttackCollider.enabled = true;
             yield return YieldCache.WaitForSeconds(0.5f);
-            melee.rigid.velocity = Vector3.zero;
+            melee.Rigid.velocity = Vector3.zero;
             melee.AttackCollider.enabled = false;
             yield return YieldCache.WaitForSeconds(2.0f);
         }
