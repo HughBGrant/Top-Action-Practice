@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -30,7 +31,9 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     public MonsterStateMachine StateMachine { get { return stateMachine; } }
     public NavMeshAgent MeshAgent { get { return meshAgent; } }
     public MonsterBehavior Behavior { get { return behavior; } }
-    public bool IsDead { get { return isDead; } }
+    public MeshRenderer[] Meshes { get { return meshes; } }
+    public bool IsDead { get { return isDead; } private set { isDead = value; } }
+    public MonsterType Type { get { return type; } }
 
     protected bool isChasing;
     protected bool isAttacking;
@@ -51,7 +54,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         stateMachine = new MonsterStateMachine();
 
     }
-    protected void RegisterStates()
+    protected virtual void RegisterStates()
     {
         stateMachine.AddState(new IdleState(this));
         stateMachine.AddState(new ChaseState(this));
@@ -70,32 +73,34 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void Update()
     {
-        stateMachine.Update();
-
+        if (!IsDead)
+        {
+            stateMachine.Update();
+        }
         //if (meshAgent && TargetTransform && type != MonsterType.Boss)
         //{
         //    meshAgent.SetDestination(TargetTransform.position);
         //    meshAgent.isStopped = !isChasing;
         //}
+        //DetectTarget();
     }
     public virtual void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
         currentHealth -= damage;
+        hitCo ??= StartCoroutine(FlashOnHit());
 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && !IsDead)
         {
+            IsDead = true;
+
+            DeadState deadState = stateMachine.GetState<DeadState>();
+            deadState.SetDeathInfo(hitPoint, isHitGrenade);
             StateMachine.ChangeState(MonsterStateType.Dead);
         }
-        //hitCo ??= StartCoroutine(FlashOnHit());
-
-        //if (currentHealth <= 0)
-        //{
-        //    HandleDeath(hitPoint, isHitGrenade);
-        //}
     }
     protected virtual void OnDrawGizmos()
     {
-        if (!Application.isPlaying || behavior == null || stateMachine.CurrentType != MonsterStateType.Chase) { return; }
+        if (!Application.isPlaying || behavior == null) { return; }
 
         Vector3 start = transform.position;
         Vector3 end = start + transform.forward * behavior.AttackRange;
@@ -106,23 +111,21 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(start, end);
     }
+    private IEnumerator FlashOnHit()
+    {
+        foreach (MeshRenderer mesh in meshes)
+        {
+            mesh.material.color = Color.red;
+        }
+        yield return YieldCache.WaitForSeconds(0.1f);
 
-    //private IEnumerator FlashOnHit()
-    //{
-    //    foreach (MeshRenderer mesh in meshes)
-    //    {
-    //        mesh.material.color = Color.red;
-    //    }
-    //    yield return YieldCache.WaitForSeconds(0.1f);
-
-    //    if (currentHealth > 0)
-    //    {
-    //        foreach (MeshRenderer mesh in meshes)
-    //        {
-    //            mesh.material.color = Color.white;
-    //        }
-    //    }
-    //    hitCo = null;
-    //}
-
+        if (currentHealth > 0)
+        {
+            foreach (MeshRenderer mesh in meshes)
+            {
+                mesh.material.color = Color.white;
+            }
+        }
+        hitCo = null;
+    }
 }

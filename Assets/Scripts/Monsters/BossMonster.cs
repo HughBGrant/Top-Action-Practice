@@ -26,6 +26,13 @@ public class BossMonster : MonsterBase
     private bool isTrackingTarget;
     private Coroutine thinkCo;
 
+    protected override void RegisterStates()
+    {
+        stateMachine.AddState(new AttackState(this));
+        stateMachine.AddState(new DeadState(this));
+
+        stateMachine.ChangeState(MonsterStateType.Attack);
+    }
     protected override void Awake()
     {
         base.Awake();
@@ -111,3 +118,86 @@ public class BossMonster : MonsterBase
         isTrackingTarget = true;
     }
 }
+
+
+//public class BossMonster : MonsterBase
+//{
+//    protected override void Start()
+//    {
+//        base.Start();
+//        StartCoroutine(BossThinkLoop());
+//    }
+
+//    private IEnumerator BossThinkLoop()
+//    {
+//        yield return new WaitForSeconds(0.5f);
+
+//        while (!isDead)
+//        {
+//            float rand = Random.value;
+//            if (rand < 0.4f)
+//            {
+//                yield return PerformMissileAttack();
+//            }
+//            else if (rand < 0.8f)
+//            {
+//                yield return PerformRockThrow();
+//            }
+//            else
+//            {
+//                yield return PerformJumpAttack();
+//            }
+
+//            yield return new WaitForSeconds(1.0f);
+//        }
+//    }
+
+//    private IEnumerator PerformMissileAttack() { yield return new WaitForSeconds(1f); }
+//    private IEnumerator PerformRockThrow() { yield return new WaitForSeconds(1f); }
+//    private IEnumerator PerformJumpAttack() { yield return new WaitForSeconds(1f); }
+//}
+
+//public class BossIdleState : MonsterState
+//{
+//    private float timer;
+
+//    public BossIdleState(MonsterBase monster) : base(monster) { }
+//    public override MonsterStateType StateType => MonsterStateType.Idle;
+
+//    public override void Enter() => timer = 0f;
+
+//    public override void Update()
+//    {
+//        timer += Time.deltaTime;
+//        if (timer > 2f)
+//        {
+//            monster.stateMachine.ChangeState(MonsterStateType.Attack);
+//        }
+//    }
+//}
+
+//public class BossAttackState : MonsterState
+//{
+//    public BossAttackState(MonsterBase monster) : base(monster) { }
+//    public override MonsterStateType StateType => MonsterStateType.Attack;
+
+//    public override void Enter()
+//    {
+//        monster.StartCoroutine(AttackRoutine());
+//    }
+
+//    private IEnumerator AttackRoutine()
+//    {
+//        float rand = Random.value;
+
+//        if (rand < 0.4f)
+//            Debug.Log("Boss: 미사일 공격!");
+//        else if (rand < 0.8f)
+//            Debug.Log("Boss: 바위 던지기!");
+//        else
+//            Debug.Log("Boss: 점프 공격!");
+
+//        yield return new WaitForSeconds(2f);
+//        monster.stateMachine.ChangeState(MonsterStateType.Idle);
+//    }
+//}

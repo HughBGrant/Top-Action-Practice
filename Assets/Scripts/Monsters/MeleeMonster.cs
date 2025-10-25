@@ -9,6 +9,7 @@ public class MeleeMonster : MonsterBase
     protected override void Awake()
     {
         base.Awake();
+
         if (attackCollider == null)
         {
             Debug.LogWarning($"{name}: MeleeMonster인데 HitBox가 지정되지 않음");
