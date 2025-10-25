@@ -1,73 +1,51 @@
+using System.Collections;
 using UnityEngine;
 
 public class AttackState : MonsterState
 {
-    private float timer;
+    //private bool isAttacking;
+    private Coroutine attackCo;
 
     public override MonsterStateType StateType { get { return MonsterStateType.Attack; } }
     public AttackState(MonsterBase monster) : base(monster) { }
 
     public override void Enter()
     {
-        monster.Animator.SetBool("IsAttacking", true);
-        timer = 0f;
+        attackCo = monster.StartCoroutine(AttackRoutine());
     }
     public override void Update()
     {
-        timer += Time.deltaTime;
-
-        if (timer > 2f)
+        if (monster.TargetTransform == null)
         {
-            monster.StateMachine.ChangeState(MonsterStateType.Chase);
+            monster.StateMachine.ChangeState(MonsterStateType.Idle);
+            return;
         }
     }
     public override void Exit()
     {
-        monster.Animator.SetBool("IsAttacking", false);
+        if (attackCo != null)
+        {
+            monster.StopCoroutine(attackCo);
+            attackCo = null;
+        }
     }
+    private IEnumerator AttackRoutine()
+    {
+        monster.MeshAgent.isStopped = true;
+        monster.Animator.SetBool("IsAttacking", true);
 
-    //protected IEnumerator PerformAttack()
-    //{
-    //    isChasing = false;
-    //    isAttacking = true;
-    //    meshAgent.isStopped = true;
-    //    animator.SetBool(IsAttackingHash, true);
+        yield return monster.Behavior.ExecuteAttack(monster);
 
-    //    yield return behavior.ExecuteAttack(this);
+        monster.Animator.SetBool("IsAttacking", false);
+        monster.MeshAgent.isStopped = false;
+        monster.StateMachine.ChangeState(ShouldReturnToChase() ? MonsterStateType.Chase : MonsterStateType.Attack);
 
-    //    animator.SetBool(IsAttackingHash, false);
-    //    meshAgent.isStopped = false;
-    //    isAttacking = false;
-    //    isChasing = true;
-    //    attackCo = null;
-    //}
+        attackCo = null;
+    }
+    private bool ShouldReturnToChase()
+    {
+        float distance = Vector3.Distance(monster.transform.position, monster.TargetTransform.position);
+
+        return distance > monster.Behavior.AttackRange;
+    }
 }
-//using System.Collections;
-//using UnityEngine;
-
-//public class AttackState : MonsterState
-//{
-//    private bool isAttacking;
-
-//    public override MonsterStateType StateType => MonsterStateType.Attack;
-
-//    public AttackState(MonsterBase monster) : base(monster) { }
-
-//    public override void Enter()
-//    {
-//        monster.StartCoroutine(AttackRoutine());
-//    }
-
-//    private IEnumerator AttackRoutine()
-//    {
-//        isAttacking = true;
-//        monster.Animator.SetBool("IsAttacking", true);
-
-//        yield return monster.Behavior.ExecuteAttack(monster);
-
-//        monster.Animator.SetBool("IsAttacking", false);
-//        isAttacking = false;
-
-//        monster.ChangeState(MonsterStateType.Chase);
-//    }
-//}

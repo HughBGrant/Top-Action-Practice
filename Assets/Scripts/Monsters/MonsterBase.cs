@@ -54,9 +54,9 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected void RegisterStates()
     {
         stateMachine.AddState(new IdleState(this));
-        //stateMachine.AddState(new ChaseState(this));
-        //stateMachine.AddState(new AttackState(this));
-        //stateMachine.AddState(new DeadState(this));
+        stateMachine.AddState(new ChaseState(this));
+        stateMachine.AddState(new AttackState(this));
+        stateMachine.AddState(new DeadState(this));
 
         stateMachine.ChangeState(MonsterStateType.Idle);
     }
@@ -70,22 +70,19 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void Update()
     {
-        if (!isDead)
-        {
-            stateMachine.Update();
-        }
+        stateMachine.Update();
+
         //if (meshAgent && TargetTransform && type != MonsterType.Boss)
         //{
         //    meshAgent.SetDestination(TargetTransform.position);
         //    meshAgent.isStopped = !isChasing;
         //}
-        //DetectTarget();
     }
     public virtual void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
         currentHealth -= damage;
 
-        if (currentHealth <= 0 && !isDead)
+        if (currentHealth <= 0)
         {
             StateMachine.ChangeState(MonsterStateType.Dead);
         }
@@ -98,7 +95,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void OnDrawGizmos()
     {
-        if (!Application.isPlaying || behavior == null) return;
+        if (!Application.isPlaying || behavior == null || stateMachine.CurrentType != MonsterStateType.Chase) { return; }
 
         Vector3 start = transform.position;
         Vector3 end = start + transform.forward * behavior.AttackRange;
@@ -128,29 +125,4 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     //    hitCo = null;
     //}
 
-    //protected virtual void HandleDeath(Vector3 hitPoint, bool isHitGrenade = false)
-    //{
-    //    isDead = true;
-    //    isChasing = false;
-    //    meshAgent.enabled = false;
-    //    foreach (MeshRenderer mesh in meshes)
-    //    {
-    //        mesh.material.color = Color.gray;
-    //    }
-    //    gameObject.layer = LayerMask.NameToLayer("DeadMonster");
-    //    animator.SetTrigger(DieHash);
-
-    //    Vector3 hitDir = (transform.position - hitPoint).normalized + Vector3.up * (isHitGrenade ? 3f : 1f);
-    //    Rigid.AddForce(hitDir * 5f, ForceMode.Impulse);
-
-    //    if (isHitGrenade)
-    //    {
-    //        Rigid.AddTorque(hitDir * 15, ForceMode.Impulse);
-    //    }
-
-    //    if (type != MonsterType.Boss)
-    //    {
-    //        Destroy(gameObject, 2f);
-    //    }
-    //}
 }
