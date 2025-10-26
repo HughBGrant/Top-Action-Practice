@@ -157,6 +157,7 @@ public class BossMonster : MonsterBase
 //    private IEnumerator PerformJumpAttack() { yield return new WaitForSeconds(1f); }
 //}
 
+
 //public class BossIdleState : MonsterState
 //{
 //    private float timer;
@@ -175,6 +176,7 @@ public class BossMonster : MonsterBase
 //        }
 //    }
 //}
+
 
 //public class BossAttackState : MonsterState
 //{
@@ -200,4 +202,166 @@ public class BossMonster : MonsterBase
 //        yield return new WaitForSeconds(2f);
 //        monster.stateMachine.ChangeState(MonsterStateType.Idle);
 //    }
+//}
+
+
+//public class BossBehavior
+//{
+//    private BossMonster boss;
+
+//    public BossBehavior(BossMonster boss)
+//    {
+//        this.boss = boss;
+//    }
+
+//    public IEnumerator ExecuteRandomAttack()
+//    {
+//        float rand = Random.value;
+//        if (rand < 0.4f)
+//        {
+//            yield return MissileAttack();
+//        }
+//        else if (rand < 0.8f)
+//        {
+//            yield return RockThrow();
+//        }
+//        else
+//        {
+//            yield return JumpAttack();
+//        }
+//    }
+
+//    private IEnumerator MissileAttack() { /* 기존 미사일 코드 */ yield break; }
+//    private IEnumerator RockThrow() { /* 기존 바위 코드 */ yield break; }
+//    private IEnumerator JumpAttack() { /* 기존 점프 코드 */ yield break; }
+//}
+
+
+//public class BossAttackState : MonsterState
+//{
+//    private Coroutine attackCo;
+//    private BossBehavior behavior;
+
+//    public BossAttackState(BossMonster boss) : base(boss)
+//    {
+//        behavior = new BossBehavior(boss);
+//    }
+
+//    public override MonsterStateType StateType => MonsterStateType.Attack;
+
+//    public override void Enter()
+//    {
+//        attackCo = monster.StartCoroutine(behavior.ExecuteRandomAttack());
+//    }
+
+//    public override void Exit()
+//    {
+//        if (attackCo != null)
+//        {
+//            monster.StopCoroutine(attackCo);
+//            attackCo = null;
+//        }
+//    }
+//}
+
+
+//public class BossBehavior : MonsterBehavior
+//{
+//    private BossMonster boss;
+
+//    public BossBehavior(BossMonster boss) : base(MonsterType.Boss)
+//    {
+//        this.boss = boss;
+//    }
+
+//    public IEnumerator ExecuteRandomAttack()
+//    {
+//        float rand = Random.value;
+
+//        if (rand < 0.4f)
+//        {
+//            yield return PerformMissileAttack();
+//        }
+//        else if (rand < 0.8f)
+//        {
+//            yield return PerformRockThrow();
+//        }
+//        else
+//        {
+//            yield return PerformJumpAttack();
+//        }
+//    }
+
+//    private IEnumerator PerformMissileAttack()
+//    {
+//        boss.Animator.SetTrigger("LaunchMissile");
+//        yield return new WaitForSeconds(0.2f);
+
+//        var missileA = Object.Instantiate(boss.ProjectilePrefab, boss.transform.position + Vector3.up * 2f, boss.transform.rotation)
+//            .GetComponent<GuidedMissile>();
+//        missileA.targetTransform = boss.TargetTransform;
+
+//        yield return new WaitForSeconds(0.3f);
+//        var missileB = Object.Instantiate(boss.ProjectilePrefab, boss.transform.position + Vector3.up * 2f, boss.transform.rotation)
+//            .GetComponent<GuidedMissile>();
+//        missileB.targetTransform = boss.TargetTransform;
+
+//        yield return new WaitForSeconds(2f);
+//    }
+
+//    private IEnumerator PerformRockThrow()
+//    {
+//        boss.Animator.SetTrigger("ThrowRock");
+//        Object.Instantiate(boss.RockPrefab, boss.transform.position + Vector3.up, boss.transform.rotation);
+//        yield return new WaitForSeconds(3.0f);
+//    }
+
+//    private IEnumerator PerformJumpAttack()
+//    {
+//        boss.MeshAgent.isStopped = false;
+//        boss.Animator.SetTrigger("JumpAttack");
+
+//        yield return new WaitForSeconds(1.5f);
+//        boss.AttackCollider.enabled = true;
+//        yield return new WaitForSeconds(0.5f);
+//        boss.AttackCollider.enabled = false;
+//        boss.MeshAgent.isStopped = true;
+
+//        yield return new WaitForSeconds(1.0f);
+//    }
+//}
+
+
+//public class BossMonster : MonsterBase
+//{
+//    private BossBehavior bossBehavior;
+
+//    protected override void Awake()
+//    {
+//        base.Awake();
+//        bossBehavior = new BossBehavior(this);
+//    }
+
+//    protected override void Start()
+//    {
+//        stateMachine.AddState(new IdleState(this));
+//        stateMachine.AddState(new ChaseState(this));
+//        stateMachine.AddState(new AttackState(this));
+//        stateMachine.AddState(new DeadState(this, Vector3.zero));
+
+//        stateMachine.ChangeState(MonsterStateType.Idle);
+//    }
+
+//    public BossBehavior BossBehavior => bossBehavior;
+//}
+
+
+//private IEnumerator BossAttackRoutine()
+//{
+//    isAttacking = true;
+
+//    yield return (monster as BossMonster).BossBehavior.ExecuteRandomAttack();
+
+//    isAttacking = false;
+//    monster.ChangeState(MonsterStateType.Idle);
 //}
