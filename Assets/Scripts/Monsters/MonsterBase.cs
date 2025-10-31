@@ -12,27 +12,28 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected Transform targetTransform;
 
     protected int currentHealth;
+    protected bool isDead;
+    protected float distance;
+
+    protected MonsterBehavior behavior;
+    protected MonsterStateMachine stateMachine;
+
     protected Rigidbody rigid;
     protected NavMeshAgent meshAgent;
     protected Animator animator;
     protected MeshRenderer[] meshes;
-    protected MonsterBehavior behavior;
-
-    protected MonsterStateMachine stateMachine;
-
-    public Transform TargetTransform { get { return targetTransform; } }
-    public Rigidbody Rigid { get { return rigid; } }
-    public Animator Animator { get { return animator; } }
-    public MonsterStateMachine StateMachine { get { return stateMachine; } }
-    public NavMeshAgent MeshAgent { get { return meshAgent; } }
-    public MonsterBehavior Behavior { get { return behavior; } }
-    public MeshRenderer[] Meshes { get { return meshes; } }
-    public bool IsDead { get { return isDead; } private set { isDead = value; } }
-    public MonsterType Type { get { return type; } }
-
-    protected bool isDead;
 
     protected Coroutine hitCo;
+    public Transform TargetTransform { get { return targetTransform; } }
+    public MonsterType Type { get { return type; } }
+    public bool IsDead { get { return isDead; } private set { isDead = value; } }
+    public float Distance { get { return distance; } set { distance = value; } }
+    public MonsterBehavior Behavior { get { return behavior; } }
+    public MonsterStateMachine StateMachine { get { return stateMachine; } }
+    public Rigidbody Rigid { get { return rigid; } }
+    public Animator Animator { get { return animator; } }
+    public NavMeshAgent MeshAgent { get { return meshAgent; } }
+    public MeshRenderer[] Meshes { get { return meshes; } }
 
     protected virtual void Awake()
     {
@@ -68,6 +69,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         {
             stateMachine.Update();
         }
+        Distance = Vector3.Distance(transform.position, TargetTransform.position);
         //if (type != MonsterType.Boss)
         //{
         //    meshAgent.SetDestination(TargetTransform.position);
@@ -117,5 +119,9 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
             }
         }
         hitCo = null;
+    }
+    public bool ShouldReturnToChase()
+    {
+        return distance > Behavior.AttackRange;
     }
 }

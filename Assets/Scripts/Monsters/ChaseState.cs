@@ -12,12 +12,15 @@ public class ChaseState : MonsterState
     }
     public override void Update()
     {
-        if (monster.TargetTransform == null)
+        monster.MeshAgent.SetDestination(monster.TargetTransform.position);
+
+        float distance = Vector3.Distance(monster.transform.position, monster.TargetTransform.position);
+
+        if (monster.TargetTransform == null || distance > 30f)
         {
             monster.StateMachine.ChangeState(MonsterStateType.Idle);
             return;
         }
-        monster.MeshAgent.SetDestination(monster.TargetTransform.position);
 
         if (IsTargetInAttackRange())
         {

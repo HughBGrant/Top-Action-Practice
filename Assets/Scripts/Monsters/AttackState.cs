@@ -36,16 +36,10 @@ public class AttackState : MonsterState
         monster.MeshAgent.isStopped = true;
         monster.Animator.SetBool("IsAttacking", true);
 
-        yield return monster.Behavior.ExecuteAttack(monster);
+        yield return monster.Behavior.ExecuteAttack();
 
-        monster.StateMachine.ChangeState(ShouldReturnToChase() ? MonsterStateType.Idle : MonsterStateType.Attack);
+        monster.StateMachine.ChangeState(monster.ShouldReturnToChase() ? MonsterStateType.Idle : MonsterStateType.Attack);
 
         attackCo = null;
-    }
-    private bool ShouldReturnToChase()
-    {
-        float distance = Vector3.Distance(monster.transform.position, monster.TargetTransform.position);
-
-        return distance > monster.Behavior.AttackRange;
     }
 }

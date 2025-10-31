@@ -13,7 +13,7 @@ public class BossAttackState : MonsterState
     }
     private IEnumerator AttackRoutine()
     {
-        yield return monster.Behavior.ExecuteAttack(monster);
+        yield return ((BossMonster)monster).BossBehavior.ExecuteRandomAttack();
 
         monster.StateMachine.ChangeState(MonsterStateType.Idle);
 

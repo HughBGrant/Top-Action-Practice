@@ -3,8 +3,7 @@ using UnityEngine;
 public class BossMonster : MonsterBase
 {
     [SerializeField]
-    protected Collider attackCollider;
-
+    private Collider attackCollider;
     [SerializeField]
     private GameObject projectilePrefab;
     [SerializeField]
@@ -17,6 +16,8 @@ public class BossMonster : MonsterBase
     private BoxCollider mainCollider;
 
     private bool isTrackingTarget = true;
+
+    private BossMonsterBehavior bossBehavior;
     public Collider AttackCollider { get { return attackCollider; } }
     public GameObject ProjectilePrefab { get { return projectilePrefab; } }
     public GameObject RockPrefab { get { return rockPrefab; } }
@@ -24,13 +25,14 @@ public class BossMonster : MonsterBase
     public Transform LaunchPointB { get { return launchPointB; } }
     public BoxCollider MainCollider { get { return mainCollider; } }
     public bool IsTrackingTarget { get { return isTrackingTarget; } set { isTrackingTarget = value; } }
+    public BossMonsterBehavior BossBehavior { get { return bossBehavior; } }
 
 
     protected override void Awake()
     {
         base.Awake();
 
-        behavior = new BossMonsterBehavior(type);
+        bossBehavior = new BossMonsterBehavior(this);
         mainCollider = GetComponent<BoxCollider>();
 
         meshAgent.isStopped = true;
@@ -45,11 +47,8 @@ public class BossMonster : MonsterBase
     }
     protected override void Update()
     {
-        if (isDead)
-        {
-            StopAllCoroutines();
-            return;
-        }
+        base.Update();
+
         if (isTrackingTarget)
         {
             transform.LookAt(TargetTransform.position);

@@ -3,13 +3,15 @@ using UnityEngine;
 
 public class MonsterBehavior
 {
+    MonsterBase monster;
     protected MonsterType monsterType;
 
     public float AttackRadius { get; private set; }
     public float AttackRange { get; private set; }
 
-    public MonsterBehavior(MonsterType monsterType)
+    public MonsterBehavior(MonsterBase monster, MonsterType monsterType)
     {
+        this.monster = monster;
         this.monsterType = monsterType;
 
         // 몬스터 타입별 기본 공격 범위 설정
@@ -29,22 +31,22 @@ public class MonsterBehavior
                 break;
         }
     }
-    public IEnumerator ExecuteAttack(MonsterBase monster)
+    public IEnumerator ExecuteAttack()
     {
         switch (monsterType)
         {
             case MonsterType.A:
-                yield return AttackTypeA(monster);
+                yield return AttackTypeA();
                 break;
             case MonsterType.B:
-                yield return AttackTypeB(monster);
+                yield return AttackTypeB();
                 break;
             case MonsterType.C:
-                yield return AttackTypeC(monster);
+                yield return AttackTypeC();
                 break;
         }
     }
-    private IEnumerator AttackTypeA(MonsterBase monster)
+    private IEnumerator AttackTypeA()
     {
         if (monster is not MeleeMonster melee) { yield break; }
 
@@ -54,7 +56,7 @@ public class MonsterBehavior
         melee.AttackCollider.enabled = false;
         yield return YieldCache.WaitForSeconds(1.0f);
     }
-    private IEnumerator AttackTypeB(MonsterBase monster)
+    private IEnumerator AttackTypeB()
     {
         if (monster is not MeleeMonster melee) { yield break; }
 
@@ -66,7 +68,7 @@ public class MonsterBehavior
         melee.AttackCollider.enabled = false;
         yield return YieldCache.WaitForSeconds(2.0f);
     }
-    private IEnumerator AttackTypeC(MonsterBase monster)
+    private IEnumerator AttackTypeC()
     {
         if (monster is not RangedMonster ranged) { yield break; }
 
