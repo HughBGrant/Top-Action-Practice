@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ChaseState : MonsterState
 {
-    public override MonsterStateType StateType => MonsterStateType.Chase;
+    public override MonsterStateType StateType { get { return MonsterStateType.Chase; } }
     public ChaseState(MonsterBase monster) : base(monster) { }
 
     public override void Enter()
@@ -31,10 +31,7 @@ public class ChaseState : MonsterState
     }
     private bool IsTargetInAttackRange()
     {
-        if (monster.Behavior == null)
-        {
-            return false;
-        }
+        if (monster.Behavior == null) { return false; }
 
         RaycastHit[] hits = Physics.SphereCastAll(
             monster.transform.position,

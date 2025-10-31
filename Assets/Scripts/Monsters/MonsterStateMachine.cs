@@ -9,7 +9,6 @@ public class MonsterStateMachine
     {
         currentState?.Update();
     }
-
     public void AddState(MonsterState state)
     {
         states[state.StateType] = state;

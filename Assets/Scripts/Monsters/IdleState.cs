@@ -8,7 +8,6 @@ public class IdleState : MonsterState
 
     public override void Enter()
     {
-        monster.GetComponent<Animator>().SetBool("IsWalking", false);
     }
     public override void Update()
     {

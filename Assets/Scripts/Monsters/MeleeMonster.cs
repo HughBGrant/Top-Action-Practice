@@ -9,6 +9,7 @@ public class MeleeMonster : MonsterBase
     protected override void Awake()
     {
         base.Awake();
+        behavior = new MonsterBehavior(type);
 
         if (attackCollider == null)
         {

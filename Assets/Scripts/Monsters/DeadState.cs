@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DeadState : MonsterState
 {
-    public override MonsterStateType StateType => MonsterStateType.Dead;
+    public override MonsterStateType StateType { get { return MonsterStateType.Dead; } }
     private Vector3 hitPoint;
     private bool isHitGrenade;
     public DeadState(MonsterBase monster) : base(monster) { }

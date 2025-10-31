@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class AttackState : MonsterState
 {
-    //private bool isAttacking;
+    public override MonsterStateType StateType { get { return MonsterStateType.Attack; } }
     private Coroutine attackCo;
 
-    public override MonsterStateType StateType { get { return MonsterStateType.Attack; } }
     public AttackState(MonsterBase monster) : base(monster) { }
 
     public override void Enter()
@@ -28,6 +27,9 @@ public class AttackState : MonsterState
             monster.StopCoroutine(attackCo);
             attackCo = null;
         }
+
+        monster.Animator.SetBool("IsAttacking", false);
+        monster.MeshAgent.isStopped = false;
     }
     private IEnumerator AttackRoutine()
     {
@@ -36,9 +38,7 @@ public class AttackState : MonsterState
 
         yield return monster.Behavior.ExecuteAttack(monster);
 
-        monster.Animator.SetBool("IsAttacking", false);
-        monster.MeshAgent.isStopped = false;
-        monster.StateMachine.ChangeState(ShouldReturnToChase() ? MonsterStateType.Chase : MonsterStateType.Attack);
+        monster.StateMachine.ChangeState(ShouldReturnToChase() ? MonsterStateType.Idle : MonsterStateType.Attack);
 
         attackCo = null;
     }

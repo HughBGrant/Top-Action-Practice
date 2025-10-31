@@ -9,6 +9,7 @@ public class RangedMonster : MonsterBase
     protected override void Awake()
     {
         base.Awake();
+        behavior = new MonsterBehavior(type);
 
         if (projectilePrefab == null)
         {

@@ -4,10 +4,6 @@ using UnityEngine.AI;
 
 public abstract class MonsterBase : MonoBehaviour, IDamageable
 {
-    protected static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
-    protected static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
-    protected static readonly int DieHash = Animator.StringToHash("Die");
-
     [SerializeField]
     protected MonsterType type;
     [SerializeField]
@@ -23,7 +19,6 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected MonsterBehavior behavior;
 
     protected MonsterStateMachine stateMachine;
-    protected bool isDead;
 
     public Transform TargetTransform { get { return targetTransform; } }
     public Rigidbody Rigid { get { return rigid; } }
@@ -35,10 +30,8 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     public bool IsDead { get { return isDead; } private set { isDead = value; } }
     public MonsterType Type { get { return type; } }
 
-    protected bool isChasing;
-    protected bool isAttacking;
+    protected bool isDead;
 
-    protected Coroutine attackCo;
     protected Coroutine hitCo;
 
     protected virtual void Awake()
@@ -47,12 +40,10 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         meshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         meshes = GetComponentsInChildren<MeshRenderer>();
-        behavior = new MonsterBehavior(type);
 
         currentHealth = maxHealth;
 
         stateMachine = new MonsterStateMachine();
-
     }
     protected virtual void RegisterStates()
     {
@@ -77,12 +68,11 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         {
             stateMachine.Update();
         }
-        //if (meshAgent && TargetTransform && type != MonsterType.Boss)
+        //if (type != MonsterType.Boss)
         //{
         //    meshAgent.SetDestination(TargetTransform.position);
         //    meshAgent.isStopped = !isChasing;
         //}
-        //DetectTarget();
     }
     public virtual void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
@@ -98,19 +88,19 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
             StateMachine.ChangeState(MonsterStateType.Dead);
         }
     }
-    protected virtual void OnDrawGizmos()
-    {
-        if (!Application.isPlaying || behavior == null) { return; }
+    //protected virtual void OnDrawGizmos()
+    //{
+    //    if (!Application.isPlaying || behavior == null) { return; }
 
-        Vector3 start = transform.position;
-        Vector3 end = start + transform.forward * behavior.AttackRange;
+    //    Vector3 start = transform.position;
+    //    Vector3 end = start + transform.forward * behavior.AttackRange;
 
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(start, behavior.AttackRadius);
-        Gizmos.DrawWireSphere(end, behavior.AttackRadius);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(start, end);
-    }
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(start, behavior.AttackRadius);
+    //    Gizmos.DrawWireSphere(end, behavior.AttackRadius);
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawLine(start, end);
+    //}
     private IEnumerator FlashOnHit()
     {
         foreach (MeshRenderer mesh in meshes)
