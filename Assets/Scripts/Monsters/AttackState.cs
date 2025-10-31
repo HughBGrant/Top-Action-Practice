@@ -12,6 +12,17 @@ public class AttackState : MonsterState
     {
         attackCo = monster.StartCoroutine(AttackRoutine());
     }
+    private IEnumerator AttackRoutine()
+    {
+        monster.MeshAgent.isStopped = true;
+        monster.Animator.SetBool("IsAttacking", true);
+
+        yield return monster.Behavior.ExecuteAttack();
+
+        monster.StateMachine.ChangeState(monster.ShouldReturnToChase() ? MonsterStateType.Chase : MonsterStateType.Attack);
+
+        attackCo = null;
+    }
     public override void Update()
     {
         if (monster.TargetTransform == null)
@@ -30,16 +41,5 @@ public class AttackState : MonsterState
 
         monster.Animator.SetBool("IsAttacking", false);
         monster.MeshAgent.isStopped = false;
-    }
-    private IEnumerator AttackRoutine()
-    {
-        monster.MeshAgent.isStopped = true;
-        monster.Animator.SetBool("IsAttacking", true);
-
-        yield return monster.Behavior.ExecuteAttack();
-
-        monster.StateMachine.ChangeState(monster.ShouldReturnToChase() ? MonsterStateType.Idle : MonsterStateType.Attack);
-
-        attackCo = null;
     }
 }

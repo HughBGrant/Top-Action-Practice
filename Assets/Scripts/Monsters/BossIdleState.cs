@@ -14,7 +14,7 @@ public class BossIdleState : MonsterState
 
     public override void Update()
     {
-        timer += Time.deltaTime;
+        timer -= Time.deltaTime;
 
         if (timer < 0f)
         {

@@ -65,11 +65,12 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void Update()
     {
+        Distance = Vector3.Distance(transform.position, TargetTransform.position);
+
         if (!IsDead)
         {
             stateMachine.Update();
         }
-        Distance = Vector3.Distance(transform.position, TargetTransform.position);
         //if (type != MonsterType.Boss)
         //{
         //    meshAgent.SetDestination(TargetTransform.position);
