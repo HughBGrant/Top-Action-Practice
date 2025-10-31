@@ -3,10 +3,6 @@ using UnityEngine;
 public class BossMonster : MonsterBase
 {
     [SerializeField]
-    private Collider attackCollider;
-    [SerializeField]
-    private GameObject projectilePrefab;
-    [SerializeField]
     private GameObject rockPrefab;
     [SerializeField]
     private Transform launchPointA;
@@ -18,8 +14,6 @@ public class BossMonster : MonsterBase
     private bool isTrackingTarget = true;
 
     private BossMonsterBehavior bossBehavior;
-    public Collider AttackCollider { get { return attackCollider; } }
-    public GameObject ProjectilePrefab { get { return projectilePrefab; } }
     public GameObject RockPrefab { get { return rockPrefab; } }
     public Transform LaunchPointA { get { return launchPointA; } }
     public Transform LaunchPointB { get { return launchPointB; } }

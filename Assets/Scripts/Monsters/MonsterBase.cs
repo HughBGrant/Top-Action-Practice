@@ -5,11 +5,19 @@ using UnityEngine.AI;
 public abstract class MonsterBase : MonoBehaviour, IDamageable
 {
     [SerializeField]
-    protected MonsterType type;
-    [SerializeField]
     protected int maxHealth;
     [SerializeField]
+    protected MonsterType type;
+    [SerializeField]
     protected Transform targetTransform;
+    [SerializeField]
+    protected float attackRadius;
+    [SerializeField]
+    protected float attackRange;
+    [SerializeField]
+    protected Collider attackCollider;
+    [SerializeField]
+    protected GameObject projectilePrefab;
 
     protected int currentHealth;
     protected bool isDead;
@@ -24,8 +32,14 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected MeshRenderer[] meshes;
 
     protected Coroutine hitCo;
-    public Transform TargetTransform { get { return targetTransform; } }
+
     public MonsterType Type { get { return type; } }
+    public Transform TargetTransform { get { return targetTransform; } }
+
+    public float AttackRadius { get { return attackRadius; } }
+    public float AttackRange { get { return attackRange; } }
+    public Collider AttackCollider { get { return attackCollider; } }
+    public GameObject ProjectilePrefab { get { return projectilePrefab; } }
     public bool IsDead { get { return isDead; } private set { isDead = value; } }
     public float Distance { get { return distance; } set { distance = value; } }
     public MonsterBehavior Behavior { get { return behavior; } }
@@ -41,6 +55,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         meshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         meshes = GetComponentsInChildren<MeshRenderer>();
+        behavior = new MonsterBehavior(this, type);
 
         currentHealth = maxHealth;
 
@@ -91,19 +106,6 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
             StateMachine.ChangeState(MonsterStateType.Dead);
         }
     }
-    //protected virtual void OnDrawGizmos()
-    //{
-    //    if (!Application.isPlaying || behavior == null) { return; }
-
-    //    Vector3 start = transform.position;
-    //    Vector3 end = start + transform.forward * behavior.AttackRange;
-
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(start, behavior.AttackRadius);
-    //    Gizmos.DrawWireSphere(end, behavior.AttackRadius);
-    //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawLine(start, end);
-    //}
     private IEnumerator FlashOnHit()
     {
         foreach (MeshRenderer mesh in meshes)
@@ -121,8 +123,8 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         }
         hitCo = null;
     }
-    public bool ShouldReturnToChase()
+    public bool IsTargetInAttackRange()
     {
-        return distance > Behavior.AttackRange;
+        return distance < AttackRange;
     }
 }

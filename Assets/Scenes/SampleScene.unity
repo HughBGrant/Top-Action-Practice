@@ -861,6 +861,7 @@ MonoBehaviour:
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
   attackCollider: {fileID: 1161959386}
+  projectilePrefab: {fileID: 0}
 --- !u!4 &523951551 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 883724508928496280, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
@@ -1018,6 +1019,7 @@ MonoBehaviour:
   type: 2
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
+  attackCollider: {fileID: 0}
   projectilePrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
 --- !u!4 &594488909 stripped
 Transform:
@@ -1255,6 +1257,7 @@ MonoBehaviour:
   maxHealth: 100
   targetTransform: {fileID: 1290166534}
   attackCollider: {fileID: 1992542770}
+  projectilePrefab: {fileID: 0}
 --- !u!1001 &622605787
 PrefabInstance:
   m_ObjectHideFlags: 0

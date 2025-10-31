@@ -22,7 +22,7 @@ public class ChaseState : MonsterState
             return;
         }
 
-        if (IsTargetInAttackRange())
+        if (!monster.IsTargetInAttackRange())
         {
             monster.StateMachine.ChangeState(MonsterStateType.Attack);
         }
@@ -32,23 +32,4 @@ public class ChaseState : MonsterState
         monster.MeshAgent.isStopped = true;
         monster.Animator.SetBool("IsWalking", false);
     }
-    private bool IsTargetInAttackRange()
-    {
-        if (monster.Behavior == null) { return false; }
-
-        RaycastHit[] hits = Physics.SphereCastAll(
-            monster.transform.position,
-            monster.Behavior.AttackRadius,
-            monster.transform.forward,
-            monster.Behavior.AttackRange,
-            LayerMask.GetMask("Player")
-        );
-        return hits.Length > 0;
-    }
-    //private bool IsTargetInAttackRange()
-    //{
-    //    float distance = Vector3.Distance(monster.transform.position, monster.TargetTransform.position);
-
-    //    return distance < monster.Behavior.AttackRange;
-    //}
 }

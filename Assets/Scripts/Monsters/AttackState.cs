@@ -19,7 +19,7 @@ public class AttackState : MonsterState
 
         yield return monster.Behavior.ExecuteAttack();
 
-        monster.StateMachine.ChangeState(monster.ShouldReturnToChase() ? MonsterStateType.Chase : MonsterStateType.Attack);
+        monster.StateMachine.ChangeState(monster.IsTargetInAttackRange() ? MonsterStateType.Attack : MonsterStateType.Chase);
 
         attackCo = null;
     }
