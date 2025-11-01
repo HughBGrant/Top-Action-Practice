@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public abstract class MonsterBase : MonoBehaviour, IDamageable
+public class MonsterBase : MonoBehaviour, IDamageable
 {
     [SerializeField]
     protected int maxHealth;
@@ -14,6 +14,8 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected float attackRadius;
     [SerializeField]
     protected float attackRange;
+    [SerializeField]
+    protected float chaseRange;
     [SerializeField]
     protected Collider attackCollider;
     [SerializeField]
@@ -38,6 +40,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
 
     public float AttackRadius { get { return attackRadius; } }
     public float AttackRange { get { return attackRange; } }
+    public float ChaseRange { get { return chaseRange; } }
     public Collider AttackCollider { get { return attackCollider; } }
     public GameObject ProjectilePrefab { get { return projectilePrefab; } }
     public bool IsDead { get { return isDead; } private set { isDead = value; } }
@@ -55,7 +58,7 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
         meshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         meshes = GetComponentsInChildren<MeshRenderer>();
-        behavior = new MonsterBehavior(this, type);
+        behavior = new MonsterBehavior(this);
 
         currentHealth = maxHealth;
 
@@ -73,24 +76,12 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     protected virtual void Start()
     {
         RegisterStates();
-        //if (type != MonsterType.Boss)
-        //{
-        //    StartCoroutine(BeginChase());
-        //}
     }
     protected virtual void Update()
     {
         Distance = Vector3.Distance(transform.position, TargetTransform.position);
 
-        if (!IsDead)
-        {
-            stateMachine.Update();
-        }
-        //if (type != MonsterType.Boss)
-        //{
-        //    meshAgent.SetDestination(TargetTransform.position);
-        //    meshAgent.isStopped = !isChasing;
-        //}
+        stateMachine.Update();
     }
     public virtual void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
@@ -126,5 +117,9 @@ public abstract class MonsterBase : MonoBehaviour, IDamageable
     public bool IsTargetInAttackRange()
     {
         return distance < AttackRange;
+    }
+    public bool IsTargetInChaseRange()
+    {
+        return distance < ChaseRange;
     }
 }

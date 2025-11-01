@@ -20,12 +20,12 @@ public class GuidedMissile : Projectile
 
     private IEnumerator TrackTarget()
     {
-        yield return null;
         while (targetTransform != null)
         {
             meshAgent.SetDestination(targetTransform.position);
             yield return YieldCache.WaitForSeconds(0.1f);
         }
+
         Destroy(gameObject);
     }
 }

@@ -4,12 +4,9 @@ public class IdleState : MonsterState
 
     public IdleState(MonsterBase monster) : base(monster) { }
 
-    public override void Enter()
-    {
-    }
     public override void Update()
     {
-        if (monster.Distance < 30f)
+        if (monster.IsTargetInChaseRange())
         {
             monster.StateMachine.ChangeState(MonsterStateType.Chase);
             return;

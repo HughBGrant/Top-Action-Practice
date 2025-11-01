@@ -10,36 +10,45 @@ public class AttackState : MonsterState
 
     public override void Enter()
     {
+        Debug.Log("enter");
         attackCo = monster.StartCoroutine(AttackRoutine());
     }
     private IEnumerator AttackRoutine()
     {
-        monster.MeshAgent.isStopped = true;
-        monster.Animator.SetBool("IsAttacking", true);
-
-        yield return monster.Behavior.ExecuteAttack();
-
-        monster.StateMachine.ChangeState(monster.IsTargetInAttackRange() ? MonsterStateType.Attack : MonsterStateType.Chase);
-
-        attackCo = null;
-    }
-    public override void Update()
-    {
-        if (monster.TargetTransform == null)
+        if (monster is not BossMonster)
         {
-            monster.StateMachine.ChangeState(MonsterStateType.Idle);
-            return;
+            monster.Animator.SetBool("IsAttacking", true);
         }
+
+        if (monster.Behavior is IAttackBehavior attackBehavior)
+        {
+            yield return attackBehavior.ExecuteAttack();
+        }
+
+        if (monster is BossMonster)
+        {
+            monster.StateMachine.ChangeState(MonsterStateType.Attack);
+        }
+        else
+        {
+            monster.StateMachine.ChangeState(
+            monster.IsTargetInAttackRange()
+            ? MonsterStateType.Attack
+            : MonsterStateType.Chase);
+        }
+        attackCo = null;
     }
     public override void Exit()
     {
+        Debug.Log("exit");
         if (attackCo != null)
         {
             monster.StopCoroutine(attackCo);
             attackCo = null;
         }
-
-        monster.Animator.SetBool("IsAttacking", false);
-        monster.MeshAgent.isStopped = false;
+        if (monster is not BossMonster)
+        {
+            monster.Animator.SetBool("IsAttacking", false);
+        }
     }
 }

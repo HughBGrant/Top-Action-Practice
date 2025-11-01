@@ -16,13 +16,13 @@ public class ChaseState : MonsterState
 
         float distance = Vector3.Distance(monster.transform.position, monster.TargetTransform.position);
 
-        if (monster.TargetTransform == null || distance > 30f)
+        if (monster.TargetTransform == null || !monster.IsTargetInChaseRange())
         {
             monster.StateMachine.ChangeState(MonsterStateType.Idle);
             return;
         }
 
-        if (!monster.IsTargetInAttackRange())
+        if (monster.IsTargetInAttackRange())
         {
             monster.StateMachine.ChangeState(MonsterStateType.Attack);
         }

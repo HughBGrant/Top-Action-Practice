@@ -8,6 +8,8 @@ public class BossMonster : MonsterBase
     private Transform launchPointA;
     [SerializeField]
     private Transform launchPointB;
+    [SerializeField]
+    private GuidedMissile guidedProjectilePrefab;
 
     private BoxCollider mainCollider;
 
@@ -20,6 +22,7 @@ public class BossMonster : MonsterBase
     public BoxCollider MainCollider { get { return mainCollider; } }
     public bool IsTrackingTarget { get { return isTrackingTarget; } set { isTrackingTarget = value; } }
     public BossMonsterBehavior BossBehavior { get { return bossBehavior; } }
+    public new GuidedMissile ProjectilePrefab { get { return guidedProjectilePrefab; } }
 
 
     protected override void Awake()
@@ -33,9 +36,9 @@ public class BossMonster : MonsterBase
     }
     protected override void RegisterStates()
     {
-        stateMachine.AddState(new BossIdleState(this));
-        stateMachine.AddState(new BossAttackState(this));
-        //stateMachine.AddState(new BossDeadState(this));
+        stateMachine.AddState(new IdleState(this));
+        stateMachine.AddState(new AttackState(this));
+        stateMachine.AddState(new DeadState(this));
 
         stateMachine.ChangeState(MonsterStateType.Idle);
     }

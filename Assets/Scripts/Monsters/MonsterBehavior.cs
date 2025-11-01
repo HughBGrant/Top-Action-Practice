@@ -1,40 +1,39 @@
 using System.Collections;
 using UnityEngine;
 
-public class MonsterBehavior
+public class MonsterBehavior : IAttackBehavior
 {
     MonsterBase monster;
-    protected MonsterType monsterType;
 
-    public MonsterBehavior(MonsterBase monster, MonsterType monsterType)
+    public MonsterBehavior(MonsterBase monster)
     {
         this.monster = monster;
-        this.monsterType = monsterType;
     }
     public IEnumerator ExecuteAttack()
     {
-        switch (monsterType)
+        switch (monster.Type)
         {
             case MonsterType.A:
-                yield return AttackTypeA();
+                yield return MeleeAttack();
                 break;
             case MonsterType.B:
-                yield return AttackTypeB();
+                yield return ChargeAttack();
                 break;
             case MonsterType.C:
-                yield return AttackTypeC();
+                yield return RangedAttack();
                 break;
         }
     }
-    private IEnumerator AttackTypeA()
+    private IEnumerator MeleeAttack()
     {
         yield return YieldCache.WaitForSeconds(0.2f);
         monster.AttackCollider.enabled = true;
         yield return YieldCache.WaitForSeconds(1.0f);
         monster.AttackCollider.enabled = false;
+
         yield return YieldCache.WaitForSeconds(1.0f);
     }
-    private IEnumerator AttackTypeB()
+    private IEnumerator ChargeAttack()
     {
         yield return YieldCache.WaitForSeconds(0.1f);
         monster.Rigid.AddForce(monster.transform.forward * 20, ForceMode.Impulse);
@@ -42,15 +41,16 @@ public class MonsterBehavior
         yield return YieldCache.WaitForSeconds(0.5f);
         monster.Rigid.velocity = Vector3.zero;
         monster.AttackCollider.enabled = false;
+
         yield return YieldCache.WaitForSeconds(2.0f);
     }
-    private IEnumerator AttackTypeC()
+    private IEnumerator RangedAttack()
     {
         yield return YieldCache.WaitForSeconds(0.5f);
         Vector3 spawnPos = monster.transform.position + Vector3.up * 3f;
-        GameObject bullet = Object.Instantiate(monster.ProjectilePrefab, spawnPos, monster.transform.rotation);
-        Rigidbody bulletRigid = bullet.GetComponent<Rigidbody>();
-        bulletRigid.velocity = monster.transform.forward * 20f;
+        Rigidbody bullet = Object.Instantiate(monster.ProjectilePrefab, spawnPos, monster.transform.rotation).GetComponent<Rigidbody>();
+        bullet.velocity = monster.transform.forward * 20f;
+
         yield return YieldCache.WaitForSeconds(2.0f);
     }
 }

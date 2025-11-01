@@ -1,14 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class BossMonsterBehavior
+public class BossMonsterBehavior : IAttackBehavior
 {
     private BossMonster monster;
     public BossMonsterBehavior(BossMonster monster)
     {
         this.monster = monster;
     }
-    public IEnumerator ExecuteRandomAttack()
+    public IEnumerator ExecuteAttack()
     {
         float rand = Random.value;
 
@@ -24,12 +24,11 @@ public class BossMonsterBehavior
         monster.Animator.SetTrigger("LaunchMissile");
         yield return new WaitForSeconds(0.2f);
 
-        GuidedMissile missileA = Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointA.position, monster.LaunchPointA.rotation).GetComponent<GuidedMissile>();
-
+        GuidedMissile missileA = Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointA.position, monster.LaunchPointA.rotation);
         missileA.TargetTransform = monster.TargetTransform;
 
         yield return YieldCache.WaitForSeconds(0.3f);
-        GuidedMissile missileB = Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointB.position, monster.LaunchPointB.rotation).GetComponent<GuidedMissile>();
+        GuidedMissile missileB = Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointB.position, monster.LaunchPointB.rotation);
         missileB.TargetTransform = monster.TargetTransform;
 
         yield return YieldCache.WaitForSeconds(2f);
@@ -39,6 +38,7 @@ public class BossMonsterBehavior
         monster.IsTrackingTarget = false;
         monster.Animator.SetTrigger("ThrowRock");
         Object.Instantiate(monster.RockPrefab, monster.transform.position, monster.transform.rotation);
+
         yield return YieldCache.WaitForSeconds(3.0f);
         monster.IsTrackingTarget = true;
     }
@@ -57,7 +57,6 @@ public class BossMonsterBehavior
         monster.AttackCollider.enabled = false;
 
         yield return YieldCache.WaitForSeconds(1.0f);
-
         monster.MainCollider.enabled = true;
         monster.MeshAgent.isStopped = true;
         monster.IsTrackingTarget = true;
