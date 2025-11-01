@@ -19,13 +19,13 @@ public class MonsterBase : MonoBehaviour, IDamageable
     [SerializeField]
     protected Collider attackCollider;
     [SerializeField]
-    protected GameObject projectilePrefab;
+    protected Projectile projectilePrefab;
 
     protected int currentHealth;
     protected bool isDead;
     protected float distance;
 
-    protected MonsterBehavior behavior;
+    protected IAttackBehavior behavior;
     protected MonsterStateMachine stateMachine;
 
     protected Rigidbody rigid;
@@ -42,10 +42,10 @@ public class MonsterBase : MonoBehaviour, IDamageable
     public float AttackRange { get { return attackRange; } }
     public float ChaseRange { get { return chaseRange; } }
     public Collider AttackCollider { get { return attackCollider; } }
-    public GameObject ProjectilePrefab { get { return projectilePrefab; } }
+    public virtual Projectile ProjectilePrefab { get { return projectilePrefab; } }
     public bool IsDead { get { return isDead; } private set { isDead = value; } }
     public float Distance { get { return distance; } set { distance = value; } }
-    public MonsterBehavior Behavior { get { return behavior; } }
+    public virtual IAttackBehavior Behavior { get { return behavior; } set { behavior = value; } }
     public MonsterStateMachine StateMachine { get { return stateMachine; } set { stateMachine = value; } }
     public Rigidbody Rigid { get { return rigid; } }
     public Animator Animator { get { return animator; } }

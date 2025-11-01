@@ -10,11 +10,12 @@ public class BossMonsterBehavior : IAttackBehavior
     }
     public IEnumerator ExecuteAttack()
     {
+        yield return YieldCache.WaitForSeconds(0.1f);
         float rand = Random.value;
 
-        if (rand < 0.4f)
+        if (rand < 0.01f)
             yield return PerformMissileAttack();
-        else if (rand < 0.8f)
+        else if (rand < 0.02f)
             yield return PerformRockThrow();
         else
             yield return PerformJumpAttack();
@@ -23,12 +24,11 @@ public class BossMonsterBehavior : IAttackBehavior
     {
         monster.Animator.SetTrigger("LaunchMissile");
         yield return new WaitForSeconds(0.2f);
-
-        GuidedMissile missileA = Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointA.position, monster.LaunchPointA.rotation);
+        GuidedMissile missileA = (GuidedMissile)Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointA.position, monster.LaunchPointA.rotation);
         missileA.TargetTransform = monster.TargetTransform;
 
         yield return YieldCache.WaitForSeconds(0.3f);
-        GuidedMissile missileB = Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointB.position, monster.LaunchPointB.rotation);
+        GuidedMissile missileB = (GuidedMissile)Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointB.position, monster.LaunchPointB.rotation);
         missileB.TargetTransform = monster.TargetTransform;
 
         yield return YieldCache.WaitForSeconds(2f);
@@ -57,9 +57,9 @@ public class BossMonsterBehavior : IAttackBehavior
         monster.AttackCollider.enabled = false;
 
         yield return YieldCache.WaitForSeconds(1.0f);
+        monster.IsTrackingTarget = true;
         monster.MainCollider.enabled = true;
         monster.MeshAgent.isStopped = true;
-        monster.IsTrackingTarget = true;
     }
 }
 

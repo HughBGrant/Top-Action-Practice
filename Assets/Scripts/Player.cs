@@ -63,7 +63,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private GameObject[] belongingGrenades;
     [SerializeField]
-    private GameObject grenadePrefab;
+    private GrenadeThrower grenadePrefab;
 
     // 움직임
     private Vector2 moveInput;
@@ -288,9 +288,9 @@ public class Player : MonoBehaviour, IDamageable
             Vector3 nextVec = hit.point - transform.position;
             nextVec.y = 10;
 
-            Rigidbody grenade = Instantiate(grenadePrefab, transform.position, transform.rotation).GetComponent<Rigidbody>();
-            grenade.AddForce(nextVec, ForceMode.Impulse);
-            grenade.AddTorque(Vector3.back * 10, ForceMode.Impulse);
+            GrenadeThrower grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+            grenade.Rigid.AddForce(nextVec, ForceMode.Impulse);
+            grenade.Rigid.AddTorque(Vector3.back * 10, ForceMode.Impulse);
             grenadeCount--;
             belongingGrenades[grenadeCount].SetActive(false);
         }

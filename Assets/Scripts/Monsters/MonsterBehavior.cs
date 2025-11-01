@@ -50,8 +50,8 @@ public class MonsterBehavior : IAttackBehavior
     {
         yield return YieldCache.WaitForSeconds(0.5f);
         Vector3 spawnPos = monster.transform.position + Vector3.up * 3f;
-        Rigidbody bullet = Object.Instantiate(monster.ProjectilePrefab, spawnPos, monster.transform.rotation).GetComponent<Rigidbody>();
-        bullet.velocity = monster.transform.forward * 20f;
+        Projectile bullet = Object.Instantiate(monster.ProjectilePrefab, spawnPos, monster.transform.rotation);
+        bullet.Rigid.velocity = monster.transform.forward * 20f;
 
         yield return YieldCache.WaitForSeconds(2.0f);
     }

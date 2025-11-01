@@ -217,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7988094277207216310, guid: 83dab506297948d4d8d34c4fe12431ee, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7988094277207216310, guid: 83dab506297948d4d8d34c4fe12431ee, type: 3}
       propertyPath: m_TagString
@@ -249,7 +249,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9133255185617633366, guid: 83dab506297948d4d8d34c4fe12431ee, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 12.821
+      value: 33.7
       objectReference: {fileID: 0}
     - target: {fileID: 9133255185617633366, guid: 83dab506297948d4d8d34c4fe12431ee, type: 3}
       propertyPath: m_LocalRotation.w
@@ -861,7 +861,7 @@ MonoBehaviour:
   type: 0
   targetTransform: {fileID: 1290166534}
   attackRadius: 1.5
-  attackRange: 3
+  attackRange: 5
   chaseRange: 30
   attackCollider: {fileID: 1161959386}
   projectilePrefab: {fileID: 0}
@@ -1029,9 +1029,9 @@ MonoBehaviour:
   targetTransform: {fileID: 1290166534}
   attackRadius: 0.5
   attackRange: 25
-  chaseRange: 30
+  chaseRange: 60
   attackCollider: {fileID: 0}
-  projectilePrefab: {fileID: 4664397678467185946, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
+  projectilePrefab: {fileID: 2452649965170005746, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
 --- !u!1001 &601288016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1138,7 +1138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       propertyPath: m_TagString
@@ -1777,11 +1777,10 @@ MonoBehaviour:
   attackRange: 0
   chaseRange: 0
   attackCollider: {fileID: 1416929148}
-  projectilePrefab: {fileID: 2179863741677129894, guid: 373f6ae6e0c31bc43ba40cbca358b2e1, type: 3}
+  projectilePrefab: {fileID: 2452649965170005746, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
   rockPrefab: {fileID: 2882364650027379269, guid: a10c504b3ee67f844941503ff11d58c2, type: 3}
   launchPointA: {fileID: 532700402}
   launchPointB: {fileID: 1256555379}
-  guidedProjectilePrefab: {fileID: 0}
 --- !u!1 &852288990 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7209417620919649187, guid: 10653eccf6b69fd47938a227b4bf3863, type: 3}
@@ -8213,7 +8212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 25
-  isJumpAttack: 0
+  isJumpAttack: 1
 --- !u!4 &1512554786 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}

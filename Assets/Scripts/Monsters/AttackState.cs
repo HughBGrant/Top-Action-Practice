@@ -18,12 +18,10 @@ public class AttackState : MonsterState
         {
             monster.Animator.SetBool("IsAttacking", true);
         }
-
         if (monster.Behavior is IAttackBehavior attackBehavior)
         {
             yield return attackBehavior.ExecuteAttack();
         }
-
         if (monster is BossMonster)
         {
             monster.StateMachine.ChangeState(MonsterStateType.Attack);
@@ -43,6 +41,7 @@ public class AttackState : MonsterState
         }
         if (monster is not BossMonster)
         {
+            monster.Animator.SetBool("IsAttacking", false);
         }
     }
 }

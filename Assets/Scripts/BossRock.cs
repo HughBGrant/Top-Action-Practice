@@ -16,8 +16,6 @@ public class BossRock : IDamageSource
             Destroy(gameObject);
             return;
         }
-
-
         DealDamageTo(collision.gameObject);
     }
     private IEnumerator ChargeSpin()

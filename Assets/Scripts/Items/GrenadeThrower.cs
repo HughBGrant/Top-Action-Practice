@@ -11,6 +11,7 @@ public class GrenadeThrower : MonoBehaviour
     private GameObject effect;
 
     private Rigidbody rigid;
+    public Rigidbody Rigid { get { return rigid; } }
     // Start is called before the first frame update
     void Awake()
     {

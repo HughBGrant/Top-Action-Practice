@@ -16,4 +16,8 @@ public class IdleState : MonsterState
             return;
         }
     }
+    public override void Exit()
+    {
+        monster.Animator.SetBool("IsWalking", true);
+    }
 }

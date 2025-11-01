@@ -8,11 +8,11 @@ public class RangedWeapon : WeaponBase
     [SerializeField]
     private Transform firePoint;
     [SerializeField]
-    private GameObject bulletPrefab;
+    private Projectile bulletPrefab;
     [SerializeField]
     private Transform ejectPoint;
     [SerializeField]
-    private GameObject casingPrefab;
+    private Casing casingPrefab;
     [SerializeField]
     private int currentMagazine;
     public override int CurrentMagazine { get { return currentMagazine; } set { currentMagazine = value; } }
@@ -37,16 +37,16 @@ public class RangedWeapon : WeaponBase
     }
     private IEnumerator ShootBullet()
     {
-        Rigidbody bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation).GetComponent<Rigidbody>();
+        Projectile bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         float bulletSpeed = 50f;
-        bullet.velocity = firePoint.forward * bulletSpeed;
+        bullet.Rigid.velocity = firePoint.forward * bulletSpeed;
         yield return null;
 
-        Rigidbody casing = Instantiate(casingPrefab, ejectPoint.position, ejectPoint.rotation).GetComponent<Rigidbody>();
+        Casing casing = Instantiate(casingPrefab, ejectPoint.position, ejectPoint.rotation);
         Vector3 casingVec = ejectPoint.forward * Random.Range(1, 4) * -1 + Vector3.up * Random.Range(1, 4);
-        casing.AddForce(casingVec, ForceMode.Impulse);
+        casing.Rigid.AddForce(casingVec, ForceMode.Impulse);
         float casingSpinForce = 10f;
-        casing.AddTorque(Vector3.up * casingSpinForce, ForceMode.Impulse);
+        casing.Rigid.AddTorque(Vector3.up * casingSpinForce, ForceMode.Impulse);
 
         shootCo = null;
     }

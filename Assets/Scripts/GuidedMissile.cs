@@ -8,24 +8,25 @@ public class GuidedMissile : Projectile
     public Transform TargetTransform { get { return targetTransform; } set { targetTransform = value; } }
 
     private NavMeshAgent meshAgent;
-    // Start is called before the first frame update
+
     void Awake()
     {
         meshAgent = GetComponent<NavMeshAgent>();
     }
-    private void OnEnable()
+    private void Start()
     {
         StartCoroutine(TrackTarget());
     }
-
-    private IEnumerator TrackTarget()
+    private void Update()
     {
-        while (targetTransform != null)
+        Debug.Log(TargetTransform);
+    }
+    public IEnumerator TrackTarget()
+    {
+        while (TargetTransform != null)
         {
             meshAgent.SetDestination(targetTransform.position);
             yield return YieldCache.WaitForSeconds(0.1f);
         }
-
-        Destroy(gameObject);
     }
 }

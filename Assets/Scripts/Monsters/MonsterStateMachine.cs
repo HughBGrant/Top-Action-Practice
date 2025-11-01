@@ -16,10 +16,10 @@ public class MonsterStateMachine
     }
     public void ChangeState(MonsterStateType type)
     {
-        Debug.Log(currentState);
+        Debug.Log($"Exit: {currentState}");
         currentState?.Exit();
         currentState = states[type];
-        Debug.Log(type);
+        Debug.Log($"Enter: {currentState}");
         currentState.Enter();
     }
     public T GetState<T>() where T : MonsterState
