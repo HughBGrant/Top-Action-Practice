@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class MonsterStateMachine
 {
@@ -15,10 +16,10 @@ public class MonsterStateMachine
     }
     public void ChangeState(MonsterStateType type)
     {
-        if (currentState != null && currentState.StateType == type) { return; }
-
+        Debug.Log(currentState);
         currentState?.Exit();
         currentState = states[type];
+        Debug.Log(type);
         currentState.Enter();
     }
     public T GetState<T>() where T : MonsterState

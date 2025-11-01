@@ -4,6 +4,10 @@ public class IdleState : MonsterState
 
     public IdleState(MonsterBase monster) : base(monster) { }
 
+    public override void Enter()
+    {
+        monster.Animator.SetBool("IsWalking", false);
+    }
     public override void Update()
     {
         if (monster.IsTargetInChaseRange())

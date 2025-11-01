@@ -36,7 +36,7 @@ public class MonsterBehavior : IAttackBehavior
     private IEnumerator ChargeAttack()
     {
         yield return YieldCache.WaitForSeconds(0.1f);
-        monster.Rigid.AddForce(monster.transform.forward * 20, ForceMode.Impulse);
+        monster.Rigid.AddForce(monster.transform.forward * 300, ForceMode.Impulse);
         monster.AttackCollider.enabled = true;
         yield return YieldCache.WaitForSeconds(0.5f);
         monster.Rigid.velocity = Vector3.zero;

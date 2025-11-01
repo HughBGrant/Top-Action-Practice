@@ -7,6 +7,7 @@ public class ChaseState : MonsterState
 
     public override void Enter()
     {
+        monster.Animator.SetBool("IsAttacking", false);
         monster.Animator.SetBool("IsWalking", true);
         monster.MeshAgent.isStopped = false;
     }
@@ -30,6 +31,5 @@ public class ChaseState : MonsterState
     public override void Exit()
     {
         monster.MeshAgent.isStopped = true;
-        monster.Animator.SetBool("IsWalking", false);
     }
 }

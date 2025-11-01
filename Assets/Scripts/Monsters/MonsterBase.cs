@@ -46,7 +46,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
     public bool IsDead { get { return isDead; } private set { isDead = value; } }
     public float Distance { get { return distance; } set { distance = value; } }
     public MonsterBehavior Behavior { get { return behavior; } }
-    public MonsterStateMachine StateMachine { get { return stateMachine; } }
+    public MonsterStateMachine StateMachine { get { return stateMachine; } set { stateMachine = value; } }
     public Rigidbody Rigid { get { return rigid; } }
     public Animator Animator { get { return animator; } }
     public NavMeshAgent MeshAgent { get { return meshAgent; } }
@@ -62,16 +62,16 @@ public class MonsterBase : MonoBehaviour, IDamageable
 
         currentHealth = maxHealth;
 
-        stateMachine = new MonsterStateMachine();
+        StateMachine = new MonsterStateMachine();
     }
     protected virtual void RegisterStates()
     {
-        stateMachine.AddState(new IdleState(this));
-        stateMachine.AddState(new ChaseState(this));
-        stateMachine.AddState(new AttackState(this));
-        stateMachine.AddState(new DeadState(this));
+        StateMachine.AddState(new IdleState(this));
+        StateMachine.AddState(new ChaseState(this));
+        StateMachine.AddState(new AttackState(this));
+        StateMachine.AddState(new DeadState(this));
 
-        stateMachine.ChangeState(MonsterStateType.Idle);
+        StateMachine.ChangeState(MonsterStateType.Idle);
     }
     protected virtual void Start()
     {
@@ -81,7 +81,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
     {
         Distance = Vector3.Distance(transform.position, TargetTransform.position);
 
-        stateMachine.Update();
+        StateMachine.Update();
     }
     public virtual void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
@@ -92,7 +92,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
         {
             IsDead = true;
 
-            DeadState deadState = stateMachine.GetState<DeadState>();
+            DeadState deadState = StateMachine.GetState<DeadState>();
             deadState.SetDeathInfo(hitPoint, isHitGrenade);
             StateMachine.ChangeState(MonsterStateType.Dead);
         }
@@ -116,10 +116,10 @@ public class MonsterBase : MonoBehaviour, IDamageable
     }
     public bool IsTargetInAttackRange()
     {
-        return distance < AttackRange;
+        return Distance < AttackRange;
     }
     public bool IsTargetInChaseRange()
     {
-        return distance < ChaseRange;
+        return Distance < ChaseRange;
     }
 }

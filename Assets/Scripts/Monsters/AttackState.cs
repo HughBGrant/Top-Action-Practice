@@ -10,7 +10,6 @@ public class AttackState : MonsterState
 
     public override void Enter()
     {
-        Debug.Log("enter");
         attackCo = monster.StartCoroutine(AttackRoutine());
     }
     private IEnumerator AttackRoutine()
@@ -31,16 +30,12 @@ public class AttackState : MonsterState
         }
         else
         {
-            monster.StateMachine.ChangeState(
-            monster.IsTargetInAttackRange()
-            ? MonsterStateType.Attack
-            : MonsterStateType.Chase);
+            monster.StateMachine.ChangeState(MonsterStateType.Chase);
         }
         attackCo = null;
     }
     public override void Exit()
     {
-        Debug.Log("exit");
         if (attackCo != null)
         {
             monster.StopCoroutine(attackCo);
@@ -48,7 +43,6 @@ public class AttackState : MonsterState
         }
         if (monster is not BossMonster)
         {
-            monster.Animator.SetBool("IsAttacking", false);
         }
     }
 }
