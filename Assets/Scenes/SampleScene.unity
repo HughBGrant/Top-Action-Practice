@@ -217,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7988094277207216310, guid: 83dab506297948d4d8d34c4fe12431ee, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7988094277207216310, guid: 83dab506297948d4d8d34c4fe12431ee, type: 3}
       propertyPath: m_TagString
@@ -1138,7 +1138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9187343066701982198, guid: 4198e2587d1fcca4cb87c16c3cfed34d, type: 3}
       propertyPath: m_TagString
@@ -1777,7 +1777,7 @@ MonoBehaviour:
   attackRange: 0
   chaseRange: 0
   attackCollider: {fileID: 1416929148}
-  projectilePrefab: {fileID: 2452649965170005746, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
+  projectilePrefab: {fileID: -1891944515536075271, guid: 373f6ae6e0c31bc43ba40cbca358b2e1, type: 3}
   rockPrefab: {fileID: 2882364650027379269, guid: a10c504b3ee67f844941503ff11d58c2, type: 3}
   launchPointA: {fileID: 532700402}
   launchPointB: {fileID: 1256555379}
@@ -2801,7 +2801,7 @@ MonoBehaviour:
   - {fileID: 2006751319}
   - {fileID: 1414647320}
   - {fileID: 83008190}
-  grenadePrefab: {fileID: 7837284830516385393, guid: 2b9c64a633c89c844aab390985cf3985, type: 3}
+  grenadePrefab: {fileID: 4749891025989416323, guid: 2b9c64a633c89c844aab390985cf3985, type: 3}
 --- !u!136 &1290166531
 CapsuleCollider:
   m_ObjectHideFlags: 0
