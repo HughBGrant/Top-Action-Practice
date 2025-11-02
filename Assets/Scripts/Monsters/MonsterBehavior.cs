@@ -37,6 +37,7 @@ public class MonsterBehavior : IAttackBehavior
     {
         yield return YieldCache.WaitForSeconds(0.1f);
         monster.Rigid.isKinematic = false;
+        monster.transform.LookAt(monster.TargetTransform.position);
         monster.Rigid.AddForce(monster.transform.forward * 20, ForceMode.Impulse);
         monster.AttackCollider.enabled = true;
         yield return YieldCache.WaitForSeconds(0.5f);
