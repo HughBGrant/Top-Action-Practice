@@ -9,6 +9,7 @@ public static class LayerIndex
     public static readonly int Item = LayerMask.NameToLayer("Item");
     public static readonly int MonsterHitBox = LayerMask.NameToLayer("MonsterHitBox");
     public static readonly int Melee = LayerMask.NameToLayer("Melee");
+    public static readonly int Shop = LayerMask.NameToLayer("Shop");
 
     public static bool IsInMask(GameObject obj, LayerMask mask)
     {

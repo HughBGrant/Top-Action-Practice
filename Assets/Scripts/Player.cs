@@ -14,7 +14,6 @@ public class Player : MonoBehaviour, IDamageable
 
     private enum WeaponSlot { None = -1, Hammer, HandGun, SubMachineGun }
 
-    [Header("Movement")]
     [SerializeField]
     private float runSpeed;
     [SerializeField]
@@ -24,7 +23,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private float fallGravityMultiplier;
 
-    [Header("Dodge / Swap / Reload")]
     [SerializeField]
     private float dodgeDuration;
     [SerializeField]
@@ -34,7 +32,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private float reloadDuration;
 
-    [Header("Ground Check")]
     [SerializeField]
     private Transform groundCheckPoint;
     [SerializeField]
@@ -42,7 +39,6 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private LayerMask groundLayer;
 
-    [Header("재화, 능력치")]
     [SerializeField]
     private int currentHealth;
     [SerializeField]
@@ -55,7 +51,6 @@ public class Player : MonoBehaviour, IDamageable
     //private float[] stats = new float[(int)StatType.Count];
     //public float this[StatType e] { get => stats[(int)e]; set => stats[(int)e] = value; }
 
-    [Header("장착")]
     [SerializeField]
     private GameObject[] belongingWeapons;
     [SerializeField]
@@ -65,6 +60,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField]
     private GrenadeThrower grenadePrefab;
 
+    public int Coin { get { return coin; } set { coin = value; } }
     // 움직임
     private Vector2 moveInput;
     private Vector3 moveDirection;
@@ -81,6 +77,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool isReloading;
     private bool isInTouchWall;
     private bool isTakingDamage;
+    private bool isShopping;
 
     private Animator animator;
     private Rigidbody rigid;
@@ -215,7 +212,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (context.performed)
         {
-            if (currentWeapon == null || isDodging || isSwapping || isAttacking) { return; }
+            if (currentWeapon == null || isDodging || isSwapping || isAttacking || isShopping) { return; }
             isAttackHeld = true;
 
             RestartRoutine(ref attackCo, HandleAttack());
@@ -228,7 +225,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     public void OnReload(InputAction.CallbackContext context)
     {
-        if (!context.started || isJumping || isDodging || isSwapping || isAttacking) { return; }
+        if (!context.started || isJumping || isDodging || isSwapping || isAttacking || isShopping) { return; }
         if (currentWeapon == null || currentWeapon is MeleeWeapon || ammo == 0) { return; }
 
         animator.SetTrigger(ReloadHash);
@@ -237,7 +234,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (!context.started || isJumping || isDodging) { return; }
+        if (!context.started || isJumping || isDodging || isShopping) { return; }
         if (nearObject == null) { return; }
 
         if (nearObject.CompareTag(Tag.Weapon))
@@ -248,11 +245,19 @@ public class Player : MonoBehaviour, IDamageable
             }
             Destroy(nearObject);
         }
+        else if (nearObject.CompareTag(Tag.Shop))
+        {
+            if (nearObject.TryGetComponent(out Shop shop))
+            {
+                shop.EnterShop(this);
+                isShopping = true;
+            }
+        }
     }
     public void OnSwapWeapon(InputAction.CallbackContext context)
     {
         if (!context.started) { return; }
-        if (isJumping || isDodging) { return; }
+        if (isJumping || isDodging || isShopping) { return; }
         if (belongingWeapons == null || hasWeapons == null) { return; }
 
         int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
@@ -280,7 +285,7 @@ public class Player : MonoBehaviour, IDamageable
 
         if (grenadeCount <= 0) { return; }
 
-        if (isReloading || isSwapping) { return; }
+        if (isReloading || isSwapping || isShopping) { return; }
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 100))
@@ -368,13 +373,6 @@ public class Player : MonoBehaviour, IDamageable
         isTakingDamage = false;
         hitCo = null;
     }
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.layer == LayerIndex.Weapon)
-        {
-            nearObject = other.gameObject;
-        }
-    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == LayerIndex.Item)
@@ -385,10 +383,26 @@ public class Player : MonoBehaviour, IDamageable
             Destroy(other.gameObject);
         }
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerIndex.Weapon || other.gameObject.layer == LayerIndex.Shop)
+        {
+            nearObject = other.gameObject;
+        }
+    }
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == LayerIndex.Weapon)
         {
+            nearObject = null;
+        }
+        else if (other.gameObject.layer == LayerIndex.Shop)
+        {
+            if (nearObject.TryGetComponent(out Shop shop))
+            {
+                shop.ExitShop();
+                isShopping = false;
+            }
             nearObject = null;
         }
     }

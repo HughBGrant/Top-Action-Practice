@@ -7,4 +7,5 @@ public static class Tag
     public const string Melee = "Melee";
     public const string Bullet = "Bullet";
     public const string MonsterHitBox = "MonsterHitBox";
+    public const string Shop = "Shop";
 }

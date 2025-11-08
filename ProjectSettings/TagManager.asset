@@ -13,6 +13,7 @@ TagManager:
   - Bullet
   - Monster
   - MonsterHitBox
+  - Shop
   layers:
   - Default
   - TransparentFX
@@ -28,8 +29,8 @@ TagManager:
   - Monster
   - DeadMonster
   - MonsterHitBox
-  - 
-  - 
+  - Shop
+  - Weapon
   - 
   - 
   - 
