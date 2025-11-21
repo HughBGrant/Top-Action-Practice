@@ -106,6 +106,9 @@ public class Player : MonoBehaviour, IDamageable
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         cam = Camera.main;
+
+        //PlayerPrefs.SetInt("MaxScore", 112500);
+        Debug.Log(PlayerPrefs.GetInt("MaxScore"));
     }
     void FixedUpdate()
     {
