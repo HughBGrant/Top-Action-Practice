@@ -35,3 +35,10 @@ public enum MonsterStateType
     Attack,
     Dead
 }
+public enum WeaponType
+{
+    None = -1,
+    Hammer,
+    HandGun,
+    SubMachineGun
+}

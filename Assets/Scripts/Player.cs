@@ -4,15 +4,6 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, IDamageable
 {
-    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
-    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
-    private static readonly int IsJumpingHash = Animator.StringToHash("IsJumping");
-    private static readonly int JumpHash = Animator.StringToHash("Jump");
-    private static readonly int DodgeHash = Animator.StringToHash("Dodge");
-    private static readonly int SwapHash = Animator.StringToHash("Swap");
-    private static readonly int ReloadHash = Animator.StringToHash("Reload");
-
-    private enum WeaponSlot { None = -1, Hammer, HandGun, SubMachineGun }
 
     [SerializeField]
     private float runSpeed;
@@ -40,13 +31,17 @@ public class Player : MonoBehaviour, IDamageable
     private LayerMask groundLayer;
 
     [SerializeField]
-    private int currentHealth;
+    private int health;
+    public int Health { get { return health; } set { health = value; } }
     [SerializeField]
     private int ammo;
+    public int Ammo { get { return ammo; } set { ammo = value; } }
     [SerializeField]
     private int coin;
+    public int Coin { get { return coin; } set { coin = value; } }
     [SerializeField]
-    private int grenadeCount;
+    private int score;
+    public int Score { get { return score; } set { score = value; } }
 
     //private float[] stats = new float[(int)StatType.Count];
     //public float this[StatType e] { get => stats[(int)e]; set => stats[(int)e] = value; }
@@ -55,12 +50,19 @@ public class Player : MonoBehaviour, IDamageable
     private GameObject[] belongingWeapons;
     [SerializeField]
     private bool[] hasWeapons;
+    public bool[] HasWeapons { get { return hasWeapons; } }
+    private WeaponBase currentWeapon;
+    public WeaponBase CurrentWeapon { get { return currentWeapon; } }
+    private WeaponType currentWeaponType = WeaponType.None;
+    public WeaponType CurrentWeaponType { get { return currentWeaponType; } }
     [SerializeField]
     private GameObject[] belongingGrenades;
     [SerializeField]
-    private GrenadeThrower grenadePrefab;
+    private ThrownGrenade grenadePrefab;
+    [SerializeField]
+    private int grenadeCount;
+    public int GrenadeCount { get { return grenadeCount; } }
 
-    public int Coin { get { return coin; } set { coin = value; } }
     // 움직임
     private Vector2 moveInput;
     private Vector3 moveDirection;
@@ -83,8 +85,6 @@ public class Player : MonoBehaviour, IDamageable
     private Rigidbody rigid;
     private MeshRenderer[] meshs;
 
-    private WeaponBase currentWeapon;
-    private WeaponSlot currentWeaponId = WeaponSlot.None;
     private GameObject nearObject;
     private Camera cam;
 
@@ -94,12 +94,19 @@ public class Player : MonoBehaviour, IDamageable
     private Coroutine reloadCo;
     private Coroutine hitCo;
 
+    public const int HealthCap = 100;
     private const int AmmoCap = 999;
     private const int CoinCap = 99999;
-    private const int HealthCap = 100;
     private const int GrenadeCountCap = 4;
     private const float MoveEpsilon = 0.0001f;
 
+    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
+    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
+    private static readonly int IsJumpingHash = Animator.StringToHash("IsJumping");
+    private static readonly int JumpHash = Animator.StringToHash("Jump");
+    private static readonly int DodgeHash = Animator.StringToHash("Dodge");
+    private static readonly int SwapHash = Animator.StringToHash("Swap");
+    private static readonly int ReloadHash = Animator.StringToHash("Reload");
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -107,8 +114,8 @@ public class Player : MonoBehaviour, IDamageable
         meshs = GetComponentsInChildren<MeshRenderer>();
         cam = Camera.main;
 
-        //PlayerPrefs.SetInt("MaxScore", 112500);
-        Debug.Log(PlayerPrefs.GetInt("MaxScore"));
+        //PlayerPrefs.SetInt("BestScore", 112500);
+        Debug.Log(PlayerPrefs.GetInt("BestScore"));
     }
     void FixedUpdate()
     {
@@ -265,15 +272,15 @@ public class Player : MonoBehaviour, IDamageable
 
         int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
 
-        if (newWeaponId < 0 || newWeaponId >= belongingWeapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == (int)currentWeaponId || !hasWeapons[newWeaponId]) { return; }
+        if (newWeaponId < 0 || newWeaponId >= belongingWeapons.Length || newWeaponId >= hasWeapons.Length || newWeaponId == (int)currentWeaponType || !hasWeapons[newWeaponId]) { return; }
 
         if (currentWeapon != null)
         {
             currentWeapon.gameObject.SetActive(false);
         }
-        currentWeaponId = (WeaponSlot)newWeaponId;
+        currentWeaponType = (WeaponType)newWeaponId;
 
-        GameObject go = belongingWeapons[(int)currentWeaponId];
+        GameObject go = belongingWeapons[(int)currentWeaponType];
         if (go != null && go.TryGetComponent(out WeaponBase weapon))
         {
             currentWeapon = weapon;
@@ -296,7 +303,7 @@ public class Player : MonoBehaviour, IDamageable
             Vector3 nextVec = hit.point - transform.position;
             nextVec.y = 10;
 
-            GrenadeThrower grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
+            ThrownGrenade grenade = Instantiate(grenadePrefab, transform.position, transform.rotation);
             grenade.Rigid.AddForce(nextVec, ForceMode.Impulse);
             grenade.Rigid.AddTorque(Vector3.back * 10, ForceMode.Impulse);
             grenadeCount--;
@@ -356,7 +363,7 @@ public class Player : MonoBehaviour, IDamageable
 
         hitCo ??= StartCoroutine(HitFlash());
 
-        currentHealth -= damage;
+        Health -= damage;
 
     }
     private IEnumerator HitFlash()
@@ -378,7 +385,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerIndex.Item)
+        if (other.gameObject.layer == Layer.Item)
         {
             if (!other.TryGetComponent(out Item item)) { return; }
 
@@ -388,18 +395,18 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == LayerIndex.Weapon || other.gameObject.layer == LayerIndex.Shop)
+        if (other.gameObject.layer == Layer.Weapon || other.gameObject.layer == Layer.Shop)
         {
             nearObject = other.gameObject;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerIndex.Weapon)
+        if (other.gameObject.layer == Layer.Weapon)
         {
             nearObject = null;
         }
-        else if (other.gameObject.layer == LayerIndex.Shop)
+        else if (other.gameObject.layer == Layer.Shop)
         {
             if (nearObject.TryGetComponent(out Shop shop))
             {
@@ -442,7 +449,7 @@ public class Player : MonoBehaviour, IDamageable
                 coin = Mathf.Min(coin + value, CoinCap);
                 break;
             case ItemType.Heart:
-                currentHealth = Mathf.Min(currentHealth + value, HealthCap);
+                Health = Mathf.Min(Health + value, HealthCap);
                 break;
             case ItemType.Grenade:
                 if (belongingGrenades == null || belongingGrenades.Length <= 0) { return; }

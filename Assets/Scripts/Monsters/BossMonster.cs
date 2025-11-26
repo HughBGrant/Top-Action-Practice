@@ -29,6 +29,7 @@ public class BossMonster : MonsterBase
         mainCollider = GetComponent<BoxCollider>();
 
         meshAgent.isStopped = true;
+        CurrentHealth = MaxHealth;
     }
     protected override void RegisterStates()
     {

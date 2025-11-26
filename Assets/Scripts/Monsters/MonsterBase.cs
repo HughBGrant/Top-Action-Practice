@@ -6,6 +6,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
 {
     [SerializeField]
     protected int maxHealth;
+    public int MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
     [SerializeField]
     protected MonsterType type;
     [SerializeField]
@@ -21,7 +22,9 @@ public class MonsterBase : MonoBehaviour, IDamageable
     [SerializeField]
     protected Projectile projectilePrefab;
 
+    [SerializeField]
     protected int currentHealth;
+    public int CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
     protected bool isDead;
     protected float distance;
 

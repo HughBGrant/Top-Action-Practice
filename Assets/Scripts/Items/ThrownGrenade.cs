@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class GrenadeThrower : MonoBehaviour
+public class ThrownGrenade : MonoBehaviour
 {
     [SerializeField]
     private int damage;
@@ -28,7 +28,7 @@ public class GrenadeThrower : MonoBehaviour
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
         mesh.SetActive(false);
-        effect.SetActive(false);
+        effect.SetActive(true);
 
         float radius = 15f;
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, radius, Vector3.up, 0f, LayerMask.GetMask("Monster"));

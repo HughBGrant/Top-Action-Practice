@@ -505,7 +505,7 @@ GameObject:
   - component: {fileID: 128803026}
   - component: {fileID: 128803025}
   m_Layer: 5
-  m_Name: Heart Image
+  m_Name: Health Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1837,11 +1837,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 263930642}
   m_CullTransparentMesh: 1
---- !u!4 &298373257 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
-  m_PrefabInstance: {fileID: 2045494112}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &300160036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2218,9 +2213,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackSpeed: 0.5
   firePoint: {fileID: 1673774121}
-  bulletPrefab: {fileID: 7189803251394478203, guid: fd6e6218879737c4b83eee070c88c519, type: 3}
+  bulletPrefab: {fileID: 7749750772988343082, guid: fd6e6218879737c4b83eee070c88c519, type: 3}
   ejectPoint: {fileID: 545756592}
-  casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
+  casingPrefab: {fileID: -4660826707504850430, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
   currentMagazine: 7
   maxMagazine: 7
 --- !u!1 &374766383
@@ -2845,6 +2840,7 @@ MonoBehaviour:
   chaseRange: 30
   attackCollider: {fileID: 1161959386}
   projectilePrefab: {fileID: 0}
+  currentHealth: 0
 --- !u!1 &502531052
 GameObject:
   m_ObjectHideFlags: 0
@@ -4012,6 +4008,7 @@ MonoBehaviour:
   chaseRange: 60
   attackCollider: {fileID: 0}
   projectilePrefab: {fileID: 2452649965170005746, guid: 4b110f4b356564c4fb6f612c3fb8efa9, type: 3}
+  currentHealth: 0
 --- !u!1001 &601288016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4247,6 +4244,7 @@ MonoBehaviour:
   chaseRange: 30
   attackCollider: {fileID: 1992542770}
   projectilePrefab: {fileID: 0}
+  currentHealth: 0
 --- !u!1 &613232431
 GameObject:
   m_ObjectHideFlags: 0
@@ -4330,7 +4328,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1344738194}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4375,6 +4373,10 @@ PrefabInstance:
     - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_Name
       value: Weapon Grenade (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4760,7 +4762,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1344738194}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4806,6 +4808,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Weapon Grenade (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4829,7 +4835,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &656057060
 Animator:
   serializedVersion: 5
@@ -5270,11 +5276,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!4 &755862479 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
-  m_PrefabInstance: {fileID: 655376972}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &782484582
 GameObject:
   m_ObjectHideFlags: 0
@@ -5409,11 +5410,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 782484582}
   m_CullTransparentMesh: 1
---- !u!4 &787071936 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
-  m_PrefabInstance: {fileID: 986768055}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &797507525
 GameObject:
   m_ObjectHideFlags: 0
@@ -5430,7 +5426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &797507526
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5880,6 +5876,7 @@ MonoBehaviour:
   chaseRange: 0
   attackCollider: {fileID: 1416929148}
   projectilePrefab: {fileID: -1891944515536075271, guid: 373f6ae6e0c31bc43ba40cbca358b2e1, type: 3}
+  currentHealth: 100
   rockPrefab: {fileID: 2882364650027379269, guid: a10c504b3ee67f844941503ff11d58c2, type: 3}
   launchPointA: {fileID: 532700402}
   launchPointB: {fileID: 1256555379}
@@ -5965,7 +5962,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 849461194}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1118822141}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: GameStart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &849461194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6543,12 +6552,12 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   m_Layer: 0
-  m_Name: InGame Camera
+  m_Name: Ingame Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -6824,7 +6833,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1344738194}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7385,7 +7394,7 @@ GameObject:
   - component: {fileID: 1049234384}
   - component: {fileID: 1049234383}
   m_Layer: 5
-  m_Name: Score Text
+  m_Name: Stage Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7912,11 +7921,6 @@ Transform:
   - {fileID: 1288400732}
   m_Father: {fileID: 1835411482}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1101510578 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
-  m_PrefabInstance: {fileID: 622605787}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1102671349
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8061,6 +8065,78 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 832200117}
   m_SourcePrefab: {fileID: 100100000, guid: 06d503bba93001142b96e3510906db62, type: 3}
+--- !u!1 &1118822140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1118822142}
+  - component: {fileID: 1118822141}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1118822141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118822140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1ae83551dbd5c343bfc332b273ceeb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuCamera: {fileID: 656057059}
+  ingameCamera: {fileID: 963194225}
+  player: {fileID: 1290166530}
+  bossMonster: {fileID: 843587730}
+  stage: 0
+  playTime: 0
+  isBattling: 0
+  monsterACount: 0
+  monsterBCount: 0
+  monsterCCount: 0
+  menuPanel: {fileID: 1888004396}
+  ingamePanel: {fileID: 1540594729}
+  bestScoreText: {fileID: 1892554180}
+  scoreText: {fileID: 238998945}
+  stageText: {fileID: 1049234383}
+  playTimeText: {fileID: 313827321}
+  playerHealthText: {fileID: 1294820117}
+  playerAmmoText: {fileID: 1274991301}
+  playerCoinText: {fileID: 578441311}
+  weapon1Image: {fileID: 1782353962}
+  weapon2Image: {fileID: 2010588431}
+  weapon3Image: {fileID: 902881804}
+  weaponRImage: {fileID: 1338040768}
+  monsterAText: {fileID: 374766385}
+  monsterBText: {fileID: 138930647}
+  monsterCText: {fileID: 502531054}
+  bossHealthGroup: {fileID: 869630987}
+  bossHealthBar: {fileID: 1610073113}
+--- !u!4 &1118822142
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1118822140}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1119296250
 GameObject:
   m_ObjectHideFlags: 0
@@ -8277,7 +8353,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1344738194}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8322,6 +8398,10 @@ PrefabInstance:
     - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_Name
       value: Weapon Grenade (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14340,10 +14420,10 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  currentHealth: 100
+  health: 0
   ammo: 100
   coin: 4000
-  grenadeCount: 0
+  score: 0
   belongingWeapons:
   - {fileID: 1348174882717130290}
   - {fileID: 1509416925352882783}
@@ -14354,7 +14434,8 @@ MonoBehaviour:
   - {fileID: 2006751319}
   - {fileID: 1414647320}
   - {fileID: 83008190}
-  grenadePrefab: {fileID: 4749891025989416323, guid: 2b9c64a633c89c844aab390985cf3985, type: 3}
+  grenadePrefab: {fileID: 9167339070083010380, guid: 2b9c64a633c89c844aab390985cf3985, type: 3}
+  grenadeCount: 0
 --- !u!136 &1290166531
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -14660,7 +14741,7 @@ GameObject:
   - component: {fileID: 1294820118}
   - component: {fileID: 1294820117}
   m_Layer: 5
-  m_Name: Heart Text
+  m_Name: Health Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15202,9 +15283,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackSpeed: 0.2
   firePoint: {fileID: 1673774121}
-  bulletPrefab: {fileID: 3266974850389035250, guid: 9be37de3ba72ee34eb5df79901133c8d, type: 3}
+  bulletPrefab: {fileID: 8295655836400702192, guid: 9be37de3ba72ee34eb5df79901133c8d, type: 3}
   ejectPoint: {fileID: 198873682}
-  casingPrefab: {fileID: 3759089084717542204, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
+  casingPrefab: {fileID: -4660826707504850430, guid: ec5b5500ff07339429f322ecb81c0a5b, type: 3}
   currentMagazine: 30
   maxMagazine: 30
 --- !u!1 &1335607899
@@ -15418,12 +15499,6 @@ Transform:
   - {fileID: 432367494}
   - {fileID: 979628787}
   - {fileID: 1362657168}
-  - {fileID: 1512554786}
-  - {fileID: 298373257}
-  - {fileID: 1101510578}
-  - {fileID: 755862479}
-  - {fileID: 787071936}
-  - {fileID: 1719402709}
   - {fileID: 4714566416395749468}
   - {fileID: 249068098}
   - {fileID: 1519161469}
@@ -20382,7 +20457,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1344738194}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20427,6 +20502,10 @@ PrefabInstance:
     - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_Name
       value: Weapon Grenade (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20858,11 +20937,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1512554786 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
-  m_PrefabInstance: {fileID: 1142113200}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1519161469 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3462745537925090361, guid: 9be37de3ba72ee34eb5df79901133c8d, type: 3}
@@ -25744,12 +25818,12 @@ GameObject:
   - component: {fileID: 1540594732}
   - component: {fileID: 1540594731}
   m_Layer: 5
-  m_Name: InGame Panel
+  m_Name: Ingame Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1540594730
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27261,11 +27335,6 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!4 &1719402709 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
-  m_PrefabInstance: {fileID: 1386332497}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1727152163
 GameObject:
   m_ObjectHideFlags: 0
@@ -42637,7 +42706,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1888004397
 RectTransform:
   m_ObjectHideFlags: 0
@@ -42989,7 +43058,7 @@ GameObject:
   - component: {fileID: 1923615475}
   - component: {fileID: 1923615474}
   m_Layer: 5
-  m_Name: Score Image
+  m_Name: Stage Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43831,7 +43900,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1344738194}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4488940172311662557, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -43876,6 +43945,10 @@ PrefabInstance:
     - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
       propertyPath: m_Name
       value: Weapon Grenade (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120336280721268181, guid: 2b2c701ff18412f43a4bd6e4d02ba88d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -45111,12 +45184,19 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1118822142}
   - {fileID: 963194228}
   - {fileID: 656057063}
   - {fileID: 705507995}
   - {fileID: 1911193709}
   - {fileID: 1835411482}
   - {fileID: 1016541235}
+  - {fileID: 1142113200}
+  - {fileID: 2045494112}
+  - {fileID: 622605787}
+  - {fileID: 655376972}
+  - {fileID: 986768055}
+  - {fileID: 1386332497}
   - {fileID: 1344738194}
   - {fileID: 1566877316}
   - {fileID: 1304580480}

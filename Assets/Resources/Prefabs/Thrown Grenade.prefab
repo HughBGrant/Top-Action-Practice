@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8374074354923424780}
   - component: {fileID: 9138119682869219802}
   - component: {fileID: 5555705489608112694}
-  - component: {fileID: 4749891025989416323}
+  - component: {fileID: 9167339070083010380}
   m_Layer: 8
   m_Name: Thrown Grenade
   m_TagString: Untagged
@@ -84,7 +84,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4749891025989416323
+--- !u!114 &9167339070083010380
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -93,10 +93,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7837284830516385393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11edd44b76f721b47bf4bbc1fe572bab, type: 3}
+  m_Script: {fileID: 11500000, guid: 8477b269aa5cea04fa8b42a55c3dd36e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 100
+  damage: 20
   mesh: {fileID: 7970021305599908398}
   effect: {fileID: 5300005638007739235}
 --- !u!1 &7970021305599908398
