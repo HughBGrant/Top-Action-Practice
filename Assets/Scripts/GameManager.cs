@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +13,12 @@ public class GameManager : MonoBehaviour
     private Player player;
     [SerializeField]
     private BossMonster bossMonster;
+    [SerializeField]
+    private GameObject itemShop;
+    [SerializeField]
+    private GameObject weaponShop;
+    [SerializeField]
+    private GameObject stageEntrance;
     [SerializeField]
     private int stage;
     [SerializeField]
@@ -68,7 +75,7 @@ public class GameManager : MonoBehaviour
     {
         bestScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("BestScore"));
     }
-    public void GameStart()
+    public void StartGame()
     {
         menuCamera.SetActive(false);
         ingameCamera.SetActive(true);
@@ -77,6 +84,34 @@ public class GameManager : MonoBehaviour
         ingamePanel.SetActive(true);
 
         player.gameObject.SetActive(true);
+    }
+    public void StartStage()
+    {
+        itemShop.SetActive(false);
+        weaponShop.SetActive(false);
+        stageEntrance.SetActive(false);
+
+        StartCoroutine(StartBattle());
+    }
+    public void EndStage()
+    {
+        player.transform.position = Vector3.up * 0.8f;
+
+        itemShop.SetActive(true);
+        weaponShop.SetActive(true);
+        stageEntrance.SetActive(true);
+
+        isBattling = false;
+        stage++;
+    }
+    IEnumerator StartBattle()
+    {
+        isBattling = true;
+        yield return YieldCache.WaitForSeconds(5f);
+
+        EndStage();
+
+
     }
     private void Update()
     {

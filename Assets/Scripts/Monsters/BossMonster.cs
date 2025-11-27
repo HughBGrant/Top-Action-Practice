@@ -34,7 +34,7 @@ public class BossMonster : MonsterBase
     protected override void RegisterStates()
     {
         stateMachine.AddState(new AttackState(this));
-        stateMachine.AddState(new DeadState(this));
+        stateMachine.AddState(new DeathState(this));
 
         stateMachine.ChangeState(MonsterStateType.Attack);
     }
@@ -44,7 +44,7 @@ public class BossMonster : MonsterBase
 
         if (isTrackingTarget)
         {
-            transform.LookAt(TargetTransform.position);
+            transform.LookAt(Target.transform.position);
         }
     }
 }

@@ -37,7 +37,7 @@ public class MonsterBehavior : IAttackBehavior
     {
         yield return YieldCache.WaitForSeconds(0.1f);
         monster.Rigid.isKinematic = false;
-        monster.transform.LookAt(monster.TargetTransform.position);
+        monster.transform.LookAt(monster.Target.transform.position);
         monster.Rigid.AddForce(monster.transform.forward * 20, ForceMode.Impulse);
         monster.AttackCollider.enabled = true;
         yield return YieldCache.WaitForSeconds(0.5f);
@@ -50,7 +50,7 @@ public class MonsterBehavior : IAttackBehavior
     private IEnumerator RangedAttack()
     {
         yield return YieldCache.WaitForSeconds(0.5f);
-        Vector3 spawnPos = monster.transform.position + Vector3.up * 3f;
+        Vector3 spawnPos = monster.transform.position + (Vector3.up * 3f);
         Projectile bullet = Object.Instantiate(monster.ProjectilePrefab, spawnPos, monster.transform.rotation);
         bullet.Rigid.velocity = monster.transform.forward * 20f;
 

@@ -25,11 +25,11 @@ public class BossMonsterBehavior : IAttackBehavior
         monster.Animator.SetTrigger("LaunchMissile");
         yield return new WaitForSeconds(0.2f);
         GuidedMissile missileA = (GuidedMissile)Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointA.position, monster.LaunchPointA.rotation);
-        missileA.TargetTransform = monster.TargetTransform;
+        missileA.TargetTransform = monster.Target.transform;
 
         yield return YieldCache.WaitForSeconds(0.3f);
         GuidedMissile missileB = (GuidedMissile)Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointB.position, monster.LaunchPointB.rotation);
-        missileB.TargetTransform = monster.TargetTransform;
+        missileB.TargetTransform = monster.Target.transform;
 
         yield return YieldCache.WaitForSeconds(2f);
     }
@@ -44,7 +44,7 @@ public class BossMonsterBehavior : IAttackBehavior
     }
     private IEnumerator PerformJumpAttack()
     {
-        monster.MeshAgent.SetDestination(monster.TargetTransform.position);
+        monster.MeshAgent.SetDestination(monster.Target.transform.position);
 
         monster.IsTrackingTarget = false;
         monster.MeshAgent.isStopped = false;

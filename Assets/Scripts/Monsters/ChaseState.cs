@@ -9,14 +9,14 @@ public class ChaseState : MonsterState
     }
     public override void Update()
     {
-        monster.MeshAgent.SetDestination(monster.TargetTransform.position);
+        monster.MeshAgent.SetDestination(monster.Target.transform.position);
 
         if (monster.IsTargetInAttackRange())
         {
             monster.StateMachine.ChangeState(MonsterStateType.Attack);
             return;
         }
-        if (monster.TargetTransform == null || !monster.IsTargetInChaseRange())
+        if (monster.Target == null || !monster.IsTargetInChaseRange())
         {
             monster.StateMachine.ChangeState(MonsterStateType.Idle);
         }

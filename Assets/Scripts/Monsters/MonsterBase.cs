@@ -6,54 +6,58 @@ public class MonsterBase : MonoBehaviour, IDamageable
 {
     [SerializeField]
     protected int maxHealth;
-    public int MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
+    public int MaxHealth { get { return maxHealth; } }
     [SerializeField]
     protected MonsterType type;
+    public MonsterType Type { get { return type; } }
     [SerializeField]
-    protected Transform targetTransform;
+    protected Player target;
+    public Player Target { get { return target; } }
     [SerializeField]
     protected float attackRadius;
+    public float AttackRadius { get { return attackRadius; } }
     [SerializeField]
     protected float attackRange;
+    public float AttackRange { get { return attackRange; } }
     [SerializeField]
     protected float chaseRange;
+    public float ChaseRange { get { return chaseRange; } }
     [SerializeField]
     protected Collider attackCollider;
+    public Collider AttackCollider { get { return attackCollider; } }
     [SerializeField]
     protected Projectile projectilePrefab;
+    public virtual Projectile ProjectilePrefab { get { return projectilePrefab; } }
+    [SerializeField]
+    protected int rewardScore;
+    public int RewardScore { get { return rewardScore; } }
+    [SerializeField]
+    protected GameObject[] rewardCoins;
+    public GameObject[] RewardCoins { get { return rewardCoins; } }
 
     [SerializeField]
     protected int currentHealth;
     public int CurrentHealth { get { return currentHealth; } set { currentHealth = value; } }
     protected bool isDead;
+    public bool IsDead { get { return isDead; } private set { isDead = value; } }
     protected float distance;
+    public float Distance { get { return distance; } set { distance = value; } }
 
     protected IAttackBehavior behavior;
+    public virtual IAttackBehavior Behavior { get { return behavior; } set { behavior = value; } }
     protected MonsterStateMachine stateMachine;
+    public MonsterStateMachine StateMachine { get { return stateMachine; } set { stateMachine = value; } }
 
     protected Rigidbody rigid;
+    public Rigidbody Rigid { get { return rigid; } }
     protected NavMeshAgent meshAgent;
+    public NavMeshAgent MeshAgent { get { return meshAgent; } }
     protected Animator animator;
+    public Animator Animator { get { return animator; } }
     protected MeshRenderer[] meshes;
+    public MeshRenderer[] Meshes { get { return meshes; } }
 
     protected Coroutine hitCo;
-
-    public MonsterType Type { get { return type; } }
-    public Transform TargetTransform { get { return targetTransform; } }
-
-    public float AttackRadius { get { return attackRadius; } }
-    public float AttackRange { get { return attackRange; } }
-    public float ChaseRange { get { return chaseRange; } }
-    public Collider AttackCollider { get { return attackCollider; } }
-    public virtual Projectile ProjectilePrefab { get { return projectilePrefab; } }
-    public bool IsDead { get { return isDead; } private set { isDead = value; } }
-    public float Distance { get { return distance; } set { distance = value; } }
-    public virtual IAttackBehavior Behavior { get { return behavior; } set { behavior = value; } }
-    public MonsterStateMachine StateMachine { get { return stateMachine; } set { stateMachine = value; } }
-    public Rigidbody Rigid { get { return rigid; } }
-    public Animator Animator { get { return animator; } }
-    public NavMeshAgent MeshAgent { get { return meshAgent; } }
-    public MeshRenderer[] Meshes { get { return meshes; } }
 
     protected virtual void Awake()
     {
@@ -72,7 +76,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
         StateMachine.AddState(new IdleState(this));
         StateMachine.AddState(new ChaseState(this));
         StateMachine.AddState(new AttackState(this));
-        StateMachine.AddState(new DeadState(this));
+        StateMachine.AddState(new DeathState(this));
 
         StateMachine.ChangeState(MonsterStateType.Idle);
     }
@@ -82,7 +86,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
     }
     protected virtual void Update()
     {
-        Distance = Vector3.Distance(transform.position, TargetTransform.position);
+        Distance = Vector3.Distance(transform.position, Target.transform.position);
 
         StateMachine.Update();
     }
@@ -95,7 +99,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
         {
             IsDead = true;
 
-            DeadState deadState = StateMachine.GetState<DeadState>();
+            DeathState deadState = StateMachine.GetState<DeathState>();
             deadState.SetDeathInfo(hitPoint, isHitGrenade);
             StateMachine.ChangeState(MonsterStateType.Dead);
         }

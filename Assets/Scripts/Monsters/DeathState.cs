@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class DeadState : MonsterState
+public class DeathState : MonsterState
 {
     public override MonsterStateType StateType { get { return MonsterStateType.Dead; } }
     private Vector3 hitPoint;
     private bool isHitGrenade;
-    public DeadState(MonsterBase monster) : base(monster) { }
+    public DeathState(MonsterBase monster) : base(monster) { }
     public override void Enter()
     {
         monster.MeshAgent.enabled = false;
@@ -18,18 +18,19 @@ public class DeadState : MonsterState
         }
         monster.gameObject.layer = LayerMask.NameToLayer("DeadMonster");
 
-        Vector3 hitDir = (monster.transform.position - hitPoint).normalized + Vector3.up * (isHitGrenade ? 3f : 1f);
+        Vector3 hitDir = (monster.transform.position - hitPoint).normalized + (Vector3.up * (isHitGrenade ? 3f : 1f));
         monster.Rigid.AddForce(hitDir * 5f, ForceMode.Impulse);
+        monster.Target.Score += monster.RewardScore;
+        int randomIndex = Random.Range(0, 3);
+        Object.Instantiate(monster.RewardCoins[randomIndex], monster.transform);
+
 
         if (isHitGrenade)
         {
             monster.Rigid.AddTorque(hitDir * 15, ForceMode.Impulse);
         }
 
-        if (monster.Type != MonsterType.Boss)
-        {
-            Object.Destroy(monster.gameObject, 2f);
-        }
+        Object.Destroy(monster.gameObject, 2f);
     }
     public void SetDeathInfo(Vector3 hitPoint, bool isHitGrenade)
     {
