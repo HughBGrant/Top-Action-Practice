@@ -2895,6 +2895,8 @@ RectTransform:
   m_Children:
   - {fileID: 1540594730}
   - {fileID: 1888004397}
+  - {fileID: 1605928314}
+  - {fileID: 1082234939}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3582,7 +3584,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!199 &598190933
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -15715,7 +15717,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!199 &982331078
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -21439,7 +21441,7 @@ RectTransform:
   m_GameObject: {fileID: 1082234938}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.354375, y: 0.354375, z: 0.354375}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 263930643}
@@ -21448,11 +21450,11 @@ RectTransform:
   - {fileID: 1218764555}
   - {fileID: 1400617435}
   - {fileID: 1419098165}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 514294096}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 960, y: 1885.5095}
+  m_AnchoredPosition: {x: 1748.9946, y: 4695.9}
   m_SizeDelta: {x: 1000, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1082234940
@@ -21562,14 +21564,22 @@ MonoBehaviour:
   itemShop: {fileID: 1835411481}
   weaponShop: {fileID: 1016541234}
   stageEntrance: {fileID: 733058420}
-  stage: 0
+  stage: 2
   playTime: 0
   isBattling: 0
   monsterACount: 0
   monsterBCount: 0
   monsterCCount: 0
-  monsterSpawnPoints: []
-  monsterPrefabs: []
+  monsterSpawnPoints:
+  - {fileID: 598190935}
+  - {fileID: 1528565360}
+  - {fileID: 982331080}
+  - {fileID: 1372304764}
+  monsterPrefabs:
+  - {fileID: 629154110944692800, guid: b489f4a1d1006ad4ca973bfb0c2affbc, type: 3}
+  - {fileID: 4491480250528988386, guid: 7e63044dd8e2fe2479b1c310d5879e79, type: 3}
+  - {fileID: 5818566713897337022, guid: 8b10f6346ec8f1e46a3e5d14f19d836c, type: 3}
+  - {fileID: 7337040727317662826, guid: 1ddca82d2fa363a43aa8fa76bdb749b7, type: 3}
   monsterList: 
   mainMenuPanel: {fileID: 1888004396}
   hudPanel: {fileID: 1540594729}
@@ -28907,7 +28917,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!199 &1372304762
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -39029,7 +39039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!199 &1528565358
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -49665,7 +49675,7 @@ RectTransform:
   m_GameObject: {fileID: 1605928313}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.354375, y: 0.354375, z: 0.354375}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 972181692}
@@ -49674,11 +49684,11 @@ RectTransform:
   - {fileID: 1928305410}
   - {fileID: 664399668}
   - {fileID: 1328512826}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 514294096}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 960, y: 1446.6313}
+  m_AnchoredPosition: {x: 1748.9946, y: 3457.4429}
   m_SizeDelta: {x: 1000, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1605928315
@@ -68235,6 +68245,4 @@ SceneRoots:
   - {fileID: 1835411482}
   - {fileID: 1016541235}
   - {fileID: 514294096}
-  - {fileID: 1605928314}
-  - {fileID: 1082234939}
   - {fileID: 1502053227}

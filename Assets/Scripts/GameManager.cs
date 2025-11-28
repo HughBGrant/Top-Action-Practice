@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Transform[] monsterSpawnPoints;
     [SerializeField]
-    private GameObject[] monsterPrefabs;
+    private MonsterBase[] monsterPrefabs;
     [SerializeField]
     private List<int> monsterList;
 
@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         bestScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("BestScore"));
+
+        monsterList = new List<int>();
     }
     public void StartGame()
     {
@@ -73,6 +75,11 @@ public class GameManager : MonoBehaviour
         weaponShop.SetActive(false);
         stageEntrance.SetActive(false);
 
+        foreach (Transform spawnPoint in monsterSpawnPoints)
+        {
+            spawnPoint.gameObject.SetActive(true);
+        }
+
         StartCoroutine(StartBattle());
     }
     public void EndStage()
@@ -83,15 +90,31 @@ public class GameManager : MonoBehaviour
         weaponShop.SetActive(true);
         stageEntrance.SetActive(true);
 
+        foreach (Transform spawnPoint in monsterSpawnPoints)
+        {
+            spawnPoint.gameObject.SetActive(false);
+        }
         isBattling = false;
         stage++;
     }
     IEnumerator StartBattle()
     {
         isBattling = true;
-        yield return YieldCache.WaitForSeconds(5f);
 
-        EndStage();
+        for (int i = 0; i < stage; i++)
+        {
+            int randomIndex = Random.Range(0, 3);
+            monsterList.Add(randomIndex);
+        }
+        for (int i = 0; i < monsterList.Count; i++)
+        {
+            int randomIndex = Random.Range(0, 4);
+            MonsterBase monster = Instantiate(monsterPrefabs[monsterList[i]], monsterSpawnPoints[randomIndex].position, monsterSpawnPoints[randomIndex].rotation);
+            monster.Target = player;
+
+            yield return YieldCache.WaitForSeconds(4f);
+
+        }
     }
     private void Update()
     {

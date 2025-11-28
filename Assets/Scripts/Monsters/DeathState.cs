@@ -21,7 +21,7 @@ public class DeathState : MonsterState
         Vector3 hitDir = (monster.transform.position - hitPoint).normalized + (Vector3.up * (isHitGrenade ? 3f : 1f));
         monster.Rigid.AddForce(hitDir * 5f, ForceMode.Impulse);
         monster.Target.Score += monster.RewardScore;
-        int randomIndex = Random.Range(0, 3);
+        int randomIndex = Random.Range(0, monster.RewardCoins.Length);
         Object.Instantiate(monster.RewardCoins[randomIndex], monster.transform);
 
 

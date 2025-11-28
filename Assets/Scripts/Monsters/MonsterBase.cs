@@ -12,7 +12,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
     public MonsterType Type { get { return type; } }
     [SerializeField]
     protected Player target;
-    public Player Target { get { return target; } }
+    public Player Target { get { return target; } set { target = value; } }
     [SerializeField]
     protected float attackRadius;
     public float AttackRadius { get { return attackRadius; } }

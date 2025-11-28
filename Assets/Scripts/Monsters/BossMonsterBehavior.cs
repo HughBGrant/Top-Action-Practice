@@ -11,11 +11,11 @@ public class BossMonsterBehavior : IAttackBehavior
     public IEnumerator ExecuteAttack()
     {
         yield return YieldCache.WaitForSeconds(0.1f);
-        float rand = Random.value;
+        float randomValue = Random.value;
 
-        if (rand < 0.01f)
+        if (randomValue < 0.01f)
             yield return PerformMissileAttack();
-        else if (rand < 0.02f)
+        else if (randomValue < 0.02f)
             yield return PerformRockThrow();
         else
             yield return PerformJumpAttack();
