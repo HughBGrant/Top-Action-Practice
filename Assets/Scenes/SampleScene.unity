@@ -3577,7 +3577,7 @@ GameObject:
   - component: {fileID: 598190934}
   - component: {fileID: 598190933}
   m_Layer: 14
-  m_Name: Stage Entrance (1)
+  m_Name: Monster Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8388,12 +8388,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 598190932}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 50}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 78.000015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1045460247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &613232431
 GameObject:
@@ -8990,7 +8990,7 @@ GameObject:
   - component: {fileID: 656057061}
   - component: {fileID: 656057060}
   m_Layer: 0
-  m_Name: Menu Camera
+  m_Name: MainMenuCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15423,7 +15423,7 @@ GameObject:
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
   m_Layer: 0
-  m_Name: Ingame Camera
+  m_Name: InGameCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15710,7 +15710,7 @@ GameObject:
   - component: {fileID: 982331079}
   - component: {fileID: 982331078}
   m_Layer: 14
-  m_Name: Stage Entrance (3)
+  m_Name: Monster Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20521,12 +20521,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982331077}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 50, y: 1, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 50, y: 0, z: 28.000013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1045460247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &986768055
 PrefabInstance:
@@ -21057,6 +21057,41 @@ RectTransform:
   m_AnchoredPosition: {x: -20, y: 20}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 0}
+--- !u!1 &1045460246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1045460247}
+  m_Layer: 0
+  m_Name: Monster Spawn Point Group
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1045460247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045460246}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.000009536743, y: 0.99999666, z: -28.000013}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 598190935}
+  - {fileID: 1528565360}
+  - {fileID: 982331080}
+  - {fileID: 1372304764}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1046622755
 GameObject:
   m_ObjectHideFlags: 0
@@ -21521,10 +21556,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1ae83551dbd5c343bfc332b273ceeb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuCamera: {fileID: 656057059}
-  ingameCamera: {fileID: 963194225}
+  mainMenuCamera: {fileID: 656057059}
+  inGameCamera: {fileID: 963194225}
   player: {fileID: 1290166530}
-  bossMonster: {fileID: 0}
+  bossMonster: {fileID: 7337040727317662826, guid: 1ddca82d2fa363a43aa8fa76bdb749b7, type: 3}
   itemShop: {fileID: 1835411481}
   weaponShop: {fileID: 1016541234}
   stageEntrance: {fileID: 733058420}
@@ -21534,8 +21569,11 @@ MonoBehaviour:
   monsterACount: 0
   monsterBCount: 0
   monsterCCount: 0
-  menuPanel: {fileID: 1888004396}
-  ingamePanel: {fileID: 1540594729}
+  monsterSpawnPoints: []
+  monsterPrefabs: []
+  monsterList: 
+  mainMenuPanel: {fileID: 1888004396}
+  hudPanel: {fileID: 1540594729}
   bestScoreText: {fileID: 1892554180}
   scoreText: {fileID: 238998945}
   stageText: {fileID: 1049234383}
@@ -28880,7 +28918,7 @@ GameObject:
   - component: {fileID: 1372304763}
   - component: {fileID: 1372304762}
   m_Layer: 14
-  m_Name: Stage Entrance (4)
+  m_Name: Monster Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33691,12 +33729,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1372304761}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 1, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -50, y: 0, z: 28.000013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1045460247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1374442656 stripped
 GameObject:
@@ -39002,7 +39040,7 @@ GameObject:
   - component: {fileID: 1528565359}
   - component: {fileID: 1528565358}
   m_Layer: 14
-  m_Name: Stage Entrance (2)
+  m_Name: Monster Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43813,12 +43851,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528565357}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -50}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -21.999987}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1045460247}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1532534159 stripped
 GameObject:
@@ -48693,10 +48731,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1540594730}
+  - component: {fileID: 1540594733}
   - component: {fileID: 1540594732}
   - component: {fileID: 1540594731}
   m_Layer: 5
-  m_Name: Ingame Panel
+  m_Name: HudPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48767,6 +48806,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540594729}
   m_CullTransparentMesh: 1
+--- !u!114 &1540594733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1540594729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9270e942d5134504c822f32389b9fd7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1544509305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -65752,7 +65803,7 @@ GameObject:
   - component: {fileID: 1888004399}
   - component: {fileID: 1888004398}
   m_Layer: 5
-  m_Name: Menu Panel
+  m_Name: MainMenuPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68173,18 +68224,15 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1118822142}
-  - {fileID: 963194228}
   - {fileID: 656057063}
+  - {fileID: 963194228}
   - {fileID: 705507995}
-  - {fileID: 733058424}
-  - {fileID: 598190935}
-  - {fileID: 1528565360}
-  - {fileID: 982331080}
-  - {fileID: 1372304764}
+  - {fileID: 1566877316}
   - {fileID: 1911193709}
+  - {fileID: 1344738194}
+  - {fileID: 733058424}
+  - {fileID: 1045460247}
   - {fileID: 1835411482}
   - {fileID: 1016541235}
-  - {fileID: 1344738194}
-  - {fileID: 1566877316}
   - {fileID: 514294096}
   - {fileID: 1502053227}

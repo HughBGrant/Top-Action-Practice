@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,9 +7,9 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject menuCamera;
+    private GameObject mainMenuCamera;
     [SerializeField]
-    private GameObject ingameCamera;
+    private GameObject inGameCamera;
     [SerializeField]
     private Player player;
     [SerializeField]
@@ -33,11 +34,17 @@ public class GameManager : MonoBehaviour
     private int monsterCCount;
     //private float[] stats = new float[(int)StatType.Count];
     //public float this[StatType e] { get => stats[(int)e]; set => stats[(int)e] = value; }
+    [SerializeField]
+    private Transform[] monsterSpawnPoints;
+    [SerializeField]
+    private GameObject[] monsterPrefabs;
+    [SerializeField]
+    private List<int> monsterList;
 
     [SerializeField]
-    private GameObject menuPanel;
+    private GameObject mainMenuPanel;
     [SerializeField]
-    private GameObject ingamePanel;
+    private GameObject hudPanel;
     [SerializeField]
     private TextMeshProUGUI bestScoreText;
     [SerializeField]
@@ -77,11 +84,11 @@ public class GameManager : MonoBehaviour
     }
     public void StartGame()
     {
-        menuCamera.SetActive(false);
-        ingameCamera.SetActive(true);
+        mainMenuCamera.SetActive(false);
+        inGameCamera.SetActive(true);
 
-        menuPanel.SetActive(false);
-        ingamePanel.SetActive(true);
+        mainMenuPanel.SetActive(false);
+        hudPanel.SetActive(true);
 
         player.gameObject.SetActive(true);
     }
