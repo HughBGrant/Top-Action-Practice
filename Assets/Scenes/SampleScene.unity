@@ -1788,7 +1788,7 @@ GameObject:
   - component: {fileID: 313827322}
   - component: {fileID: 313827321}
   m_Layer: 5
-  m_Name: Time Text
+  m_Name: Play Time Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15347,7 +15347,7 @@ GameObject:
   - component: {fileID: 933106064}
   - component: {fileID: 933106063}
   m_Layer: 5
-  m_Name: Time Image
+  m_Name: Play Time Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21437,9 +21437,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1082234938}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.354375, y: 0.354375, z: 0.354375}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 263930643}
@@ -21448,11 +21448,11 @@ RectTransform:
   - {fileID: 1218764555}
   - {fileID: 1400617435}
   - {fileID: 1419098165}
-  m_Father: {fileID: 1540594730}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1534}
+  m_AnchoredPosition: {x: 960, y: 1885.5095}
   m_SizeDelta: {x: 1000, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1082234940
@@ -21559,7 +21559,6 @@ MonoBehaviour:
   mainMenuCamera: {fileID: 656057059}
   inGameCamera: {fileID: 963194225}
   player: {fileID: 1290166530}
-  bossMonster: {fileID: 7337040727317662826, guid: 1ddca82d2fa363a43aa8fa76bdb749b7, type: 3}
   itemShop: {fileID: 1835411481}
   weaponShop: {fileID: 1016541234}
   stageEntrance: {fileID: 733058420}
@@ -21575,21 +21574,6 @@ MonoBehaviour:
   mainMenuPanel: {fileID: 1888004396}
   hudPanel: {fileID: 1540594729}
   bestScoreText: {fileID: 1892554180}
-  scoreText: {fileID: 238998945}
-  stageText: {fileID: 1049234383}
-  playTimeText: {fileID: 313827321}
-  playerHealthText: {fileID: 1294820117}
-  playerAmmoText: {fileID: 1274991301}
-  playerCoinText: {fileID: 578441311}
-  weapon1Image: {fileID: 1782353962}
-  weapon2Image: {fileID: 2010588431}
-  weapon3Image: {fileID: 902881804}
-  weaponRImage: {fileID: 1338040768}
-  monsterAText: {fileID: 374766385}
-  monsterBText: {fileID: 138930647}
-  monsterCText: {fileID: 502531054}
-  bossHealthGroup: {fileID: 869630987}
-  bossHealthBar: {fileID: 1610073113}
 --- !u!4 &1118822142
 Transform:
   m_ObjectHideFlags: 0
@@ -48757,10 +48741,8 @@ RectTransform:
   - {fileID: 869630987}
   - {fileID: 1146447990}
   - {fileID: 989381172}
-  - {fileID: 1043224597}
   - {fileID: 963859192}
-  - {fileID: 1605928314}
-  - {fileID: 1082234939}
+  - {fileID: 1043224597}
   m_Father: {fileID: 514294096}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -48815,9 +48797,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 1540594729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9270e942d5134504c822f32389b9fd7f, type: 3}
+  m_Script: {fileID: 11500000, guid: 1dfb40fe65fc41945a0592fd7a136b9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1118822141}
+  player: {fileID: 1290166530}
+  scoreText: {fileID: 238998945}
+  bossHealthGroup: {fileID: 869630987}
+  bossHealthBar: {fileID: 814618964}
+  bossMonster: {fileID: 0}
+  stageText: {fileID: 1049234383}
+  playTimeText: {fileID: 313827321}
+  playerHealthText: {fileID: 1294820117}
+  playerAmmoText: {fileID: 1274991301}
+  playerCoinText: {fileID: 578441311}
+  weapon1Image: {fileID: 1782353962}
+  weapon2Image: {fileID: 2010588431}
+  weapon3Image: {fileID: 902881804}
+  weaponRImage: {fileID: 1338040768}
+  monsterAText: {fileID: 374766385}
+  monsterBText: {fileID: 138930647}
+  monsterCText: {fileID: 502531054}
 --- !u!1001 &1544509305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -49663,9 +49663,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1605928313}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.354375, y: 0.354375, z: 0.354375}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 972181692}
@@ -49674,11 +49674,11 @@ RectTransform:
   - {fileID: 1928305410}
   - {fileID: 664399668}
   - {fileID: 1328512826}
-  m_Father: {fileID: 1540594730}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1000}
+  m_AnchoredPosition: {x: 960, y: 1446.6313}
   m_SizeDelta: {x: 1000, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1605928315
@@ -68235,4 +68235,6 @@ SceneRoots:
   - {fileID: 1835411482}
   - {fileID: 1016541235}
   - {fileID: 514294096}
+  - {fileID: 1605928314}
+  - {fileID: 1082234939}
   - {fileID: 1502053227}
