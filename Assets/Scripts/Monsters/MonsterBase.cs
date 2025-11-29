@@ -5,6 +5,8 @@ using UnityEngine.AI;
 public class MonsterBase : MonoBehaviour, IDamageable
 {
     [SerializeField]
+    private GameManager gameManager;
+    [SerializeField]
     protected int maxHealth;
     public int MaxHealth { get { return maxHealth; } }
     [SerializeField]
@@ -61,6 +63,10 @@ public class MonsterBase : MonoBehaviour, IDamageable
 
     protected virtual void Awake()
     {
+        if (gameManager == null)
+        {
+            gameManager = GameManager.Instance;
+        }
         rigid = GetComponent<Rigidbody>();
         meshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();

@@ -19,7 +19,6 @@ public class GuidedMissile : Projectile
     }
     private void Update()
     {
-        Debug.Log(TargetTransform);
     }
     public IEnumerator TrackTarget()
     {

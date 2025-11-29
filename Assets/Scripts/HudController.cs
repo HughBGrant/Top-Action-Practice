@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class HudController : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
+    [SerializeField]
+    private GameManager gameManager;
     [SerializeField]
     private Player player;
     [Header("Score")]
@@ -88,6 +89,14 @@ public class HudController : MonoBehaviour
         monsterAText.text = gameManager.MonsterACount.ToString();
         monsterBText.text = gameManager.MonsterBCount.ToString();
         monsterCText.text = gameManager.MonsterCCount.ToString();
-        //bossHealthBar.localScale = new Vector3((float)bossMonster.CurrentHealth / bossMonster.MaxHealth, 1, 1);
+        if (bossMonster != null)
+        {
+            bossHealthGroup.anchoredPosition = Vector3.down * 30;
+            bossHealthBar.localScale = new Vector3((float)bossMonster.CurrentHealth / bossMonster.MaxHealth, 1, 1);
+        }
+        else
+        {
+            bossHealthGroup.anchoredPosition = Vector3.up * 200;
+        }
     }
 }

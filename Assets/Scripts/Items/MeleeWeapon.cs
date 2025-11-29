@@ -36,11 +36,9 @@ public class MeleeWeapon : WeaponBase
         attackCollider.enabled = true;
         trailEffect.enabled = true;
 
-        yield return YieldCache.WaitForSeconds(0.3f);
-        attackCollider.enabled = false;
-
-        yield return YieldCache.WaitForSeconds(0.3f);
+        yield return YieldCache.WaitForSeconds(0.6f);
         trailEffect.enabled = false;
+        attackCollider.enabled = false;
 
         swingCo = null;
     }
@@ -48,6 +46,7 @@ public class MeleeWeapon : WeaponBase
     {
         if (other.TryGetComponent(out IDamageable target))
         {
+            Debug.Log("sdfsdfsd");
             target.TakeDamage(damage, transform.position);
         }
     }

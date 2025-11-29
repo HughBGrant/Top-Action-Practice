@@ -21564,12 +21564,13 @@ MonoBehaviour:
   itemShop: {fileID: 1835411481}
   weaponShop: {fileID: 1016541234}
   stageEntrance: {fileID: 733058420}
-  stage: 2
+  stage: 0
   playTime: 0
   isBattling: 0
   monsterACount: 0
   monsterBCount: 0
   monsterCCount: 0
+  monsterDCount: 0
   monsterSpawnPoints:
   - {fileID: 598190935}
   - {fileID: 1528565360}
@@ -21580,7 +21581,7 @@ MonoBehaviour:
   - {fileID: 4491480250528988386, guid: 7e63044dd8e2fe2479b1c310d5879e79, type: 3}
   - {fileID: 5818566713897337022, guid: 8b10f6346ec8f1e46a3e5d14f19d836c, type: 3}
   - {fileID: 7337040727317662826, guid: 1ddca82d2fa363a43aa8fa76bdb749b7, type: 3}
-  monsterList: 
+  bossMonster: {fileID: 0}
   mainMenuPanel: {fileID: 1888004396}
   hudPanel: {fileID: 1540594729}
   bestScoreText: {fileID: 1892554180}
@@ -27790,7 +27791,7 @@ MonoBehaviour:
     m_Bits: 64
   health: 0
   ammo: 100
-  coin: 4000
+  coin: 5500
   score: 0
   belongingWeapons:
   - {fileID: 1348174882717130290}
@@ -67274,8 +67275,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1873072231039698056}
-  - component: {fileID: 799233089}
   - component: {fileID: 799233090}
+  - component: {fileID: 799233089}
   m_Layer: 7
   m_Name: Weapon Hammer
   m_TagString: Melee

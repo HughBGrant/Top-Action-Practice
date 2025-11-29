@@ -24,13 +24,28 @@ public class DeathState : MonsterState
         int randomIndex = Random.Range(0, monster.RewardCoins.Length);
         Object.Instantiate(monster.RewardCoins[randomIndex], monster.transform);
 
+        switch (monster.Type)
+        {
+            case MonsterType.A:
+                GameManager.Instance.MonsterACount--;
+                break;
+            case MonsterType.B:
+                GameManager.Instance.MonsterBCount--;
+                break;
+            case MonsterType.C:
+                GameManager.Instance.MonsterCCount--;
+                break;
+            case MonsterType.Boss:
+                GameManager.Instance.MonsterDCount--;
+                break;
+        }
 
         if (isHitGrenade)
         {
             monster.Rigid.AddTorque(hitDir * 15, ForceMode.Impulse);
         }
 
-        Object.Destroy(monster.gameObject, 2f);
+        Object.Destroy(monster.gameObject, 3f);
     }
     public void SetDeathInfo(Vector3 hitPoint, bool isHitGrenade)
     {

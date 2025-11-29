@@ -13,9 +13,9 @@ public class BossMonsterBehavior : IAttackBehavior
         yield return YieldCache.WaitForSeconds(0.1f);
         float randomValue = Random.value;
 
-        if (randomValue < 0.01f)
+        if (randomValue < 0.4f)
             yield return PerformMissileAttack();
-        else if (randomValue < 0.02f)
+        else if (randomValue < 0.8f)
             yield return PerformRockThrow();
         else
             yield return PerformJumpAttack();
@@ -44,11 +44,11 @@ public class BossMonsterBehavior : IAttackBehavior
     }
     private IEnumerator PerformJumpAttack()
     {
-        monster.MeshAgent.SetDestination(monster.Target.transform.position);
-
         monster.IsTrackingTarget = false;
-        monster.MeshAgent.isStopped = false;
         monster.MainCollider.enabled = false;
+        yield return null;
+        monster.MeshAgent.isStopped = false;
+        monster.MeshAgent.SetDestination(monster.Target.transform.position);
         monster.Animator.SetTrigger("JumpAttack");
         yield return YieldCache.WaitForSeconds(1.5f);
 

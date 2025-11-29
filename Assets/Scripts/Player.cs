@@ -107,12 +107,14 @@ public class Player : MonoBehaviour, IDamageable
     private static readonly int DodgeHash = Animator.StringToHash("Dodge");
     private static readonly int SwapHash = Animator.StringToHash("Swap");
     private static readonly int ReloadHash = Animator.StringToHash("Reload");
+    private static readonly int DieHash = Animator.StringToHash("Die");
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
         cam = Camera.main;
+        Health = HealthCap;
 
         //PlayerPrefs.SetInt("BestScore", 112500);
         Debug.Log(PlayerPrefs.GetInt("BestScore"));
@@ -365,6 +367,10 @@ public class Player : MonoBehaviour, IDamageable
 
         Health -= damage;
 
+        if (health <= 0)
+        {
+            Die();
+        }
     }
     private IEnumerator HitFlash()
     {
@@ -382,6 +388,10 @@ public class Player : MonoBehaviour, IDamageable
         }
         isTakingDamage = false;
         hitCo = null;
+    }
+    void Die()
+    {
+        animator.SetTrigger(DieHash);
     }
     private void OnTriggerEnter(Collider other)
     {
