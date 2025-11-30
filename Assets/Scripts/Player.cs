@@ -100,14 +100,6 @@ public class Player : MonoBehaviour, IDamageable
     private const int GrenadeCountCap = 4;
     private const float MoveEpsilon = 0.0001f;
 
-    private static readonly int IsRunningHash = Animator.StringToHash("IsRunning");
-    private static readonly int IsWalkingHash = Animator.StringToHash("IsWalking");
-    private static readonly int IsJumpingHash = Animator.StringToHash("IsJumping");
-    private static readonly int JumpHash = Animator.StringToHash("Jump");
-    private static readonly int DodgeHash = Animator.StringToHash("Dodge");
-    private static readonly int SwapHash = Animator.StringToHash("Swap");
-    private static readonly int ReloadHash = Animator.StringToHash("Reload");
-    private static readonly int DieHash = Animator.StringToHash("Die");
     void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -170,8 +162,8 @@ public class Player : MonoBehaviour, IDamageable
             }
         }
         //애니메이션
-        animator.SetBool(IsRunningHash, isRunning);
-        animator.SetBool(IsWalkingHash, isWalking);
+        animator.SetBool(AnimID.IsRunningHash, isRunning);
+        animator.SetBool(AnimID.IsWalkingHash, isWalking);
     }
     private void HandleJumpFall()
     {
@@ -189,7 +181,7 @@ public class Player : MonoBehaviour, IDamageable
         }
         if (wasJumping != isJumping)
         {
-            animator.SetBool(IsJumpingHash, isJumping);
+            animator.SetBool(AnimID.IsJumpingHash, isJumping);
         }
     }
     public void OnRun(InputAction.CallbackContext context)
@@ -210,13 +202,13 @@ public class Player : MonoBehaviour, IDamageable
         {
             shouldJump = true;
             isJumping = true;
-            animator.SetTrigger(JumpHash);
-            animator.SetBool(IsJumpingHash, isJumping);
+            animator.SetTrigger(AnimID.JumpHash);
+            animator.SetBool(AnimID.IsJumpingHash, isJumping);
         }
         else
         {
             dodgeDirection = moveDirection;
-            animator.SetTrigger(DodgeHash);
+            animator.SetTrigger(AnimID.DodgeHash);
             RestartRoutine(ref dodgeCo, PerformDodge());
         }
     }
@@ -240,7 +232,7 @@ public class Player : MonoBehaviour, IDamageable
         if (!context.started || isJumping || isDodging || isSwapping || isAttacking || isShopping) { return; }
         if (currentWeapon == null || currentWeapon is MeleeWeapon || ammo == 0) { return; }
 
-        animator.SetTrigger(ReloadHash);
+        animator.SetTrigger(AnimID.ReloadHash);
         isReloading = true;
         RestartRoutine(ref reloadCo, ReloadBullet());
     }
@@ -287,7 +279,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             currentWeapon = weapon;
             currentWeapon.gameObject.SetActive(true);
-            animator.SetTrigger(SwapHash);
+            animator.SetTrigger(AnimID.SwapHash);
             RestartRoutine(ref swapCo, SwapWeapon());
         }
     }
@@ -391,11 +383,11 @@ public class Player : MonoBehaviour, IDamageable
     }
     void Die()
     {
-        animator.SetTrigger(DieHash);
+        animator.SetTrigger(AnimID.DieHash);
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == Layer.Item)
+        if (other.gameObject.layer == LayerID.Item)
         {
             if (!other.TryGetComponent(out Item item)) { return; }
 
@@ -405,18 +397,18 @@ public class Player : MonoBehaviour, IDamageable
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == Layer.Weapon || other.gameObject.layer == Layer.Shop)
+        if (other.gameObject.layer == LayerID.Weapon || other.gameObject.layer == LayerID.Shop)
         {
             nearObject = other.gameObject;
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == Layer.Weapon)
+        if (other.gameObject.layer == LayerID.Weapon)
         {
             nearObject = null;
         }
-        else if (other.gameObject.layer == Layer.Shop)
+        else if (other.gameObject.layer == LayerID.Shop)
         {
             if (nearObject.TryGetComponent(out Shop shop))
             {

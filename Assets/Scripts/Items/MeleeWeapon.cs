@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class MeleeWeapon : WeaponBase
 {
-    private static readonly int SwingHash = Animator.StringToHash("Swing");
 
     [SerializeField]
     private int damage;
@@ -15,7 +14,7 @@ public class MeleeWeapon : WeaponBase
 
     private Coroutine swingCo;
 
-    public override int AttackHash { get { return SwingHash; } }
+    public override int AttackHash { get { return AnimID.SwingHash; } }
 
     private void Awake()
     {

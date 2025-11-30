@@ -16,7 +16,7 @@ public class AttackState : MonsterState
     {
         if (monster is not BossMonster)
         {
-            monster.Animator.SetBool("IsAttacking", true);
+            monster.Animator.SetBool(AnimID.IsAttackingHash, true);
         }
         if (monster.Behavior is IAttackBehavior attackBehavior)
         {
@@ -41,7 +41,7 @@ public class AttackState : MonsterState
         }
         if (monster is not BossMonster)
         {
-            monster.Animator.SetBool("IsAttacking", false);
+            monster.Animator.SetBool(AnimID.IsAttackingHash, false);
         }
     }
 }

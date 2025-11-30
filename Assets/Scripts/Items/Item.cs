@@ -25,7 +25,7 @@ public class Item : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == Layer.Ground)
+        if (collision.gameObject.layer == LayerID.Ground)
         {
             rigid.isKinematic = true;
             groundChecker.enabled = false;

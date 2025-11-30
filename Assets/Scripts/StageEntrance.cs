@@ -7,7 +7,7 @@ public class StageEntrance : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == Layer.Player)
+        if (other.gameObject.layer == LayerID.Player)
         {
             gameManager.StartStage();
         }

@@ -11,7 +11,7 @@ public class BossRock : IDamageSource
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == Layer.Wall)
+        if (collision.gameObject.layer == LayerID.Wall)
         {
             Destroy(gameObject);
             return;

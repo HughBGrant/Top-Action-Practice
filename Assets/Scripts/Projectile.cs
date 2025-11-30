@@ -10,7 +10,7 @@ public class Projectile : IDamageSource
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == Layer.Wall)
+        if (other.gameObject.layer == LayerID.Wall)
         {
             Destroy(gameObject);
             return;

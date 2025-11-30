@@ -10,7 +10,7 @@ public class DeathState : MonsterState
     {
         monster.MeshAgent.enabled = false;
 
-        monster.Animator.SetTrigger("Die");
+        monster.Animator.SetTrigger(AnimID.DieHash);
 
         foreach (MeshRenderer mesh in monster.Meshes)
         {

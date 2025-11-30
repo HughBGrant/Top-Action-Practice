@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-static class YieldCache
+public static class YieldCache
 {
     class FloatComparer : IEqualityComparer<float>
     {

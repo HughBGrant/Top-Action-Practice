@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -33,7 +32,7 @@ public class Shop : MonoBehaviour
     // Update is called once per frame
     public void ExitShop()
     {
-        animator.SetTrigger("Greet");
+        animator.SetTrigger(AnimID.GreetHash);
         uiGroup.anchoredPosition = Vector3.down * 1000;
 
     }
@@ -51,7 +50,7 @@ public class Shop : MonoBehaviour
             return;
         }
         enterPlayer.Coin -= price;
-        Vector3 ranVec = Vector3.right * Random.Range(-3, 3) + Vector3.forward * Random.Range(-3, 3);
+        Vector3 ranVec = (Vector3.right * Random.Range(-3, 3)) + (Vector3.forward * Random.Range(-3, 3));
         Instantiate(itemObjects[index], itemSpawnPoints[index].position + ranVec, itemSpawnPoints[index].rotation);
     }
     IEnumerator Talk()

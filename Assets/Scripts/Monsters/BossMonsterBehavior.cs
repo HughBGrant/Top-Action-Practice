@@ -22,7 +22,7 @@ public class BossMonsterBehavior : IAttackBehavior
     }
     private IEnumerator PerformMissileAttack()
     {
-        monster.Animator.SetTrigger("LaunchMissile");
+        monster.Animator.SetTrigger(AnimID.LaunchMissileHash);
         yield return new WaitForSeconds(0.2f);
         GuidedMissile missileA = (GuidedMissile)Object.Instantiate(monster.ProjectilePrefab, monster.LaunchPointA.position, monster.LaunchPointA.rotation);
         missileA.TargetTransform = monster.Target.transform;
@@ -36,7 +36,7 @@ public class BossMonsterBehavior : IAttackBehavior
     private IEnumerator PerformRockThrow()
     {
         monster.IsTrackingTarget = false;
-        monster.Animator.SetTrigger("ThrowRock");
+        monster.Animator.SetTrigger(AnimID.ThrowRockHash);
         Object.Instantiate(monster.RockPrefab, monster.transform.position, monster.transform.rotation);
 
         yield return YieldCache.WaitForSeconds(3.0f);
@@ -49,7 +49,7 @@ public class BossMonsterBehavior : IAttackBehavior
         yield return null;
         monster.MeshAgent.isStopped = false;
         monster.MeshAgent.SetDestination(monster.Target.transform.position);
-        monster.Animator.SetTrigger("JumpAttack");
+        monster.Animator.SetTrigger(AnimID.JumpAttackHash);
         yield return YieldCache.WaitForSeconds(1.5f);
 
         monster.AttackCollider.enabled = true;

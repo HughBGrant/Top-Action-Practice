@@ -6,7 +6,7 @@ public class IdleState : MonsterState
 
     public override void Enter()
     {
-        monster.Animator.SetBool("IsWalking", false);
+        monster.Animator.SetBool(AnimID.IsAttackingHash, false);
     }
     public override void Update()
     {
@@ -18,6 +18,6 @@ public class IdleState : MonsterState
     }
     public override void Exit()
     {
-        monster.Animator.SetBool("IsWalking", true);
+        monster.Animator.SetBool(AnimID.IsAttackingHash, true);
     }
 }

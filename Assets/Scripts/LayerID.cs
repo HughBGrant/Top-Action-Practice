@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class Layer
+public static class LayerID
 {
     public static readonly int Ground = LayerMask.NameToLayer("Ground");
     public static readonly int Player = LayerMask.NameToLayer("Player");

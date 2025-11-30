@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class RangedWeapon : WeaponBase
 {
-    private static readonly int ShootHash = Animator.StringToHash("Shoot");
 
     [SerializeField]
     private Transform firePoint;
@@ -21,7 +20,7 @@ public class RangedWeapon : WeaponBase
     public override int MaxMagazine { get { return maxMagazine; } }
 
     private Coroutine shootCo;
-    public override int AttackHash { get { return ShootHash; } }
+    public override int AttackHash { get { return AnimID.ShootHash; } }
 
     public override void Use()
     {
@@ -44,7 +43,7 @@ public class RangedWeapon : WeaponBase
         bullet.Rigid.velocity = firePoint.forward * bulletSpeed;
 
         Casing casing = Instantiate(casingPrefab, ejectPoint.position, ejectPoint.rotation);
-        Vector3 casingVec = ejectPoint.forward * Random.Range(1, 4) * -1 + Vector3.up * Random.Range(1, 4);
+        Vector3 casingVec = (ejectPoint.forward * Random.Range(1, 4) * -1) + (Vector3.up * Random.Range(1, 4));
         casing.Rigid.AddForce(casingVec, ForceMode.Impulse);
         float casingSpinForce = 10f;
         casing.Rigid.AddTorque(Vector3.up * casingSpinForce, ForceMode.Impulse);
