@@ -426,7 +426,6 @@ public class Player : MonoBehaviour, IDamageable
             nearObject = null;
         }
     }
-    // --- Utils ---
     private void RestartRoutine(ref Coroutine co, IEnumerator routine)
     {
         if (co != null)

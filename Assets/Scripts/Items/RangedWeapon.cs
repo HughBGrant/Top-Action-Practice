@@ -37,10 +37,11 @@ public class RangedWeapon : WeaponBase
     }
     private IEnumerator ShootBullet()
     {
+        yield return YieldCache.WaitForFixedUpdate;
+
         Projectile bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         float bulletSpeed = 50f;
         bullet.Rigid.velocity = firePoint.forward * bulletSpeed;
-        yield return null;
 
         Casing casing = Instantiate(casingPrefab, ejectPoint.position, ejectPoint.rotation);
         Vector3 casingVec = ejectPoint.forward * Random.Range(1, 4) * -1 + Vector3.up * Random.Range(1, 4);
