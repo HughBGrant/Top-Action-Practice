@@ -212,6 +212,14 @@ public class Player : MonoBehaviour, IDamageable
             RestartRoutine(ref dodgeCo, PerformDodge());
         }
     }
+    private IEnumerator PerformDodge()
+    {
+        isDodging = true;
+        yield return YieldCache.WaitForSeconds(dodgeDuration);
+
+        isDodging = false;
+        dodgeCo = null;
+    }
     public void OnAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -227,6 +235,25 @@ public class Player : MonoBehaviour, IDamageable
             isAttackHeld = false;
         }
     }
+    private IEnumerator HandleAttack()
+    {
+        isAttacking = true;
+        float nextAttackTime = 0;
+
+        while (isAttackHeld)
+        {
+            if (Time.time > nextAttackTime)
+            {
+                animator.SetTrigger(currentWeapon.AttackHash);
+                currentWeapon.Use();
+                nextAttackTime = Time.time + currentWeapon.AttackSpeed;
+            }
+            yield return null;
+        }
+        yield return YieldCache.WaitForSeconds(currentWeapon.AttackSpeed);
+        isAttacking = false;
+        attackCo = null;
+    }
     public void OnReload(InputAction.CallbackContext context)
     {
         if (!context.started || isJumping || isDodging || isSwapping || isAttacking || isShopping) { return; }
@@ -235,6 +262,18 @@ public class Player : MonoBehaviour, IDamageable
         animator.SetTrigger(AnimID.ReloadHash);
         isReloading = true;
         RestartRoutine(ref reloadCo, ReloadBullet());
+    }
+    private IEnumerator ReloadBullet()
+    {
+        isReloading = true;
+        yield return YieldCache.WaitForSeconds(reloadDuration);
+
+        int newAmmo = Mathf.Min(ammo, currentWeapon.MaxMagazine - currentWeapon.CurrentMagazine);
+        ammo -= newAmmo;
+        currentWeapon.CurrentMagazine += newAmmo;
+
+        isReloading = false;
+        reloadCo = null;
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
@@ -283,6 +322,14 @@ public class Player : MonoBehaviour, IDamageable
             RestartRoutine(ref swapCo, SwapWeapon());
         }
     }
+    private IEnumerator SwapWeapon()
+    {
+        isSwapping = true;
+        yield return YieldCache.WaitForSeconds(swapDuration);
+
+        isSwapping = false;
+        swapCo = null;
+    }
     public void OnFire(InputAction.CallbackContext context)
     {
         if (!context.started) { return; }
@@ -303,53 +350,6 @@ public class Player : MonoBehaviour, IDamageable
             grenadeCount--;
             belongingGrenades[grenadeCount].SetActive(false);
         }
-    }
-    private IEnumerator PerformDodge()
-    {
-        isDodging = true;
-        yield return YieldCache.WaitForSeconds(dodgeDuration);
-
-        isDodging = false;
-        dodgeCo = null;
-    }
-    private IEnumerator ReloadBullet()
-    {
-        isReloading = true;
-        yield return YieldCache.WaitForSeconds(reloadDuration);
-
-        int newAmmo = Mathf.Min(ammo, currentWeapon.MaxMagazine - currentWeapon.CurrentMagazine);
-        ammo -= newAmmo;
-        currentWeapon.CurrentMagazine += newAmmo;
-
-        isReloading = false;
-        reloadCo = null;
-    }
-    private IEnumerator SwapWeapon()
-    {
-        isSwapping = true;
-        yield return YieldCache.WaitForSeconds(swapDuration);
-
-        isSwapping = false;
-        swapCo = null;
-    }
-    private IEnumerator HandleAttack()
-    {
-        isAttacking = true;
-        float nextAttackTime = 0;
-
-        while (isAttackHeld)
-        {
-            if (Time.time > nextAttackTime)
-            {
-                animator.SetTrigger(currentWeapon.AttackHash);
-                currentWeapon.Use();
-                nextAttackTime = Time.time + currentWeapon.AttackSpeed;
-            }
-            yield return null;
-        }
-        yield return YieldCache.WaitForSeconds(currentWeapon.AttackSpeed);
-        isAttacking = false;
-        attackCo = null;
     }
     public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
@@ -395,6 +395,33 @@ public class Player : MonoBehaviour, IDamageable
             Destroy(other.gameObject);
         }
     }
+    public void ApplyItemEffect(ItemType type, int value)
+    {
+        switch (type)
+        {
+            case ItemType.Ammo:
+                ammo = Mathf.Min(ammo + value, AmmoCap);
+                break;
+            case ItemType.Coin:
+                coin = Mathf.Min(coin + value, CoinCap);
+                break;
+            case ItemType.Heart:
+                Health = Mathf.Min(Health + value, HealthCap);
+                break;
+            case ItemType.Grenade:
+                if (belongingGrenades == null || belongingGrenades.Length <= 0) { return; }
+
+                int before = grenadeCount;
+                int after = Mathf.Clamp(grenadeCount + value, 0, GrenadeCountCap);
+
+                for (int i = before; i < after && i < belongingGrenades.Length; i++)
+                {
+                    belongingGrenades[i]?.SetActive(true);
+                }
+                grenadeCount = after;
+                break;
+        }
+    }
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer == LayerID.Weapon || other.gameObject.layer == LayerID.Shop)
@@ -438,32 +465,5 @@ public class Player : MonoBehaviour, IDamageable
             return false;
         }
         return Physics.Raycast(groundCheckPoint.position, Vector3.down, groundCheckDistance, groundLayer);
-    }
-    public void ApplyItemEffect(ItemType type, int value)
-    {
-        switch (type)
-        {
-            case ItemType.Ammo:
-                ammo = Mathf.Min(ammo + value, AmmoCap);
-                break;
-            case ItemType.Coin:
-                coin = Mathf.Min(coin + value, CoinCap);
-                break;
-            case ItemType.Heart:
-                Health = Mathf.Min(Health + value, HealthCap);
-                break;
-            case ItemType.Grenade:
-                if (belongingGrenades == null || belongingGrenades.Length <= 0) { return; }
-
-                int before = grenadeCount;
-                int after = Mathf.Clamp(grenadeCount + value, 0, GrenadeCountCap);
-
-                for (int i = before; i < after && i < belongingGrenades.Length; i++)
-                {
-                    belongingGrenades[i]?.SetActive(true);
-                }
-                grenadeCount = after;
-                break;
-        }
     }
 }

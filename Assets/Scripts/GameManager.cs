@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject mainMenuPanel;
     [SerializeField]
-    private GameObject hudPanel;
+    private HudController hudController;
     [SerializeField]
     private TextMeshProUGUI bestScoreText;
 
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
         inGameCamera.SetActive(true);
 
         mainMenuPanel.SetActive(false);
-        hudPanel.SetActive(true);
+        hudController.gameObject.SetActive(true);
 
         player.gameObject.SetActive(true);
     }
@@ -141,6 +141,7 @@ public class GameManager : MonoBehaviour
 
             bossMonster = Instantiate((BossMonster)monsterPrefabs[monsterPrefabs.Length - 1], monsterSpawnPoints[0].position, monsterSpawnPoints[0].rotation);
             bossMonster.Target = player;
+            hudController.SetBoss(bossMonster);
 
         }
         while (isBattling)

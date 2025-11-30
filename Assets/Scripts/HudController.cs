@@ -17,7 +17,6 @@ public class HudController : MonoBehaviour
     private RectTransform bossHealthGroup;
     [SerializeField]
     private RectTransform bossHealthBar;
-    [SerializeField]
     private BossMonster bossMonster;
 
     [Header("Stage")]
@@ -98,5 +97,9 @@ public class HudController : MonoBehaviour
         {
             bossHealthGroup.anchoredPosition = Vector3.up * 200;
         }
+    }
+    public void SetBoss(BossMonster boss)
+    {
+        bossMonster = boss;
     }
 }

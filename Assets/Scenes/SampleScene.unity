@@ -21182,7 +21182,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: STAGE 1
+  m_text: STAGE 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 607e40837ad8b3940afa4f58c0c3a3d7, type: 2}
   m_sharedMaterial: {fileID: 3979963158042828407, guid: 607e40837ad8b3940afa4f58c0c3a3d7, type: 2}
@@ -21583,7 +21583,7 @@ MonoBehaviour:
   - {fileID: 7337040727317662826, guid: 1ddca82d2fa363a43aa8fa76bdb749b7, type: 3}
   bossMonster: {fileID: 0}
   mainMenuPanel: {fileID: 1888004396}
-  hudPanel: {fileID: 1540594729}
+  hudController: {fileID: 1540594733}
   bestScoreText: {fileID: 1892554180}
 --- !u!4 &1118822142
 Transform:
@@ -48815,8 +48815,7 @@ MonoBehaviour:
   player: {fileID: 1290166530}
   scoreText: {fileID: 238998945}
   bossHealthGroup: {fileID: 869630987}
-  bossHealthBar: {fileID: 814618964}
-  bossMonster: {fileID: 0}
+  bossHealthBar: {fileID: 1610073113}
   stageText: {fileID: 1049234383}
   playTimeText: {fileID: 313827321}
   playerHealthText: {fileID: 1294820117}
