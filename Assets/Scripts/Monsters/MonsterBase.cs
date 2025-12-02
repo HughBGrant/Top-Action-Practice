@@ -77,6 +77,10 @@ public class MonsterBase : MonoBehaviour, IDamageable
 
         StateMachine = new MonsterStateMachine();
     }
+    protected virtual void Start()
+    {
+        RegisterStates();
+    }
     protected virtual void RegisterStates()
     {
         StateMachine.AddState(new IdleState(this));
@@ -85,10 +89,6 @@ public class MonsterBase : MonoBehaviour, IDamageable
         StateMachine.AddState(new DeathState(this));
 
         StateMachine.ChangeState(MonsterStateType.Idle);
-    }
-    protected virtual void Start()
-    {
-        RegisterStates();
     }
     protected virtual void Update()
     {
@@ -110,6 +110,7 @@ public class MonsterBase : MonoBehaviour, IDamageable
             StateMachine.ChangeState(MonsterStateType.Dead);
         }
     }
+
     private IEnumerator FlashOnHit()
     {
         foreach (MeshRenderer mesh in meshes)

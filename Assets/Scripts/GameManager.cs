@@ -1,7 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -51,12 +51,16 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject mainMenuPanel;
     [SerializeField]
-    private HudController hudController;
-    [SerializeField]
     private TextMeshProUGUI bestScoreText;
+    [SerializeField]
+    private GameObject gameOverPanel;
+    [SerializeField]
+    private TextMeshProUGUI currentScoreText;
+    [SerializeField]
+    private TextMeshProUGUI ifBestText;
+    [SerializeField]
+    private HudController hudController;
 
-    private List<int> monsterList;
-    private bool isEndedStage;
 
     private void Awake()
     {
@@ -64,9 +68,13 @@ public class GameManager : MonoBehaviour
 
         bestScoreText.text = string.Format("{0:n0}", PlayerPrefs.GetInt("BestScore"));
 
-        monsterList = new List<int>();
+        if (PlayerPrefs.HasKey("BestScore"))
+        {
+            PlayerPrefs.SetInt("BestScore", 0);
+        }
+
     }
-    public void StartGame()
+    public void OnStartButtonClicked()
     {
         mainMenuCamera.SetActive(false);
         inGameCamera.SetActive(true);
@@ -76,8 +84,23 @@ public class GameManager : MonoBehaviour
 
         player.gameObject.SetActive(true);
     }
-    public void EndGame()
+    public void HandleGameOver()
     {
+        hudController.gameObject.SetActive(false);
+        gameOverPanel.SetActive(true);
+        currentScoreText.text = player.Score.ToString();
+
+        int bestScore = PlayerPrefs.GetInt("BestScore");
+        if (player.Score > bestScore)
+        {
+            ifBestText.gameObject.SetActive(true);
+            PlayerPrefs.SetInt("BestScore", player.Score);
+        }
+
+    }
+    public void OnRestartButtonClicked()
+    {
+        SceneManager.LoadScene(0);
     }
     public void StartStage()
     {
@@ -95,8 +118,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(StartBattle());
 
     }
-
-    public void EndStage()
+    public void ExitStage()
     {
         player.transform.position = Vector3.up * 0.8f;
 
@@ -154,7 +176,7 @@ public class GameManager : MonoBehaviour
             }
         }
         yield return YieldCache.WaitForSeconds(3f);
-        EndStage();
+        ExitStage();
     }
     private void Update()
     {

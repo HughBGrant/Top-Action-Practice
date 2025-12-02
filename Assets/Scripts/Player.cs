@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, IDamageable
 {
+    [SerializeField]
+    private GameManager gameManager;
 
     [SerializeField]
     private float runSpeed;
@@ -80,6 +82,7 @@ public class Player : MonoBehaviour, IDamageable
     private bool isInTouchWall;
     private bool isTakingDamage;
     private bool isShopping;
+    private bool isDead;
 
     private Animator animator;
     private Rigidbody rigid;
@@ -87,6 +90,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private GameObject nearObject;
     private Camera cam;
+    private AudioSource jumpSound;
 
     private Coroutine dodgeCo;
     private Coroutine swapCo;
@@ -102,6 +106,10 @@ public class Player : MonoBehaviour, IDamageable
 
     void Awake()
     {
+        if (gameManager == null)
+        {
+            gameManager = GameManager.Instance;
+        }
         animator = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();
@@ -131,7 +139,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             moveDirection = dodgeDirection;
         }
-        if (isSwapping || isAttacking || isReloading)
+        if (isSwapping || isAttacking || isReloading || isDead)
         {
             moveDirection = Vector3.zero;
         }
@@ -151,7 +159,7 @@ public class Player : MonoBehaviour, IDamageable
             transform.forward = moveDirection;
         }
         //공격시 방향
-        if (isAttacking)
+        if (isAttacking && !isDead)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, 100f))
@@ -194,7 +202,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (!context.started || isJumping || isDodging || isSwapping) { return; }
+        if (!context.started || isJumping || isDodging || isSwapping || isDead) { return; }
 
         bool hasMoveInput = moveInput.sqrMagnitude > MoveEpsilon;
 
@@ -204,6 +212,7 @@ public class Player : MonoBehaviour, IDamageable
             isJumping = true;
             animator.SetTrigger(AnimID.JumpHash);
             animator.SetBool(AnimID.IsJumpingHash, isJumping);
+            jumpSound.Play();
         }
         else
         {
@@ -224,7 +233,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         if (context.performed)
         {
-            if (currentWeapon == null || isDodging || isSwapping || isAttacking || isShopping) { return; }
+            if (currentWeapon == null || isDodging || isSwapping || isAttacking || isShopping || isDead) { return; }
             isAttackHeld = true;
 
             RestartRoutine(ref attackCo, HandleAttack());
@@ -256,7 +265,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     public void OnReload(InputAction.CallbackContext context)
     {
-        if (!context.started || isJumping || isDodging || isSwapping || isAttacking || isShopping) { return; }
+        if (!context.started || isJumping || isDodging || isSwapping || isAttacking || isShopping || isDead) { return; }
         if (currentWeapon == null || currentWeapon is MeleeWeapon || ammo == 0) { return; }
 
         animator.SetTrigger(AnimID.ReloadHash);
@@ -277,7 +286,7 @@ public class Player : MonoBehaviour, IDamageable
     }
     public void OnInteraction(InputAction.CallbackContext context)
     {
-        if (!context.started || isJumping || isDodging || isShopping) { return; }
+        if (!context.started || isJumping || isDodging || isShopping || isDead) { return; }
         if (nearObject == null) { return; }
 
         if (nearObject.CompareTag(Tag.Weapon))
@@ -300,7 +309,7 @@ public class Player : MonoBehaviour, IDamageable
     public void OnSwapWeapon(InputAction.CallbackContext context)
     {
         if (!context.started) { return; }
-        if (isJumping || isDodging || isShopping) { return; }
+        if (isJumping || isDodging || isShopping || isDead) { return; }
         if (belongingWeapons == null || hasWeapons == null) { return; }
 
         int newWeaponId = Mathf.RoundToInt(context.ReadValue<float>());
@@ -336,7 +345,7 @@ public class Player : MonoBehaviour, IDamageable
 
         if (grenadeCount <= 0) { return; }
 
-        if (isReloading || isSwapping || isShopping) { return; }
+        if (isReloading || isSwapping || isShopping || isDead) { return; }
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 100))
@@ -353,16 +362,16 @@ public class Player : MonoBehaviour, IDamageable
     }
     public void TakeDamage(int damage, Vector3 hitPoint, bool isHitGrenade = false)
     {
-        if (isTakingDamage) { return; }
-
-        hitCo ??= StartCoroutine(HitFlash());
-
-        Health -= damage;
+        if (isTakingDamage || isDead) { return; }
 
         if (health <= 0)
         {
             Die();
         }
+        hitCo ??= StartCoroutine(HitFlash());
+
+        Health -= damage;
+
     }
     private IEnumerator HitFlash()
     {
@@ -381,9 +390,11 @@ public class Player : MonoBehaviour, IDamageable
         isTakingDamage = false;
         hitCo = null;
     }
-    void Die()
+    private void Die()
     {
         animator.SetTrigger(AnimID.DieHash);
+        isDead = true;
+        gameManager.HandleGameOver();
     }
     private void OnTriggerEnter(Collider other)
     {
